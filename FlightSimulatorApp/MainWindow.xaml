@@ -4,9 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightSimulatorApp"
+        xmlns:controls="clr-namespace:FlightSimulatorApp.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <!--Main Grid-->
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <!-- #0 Map + Connect/Disconnect -->
+            <ColumnDefinition Width="250"/>
+            <!-- #1 Steers + Joystick -->
+        </Grid.ColumnDefinitions>
+
+        <controls:ConnectionButtons/>
+        <controls:Map Grid.Row="1" Grid.Column="0"/>
+
 
     </Grid>
 </Window>
