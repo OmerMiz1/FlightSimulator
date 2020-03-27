@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:FlightSimulatorApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <BitmapImage x:Key="airplaneIcon" UriSource="Images/Airplane.png"></BitmapImage>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maps.MapControl.WPF;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -18,6 +19,8 @@ namespace FlightSimulatorApp.Controls
     /// </summary>
     public partial class Map : UserControl
     {
+        private Pushpin AirplaneCharacter;
+
         public Map()
         {
             InitializeComponent();
