@@ -12,6 +12,19 @@
     <map:Map x:Name="myMap" Margin="5" Mode="AerialWithLabels"
              CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl">
         
+
+        <map:MapLayer x:Name="pushpinsLayer" >
+            <map:MapItemsControl x:Name="pushpins">
+                <map:MapItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <map:Pushpin Template="{StaticResource airplaneTemplate}"></map:Pushpin>
+                    </DataTemplate>
+                </map:MapItemsControl.ItemTemplate>
+            </map:MapItemsControl>
+        </map:MapLayer>
         <!-- TODO For faster loading consider using Base64 encoded image. https://varvy.com/pagespeed/base64-images.html-->
+        <map:Pushpin x:Name="airplane" Location="{Binding <!--To simulator?-->}" Template="{StaticResource airplaneTemplate}"></map:Pushpin>
+        
+        
     </map:Map>
 </UserControl>
