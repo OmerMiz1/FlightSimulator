@@ -19,8 +19,6 @@ namespace FlightSimulatorApp.Controls
     /// </summary>
     public partial class Map : UserControl
     {
-        private Pushpin AirplaneCharacter;
-
         public Map()
         {
             InitializeComponent();

@@ -13,7 +13,5 @@
              CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl">
         
         <!-- TODO For faster loading consider using Base64 encoded image. https://varvy.com/pagespeed/base64-images.html-->
-        <map:Pushpin x:Name="user"/>
-
     </map:Map>
 </UserControl>
