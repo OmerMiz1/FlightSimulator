@@ -8,7 +8,7 @@
          <ResourceDictionary>
              <!-- Airplane Template -->
              <ControlTemplate x:Key="airplaneTemplate" TargetType="map:Pushpin">
-                 <Grid Height="30" Width="30">
+                 <Grid Height="25" Width="25">
                     <Image Source="Images/Airplane.png" Stretch="Uniform" SnapsToDevicePixels="True"/>
                  </Grid>
             </ControlTemplate>
