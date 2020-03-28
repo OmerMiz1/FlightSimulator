@@ -11,31 +11,18 @@ namespace FlightSimulatorApp.Model
 {
     class TCPClient
     {
-        private TcpClient _client;
-        private Boolean _running;
+        private TcpClient client;
+        private Boolean running;
 
         private Dictionary<string, string> _valuesFromSim;
         private Dictionary<string, string> _valuesToSim;
-
-        public String Ip
-        {
-            get { return _ip;}
-            set { _ip = value;}
-        }
-
-        /*TCPClient(String ip, Int32 port)
-        {
-            _ip = ip;
-            _port = port;
-
-        }*/
 
         public Boolean Connect(String ip, Int32 port)
         {
             /* Connect to server */
             try
             {
-                _client = new TcpClient(ip, port);
+                client = new TcpClient(ip, port);
             }
             catch (Exception e)
             {
@@ -43,63 +30,74 @@ namespace FlightSimulatorApp.Model
                 Console.WriteLine("Error #1 TCPClient.Connect..");
             }
 
-            if (!_client.Connected)
+            if (!client.Connected)
             {
-                _running = false;
+                running = false;
                 return false;
             }
 
             /* TODO debug */
             Console.WriteLine("Client connected successfully to server...");
-            _running = true;
+            running = true;
             return true;
         }
 
         public void Disconnect()
         {
-            _running = false;
-            _client.GetStream().Close();
-            _client.Close();
+            running = false;
+            client.GetStream().Close();
+            client.Close();
         }
 
         public void Start()
         {
             /* Error starting communicating server.. */
-            if (!_running)
+            if (!running)
             {
                 /* TODO debug */
                 Console.WriteLine("Error #1 TCPClient.Start...");
             }
-            
-            
-            
-            using (stream = _client.GetStream())
+
+            NetworkStream stream = client.GetStream();
+            using (stream = client.GetStream())
             {
                 /* Timeout after 10 seconds */
-                _stream.ReadTimeout = TimeSpan.FromSeconds(10).Milliseconds;
+                stream.ReadTimeout = TimeSpan.FromSeconds(10).Milliseconds;
 
                 /* Start working */
                 new Thread(() =>
                 {
                     /* Analyzer mainly used for parsing read data */
                     SimDataAnalyzer analyzer = new SimDataAnalyzer();
-                    String data = null;
-                    Byte[] readBuffer = new byte[4096];
+                    Byte[] readBuffer;
 
-                    while (running && _client.Connected)
+                    while (running)
                     {
-                        /* Read data from server */
-                        try
+                        if (!client.Connected)
                         {
-                            _stream.Read(readBuffer);
+                            /* TODO debug */
+                            Console.WriteLine("Error #1 TCPClient.Start...");
                         }
-                        catch (IOException e)
+
+                        if (client.ReceiveBufferSize > 0)
                         {
-                            /*TODO add GUI notification for this error*/
-                            if (e.GetBaseException().GetType() == typeof(SocketException))
+                            readBuffer = new byte[client.ReceiveBufferSize];
+
+                            /* Read data from server */
+                            try
                             {
-                                Console.WriteLine("Err");
+                                stream.Read(readBuffer, 0, client.ReceiveBufferSize);
                             }
+                            catch (IOException e)
+                            {
+                                /*TODO add GUI notification for this error*/
+                                if (e.GetBaseException().GetType() == typeof(SocketException))
+                                {
+                                    Console.WriteLine("Err");
+                                }
+                            }
+
+                            analyzer.Parse(Encoding.ASCII.GetString(readBuffer));
                         }
 
                         Thread.Sleep(250);
@@ -107,7 +105,7 @@ namespace FlightSimulatorApp.Model
                 }).Start();
             }
         }
-    }
+
 
         public void Stop()
         {

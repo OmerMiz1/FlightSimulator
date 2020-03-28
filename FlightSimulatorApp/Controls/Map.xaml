@@ -21,7 +21,6 @@
                     </DataTemplate>
                 </map:MapItemsControl.ItemTemplate>
             </map:MapItemsControl>
-            <Rectangle HorizontalAlignment="Center" Height="440" Stroke="Black" VerticalAlignment="Center" Width="790"/>
         </map:MapLayer>
 
         <!-- TODO Bind Location to the airplane: Location="{Binding To simulator}" -->
