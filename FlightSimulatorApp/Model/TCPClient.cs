@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Windows.Automation;
@@ -10,85 +12,102 @@ namespace FlightSimulatorApp.Model
     class TCPClient
     {
         private TcpClient _client;
-        private NetworkStream _stream;
-        private string _ip;
-        private Int32 _port;
-        private Boolean running;
+        private Boolean _running;
 
-        /* Properties to receive from server */
-        public string IndicatedHeadingDeg { get; set; }
-        public string GpsIndicatedVerticalSpeed { get; set; }
-
-        public string GpsIndicatedGroundSpeedKt{ get; set; }
-        public string AirspeedIndicatorIndicatedSpeedKt{ get; set; }
-        public string GpsIndicatedAltitudeFt{ get; set; }
-        public string AttitudeIndicatoInternalRollDeg{ get; set; }
-        public string AttitudeIndicatorInternalPitchDeg{ get; set; }
-        public string AltimeterIndicatedAltitudeFt{ get; set; }
-        
-        /* Properties set by Client (send to server)*/
-        public string Rudder{ get; set; }
-        public string Elevators{ get; set; }
-        public string Ailerons{ get; set; }
-        public string Throttle{ get; set; }
-
-
-private Dictionary<string, string> _valuesFromSim;
+        private Dictionary<string, string> _valuesFromSim;
         private Dictionary<string, string> _valuesToSim;
 
-        public string Ip
+        public String Ip
         {
             get { return _ip;}
             set { _ip = value;}
         }
 
-        TCPClient(string ip, Int32 port)
+        /*TCPClient(String ip, Int32 port)
         {
             _ip = ip;
             _port = port;
 
-        }
+        }*/
 
-        public void Connect()
+        public Boolean Connect(String ip, Int32 port)
         {
+            /* Connect to server */
             try
             {
-                /* Attempt connect to server */
-                using (_client = new TcpClient(_ip, _port))
-                {
-                    /* Error connecting to server, O.W print OK message and continue.. */
-                    if (!_client.Connected) 
-                    {
-                        Console.WriteLine("TCPClient Err #1");
-                        this.running = false;
-                        return;
-
-                    }
-
-                    Console.WriteLine("Client connected successfully to server...");
-                    running = true;
-                    using (_stream = _client.GetStream())
-                    {
-                        /* Start working */
-                        Thread myThread = new Thread(() =>
-                        {
-                            while (running && _client.Connected)
-                            {
-
-                            }
-                        });
-                    }
-                }
-                
-            } 
-            
+                _client = new TcpClient(ip, port);
+            }
             catch (Exception e)
             {
-                running = false;
-                Console.WriteLine("TCPClient Err #2");
+                /*TODO debug*/
+                Console.WriteLine("Error #1 TCPClient.Connect..");
+            }
+
+            if (!_client.Connected)
+            {
+                _running = false;
+                return false;
+            }
+
+            /* TODO debug */
+            Console.WriteLine("Client connected successfully to server...");
+            _running = true;
+            return true;
+        }
+
+        public void Disconnect()
+        {
+            _running = false;
+            _client.GetStream().Close();
+            _client.Close();
+        }
+
+        public void Start()
+        {
+            /* Error starting communicating server.. */
+            if (!_running)
+            {
+                /* TODO debug */
+                Console.WriteLine("Error #1 TCPClient.Start...");
             }
             
+            
+            
+            using (stream = _client.GetStream())
+            {
+                /* Timeout after 10 seconds */
+                _stream.ReadTimeout = TimeSpan.FromSeconds(10).Milliseconds;
+
+                /* Start working */
+                new Thread(() =>
+                {
+                    /* Analyzer mainly used for parsing read data */
+                    SimDataAnalyzer analyzer = new SimDataAnalyzer();
+                    String data = null;
+                    Byte[] readBuffer = new byte[4096];
+
+                    while (running && _client.Connected)
+                    {
+                        /* Read data from server */
+                        try
+                        {
+                            _stream.Read(readBuffer);
+                        }
+                        catch (IOException e)
+                        {
+                            /*TODO add GUI notification for this error*/
+                            if (e.GetBaseException().GetType() == typeof(SocketException))
+                            {
+                                Console.WriteLine("Err");
+                            }
+                        }
+
+                        Thread.Sleep(250);
+                    }
+                }).Start();
+            }
         }
+    }
 
         public void Stop()
         {
