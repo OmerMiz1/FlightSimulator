@@ -9,10 +9,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
-    <map:Map 
-        Margin="5"
-        Mode="AerialWithLabels"
-        CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl">
+    <map:Map x:Name="myMap" Margin="5" Mode="AerialWithLabels"
+             CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl">
+        
+        <!-- Setting all pushpin template -->
+        <map:MapLayer x:Name="pushpinsLayer">
+            <map:MapItemsControl x:Name="pushpins">
+                <map:MapItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <map:Pushpin Template="{StaticResource airplaneTemplate}"></map:Pushpin>
+                    </DataTemplate>
+                </map:MapItemsControl.ItemTemplate>
+            </map:MapItemsControl>
+            <Rectangle HorizontalAlignment="Center" Height="440" Stroke="Black" VerticalAlignment="Center" Width="790"/>
+        </map:MapLayer>
 
+        <!-- TODO Bind Location to the airplane: Location="{Binding To simulator}" -->
+        <map:Pushpin x:Name="airplane" Template="{StaticResource airplaneTemplate}"></map:Pushpin>
     </map:Map>
 </UserControl>

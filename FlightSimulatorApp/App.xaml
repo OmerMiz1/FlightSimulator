@@ -1,9 +1,19 @@
 ﻿<Application x:Class="FlightSimulatorApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:map="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
              xmlns:local="clr-namespace:FlightSimulatorApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <!-- Airplane Template -->
+             <ControlTemplate x:Key="airplaneTemplate" TargetType="map:Pushpin">
+                 <Grid Height="25" Width="25">
+                    <Image Source="Images/Airplane.png" Stretch="Uniform" SnapsToDevicePixels="True"/>
+                 </Grid>
+            </ControlTemplate>
+             <!-- Airplane Template -->
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
