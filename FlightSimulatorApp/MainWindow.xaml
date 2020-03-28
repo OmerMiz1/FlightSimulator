@@ -5,24 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightSimulatorApp"
         xmlns:controls="clr-namespace:FlightSimulatorApp.Controls"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" Height="550"
+        Title="MainWindow">
     <!--Main Grid-->
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
             <!-- #0 Map + Connect/Disconnect -->
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
             <!-- #1 Steers + Joystick -->
         </Grid.ColumnDefinitions>
-
-        <controls:ConnectionButtons/>
-        <controls:Map Grid.Row="1" Grid.Column="0"/>
-
+        
+        <controls:Cockpit Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="450"/>
+            </Grid.RowDefinitions>
+            <controls:ConnectionButtons HorizontalAlignment="Stretch"/>
+            <controls:Map Grid.Row="1"/>
+        </Grid>
 
     </Grid>
 </Window>

@@ -14,28 +14,23 @@ using System.Windows.Shapes;
 namespace FlightSimulatorApp.Controls
 {
     /// <summary>
-    /// Interaction logic for ConnectionButtons.xaml
+    /// Interaction logic for CockpitControls.xaml
     /// </summary>
-    public partial class ConnectionButtons : UserControl
+    public partial class CockpitControls : UserControl
     {
-        public ConnectionButtons()
+        public CockpitControls()
         {
             InitializeComponent();
         }
 
-        private void connectButton_Click(object sender, RoutedEventArgs e)
+        private void ThrottleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
         }
 
-        private void disconnectButton_Click(object sender, RoutedEventArgs e)
+        private void AileronSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
-        }
-
-        private void settingsButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            
         }
     }
 }
