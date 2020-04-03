@@ -48,7 +48,7 @@
                 </Path.RenderTransform>
             </Path>
 
-            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125">
+            <Canvas  x:Name="Knob" VerticalAlignment="Top" HorizontalAlignment="Left" Width="0" Height="0" RenderTransformOrigin="0.5,0.5" Canvas.Left="125" Canvas.Top="125" MouseUp="Knob_MouseUp" MouseDown="Knob_MouseDown" MouseMove="Knob_MouseMove">
                 <!--<Ellipse x:Name="Shadow" HorizontalAlignment="Left" Height="88" VerticalAlignment="Top" Width="86" Fill="#52131212" Canvas.Left="22" Canvas.Top="18" />-->
                 <Ellipse x:Name="KnobBase" HorizontalAlignment="Left" Height="90" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Canvas.Top="1">
                     <Ellipse.Fill>
@@ -118,11 +118,10 @@
                 </Canvas.RenderTransform>
                 <Canvas.Resources>
 
-                    <Storyboard x:Key="CenterKnob" Name="centerKnob">
-                    <!--<Storyboard x:Key="CenterKnob" Name="centerKnob" Completed="centerKnob_Completed">-->
+                    <Storyboard x:Key="CenterKnob" Name="centerKnob" Completed="centerKnob_Completed">
 
                         <DoubleAnimation Storyboard.TargetName="knobPosition"
-                             Storyboard.TargetProperty="X" To="0" Duration="0:0:0.2">
+                                         Storyboard.TargetProperty="X" To="0" Duration="0:0:0.2">
                             <DoubleAnimation.EasingFunction>
                                 <BackEase EasingMode="EaseInOut" />
                             </DoubleAnimation.EasingFunction>

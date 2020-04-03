@@ -8,18 +8,28 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="10"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <local:Joystick Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Slider Name="ThrottleSlider" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="2" Orientation="Vertical" TickPlacement="TopLeft" ValueChanged="ThrottleSlider_ValueChanged" Maximum="100" SmallChange="2.5" TickFrequency="5" LargeChange="5"/>
         <Slider Name="AileronSlider" Width="300" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" TickPlacement="TopLeft" ValueChanged="AileronSlider_ValueChanged" Minimum="-1" Maximum="1" TickFrequency="0.1" SmallChange="0.01" LargeChange="0.1"/>
-        <Label Content="Throttle" HorizontalAlignment="Right" VerticalAlignment="Top" />
-        <Label Content="Aileron" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+      
+        <Label Content="Throttle" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-90"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <Label Content="Aileron" VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="1"/>
     </Grid>
 </UserControl>
