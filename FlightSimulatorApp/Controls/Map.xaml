@@ -24,6 +24,6 @@
         </map:MapLayer>
 
         <!-- TODO Bind Location to the airplane: Location="{Binding To simulator}" -->
-        <map:Pushpin x:Name="airplane" Template="{StaticResource airplaneTemplate}"></map:Pushpin>
+        <map:Pushpin x:Name="airplane" Location="32.308137, 34.871703" Template="{StaticResource airplaneTemplate}"></map:Pushpin>
     </map:Map>
 </UserControl>

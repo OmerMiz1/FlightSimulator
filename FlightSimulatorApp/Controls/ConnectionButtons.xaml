@@ -13,6 +13,6 @@
         </Grid.ColumnDefinitions>
         <Button Name ="connectButton" Content="Connect" Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch" Background="Green" Click="connectButton_Click"/>
         <Button Name="disconnectButton" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" IsEnabled="False" Click="disconnectButton_Click"/>
-        <Button Name="settingsButton" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
+        <Button Name="settingsButton" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow"/>
     </Grid>
 </UserControl>
