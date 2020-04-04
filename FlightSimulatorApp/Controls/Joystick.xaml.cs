@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,8 @@ namespace FlightSimulatorApp.Controls {
         private bool mouseIsDown = false;
         private Point startingPoint;
         private Storyboard myStoryboard;
+        public double X { get; set; } = 0;
+        public double Y { get; set; } = 0;
 
         public Joystick() {
             InitializeComponent();
@@ -64,6 +67,11 @@ namespace FlightSimulatorApp.Controls {
                         knobPosition.Y = -radius * Math.Sin(angle);
                     }
                 }
+
+                X = knobPosition.X / radius;
+                Trace.WriteLine("X = " + X);
+                Y = knobPosition.Y / radius;
+                Trace.WriteLine("Y = " + Y);
             }
         }
 
