@@ -18,11 +18,11 @@ namespace FlightSimulatorApp.Model {
         public List<string> _valuesFromSimNames;
 
         /* Properties FROM server */
-        public String VerticalSpeed { get; set; }
-        public String Heading { get; set; }
-        public String GpsIndicatedGroundSpeedKt { get; set; }
-        public String AirspeedIndicatorIndicatedSpeedKt { get; set; }
-        public String GpsIndicatedAltitudeFt { get; set; }
+        public String GpsVerticalSpeed { get; set; }
+        public String HeadingDegree { get; set; }
+        public String GpsGroundSpeed { get; set; }
+        public String AirSpeedIndicator { get; set; }
+        public String AltitudeGps { get; set; }
         public String AttitudeIndicatoInternalRollDeg { get; set; }
         public String AttitudeIndicatorInternalPitchDeg { get; set; }
         public String AltimeterIndicatedAltitudeFt { get; set; }
@@ -206,6 +206,34 @@ namespace FlightSimulatorApp.Model {
             _valuesFromSimNames.Add("attitude-indicator_internal-roll-deg");
             _valuesFromSimNames.Add("attitude-indicator_internal-pitch-deg");
             _valuesFromSimNames.Add("altimeter_indicated-altitude-ft");
+        }
+
+        public Dictionary<string, string> NameToPath()
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict["HeadingDegree"] = "indicated-heading-deg";
+            dict["GpsVerticalSpeed"] = "gps_indicated-vertical-speed";
+            dict["GpsGroundSpeed"] = "gps_indicated-ground-speed-kt";
+            dict["AirSpeedIndicator"] = "airspeed-indicator_indicated-speed-kt";
+            dict["GpsAltitudeFt"] = "gps_indicated-altitude-ft";
+            dict["RollDegree"] = "attitude-indicator_internal-roll-deg";
+            dict["PitchDegree"] = "attitude-indicator_internal-pitch-deg";
+            dict["AltimeterAltitudeFt"] = "altimeter_indicated-altitude-ft";
+            return dict;
+        }
+
+        public Dictionary<string, string> PathToName()
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict["indicated-heading-deg"] = "HeadingDegree";
+            dict["GpsVerticalSpeed"] = "gps_indicated-vertical-speed";
+            dict["GpsGroundSpeed"] = "gps_indicated-ground-speed-kt";
+            dict["AirSpeedIndicator"] = "airspeed-indicator_indicated-speed-kt";
+            dict["GpsAltitudeFt"] = "gps_indicated-altitude-ft";
+            dict["RollDegree"] = "attitude-indicator_internal-roll-deg";
+            dict["PitchDegree"] = "attitude-indicator_internal-pitch-deg";
+            dict["AltimeterAltitudeFt"] = "altimeter_indicated-altitude-ft";
+            return dict;
         }
     }
 }
