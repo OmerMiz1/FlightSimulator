@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
@@ -17,16 +18,43 @@ namespace FlightSimulatorApp.Controls {
     /// <summary>
     /// Interaction logic for Joystick.xaml
     /// </summary>
-    public partial class Joystick : UserControl {
+    public partial class Joystick : UserControl, INotifyPropertyChanged {
         private bool mouseIsDown = false;
         private Point startingPoint;
         private Storyboard myStoryboard;
-        public double X { get; set; } = 0;
-        public double Y { get; set; } = 0;
+        private double _x;
+        private double _y;
+
+        public double X
+        {
+            get { return _x; }
+            set
+            {
+                if (_x == value) return;
+                _x = value;
+                OnPropertyChanged("X");
+            }
+        }
+
+        public double Y {
+            get { return _y; }
+            set {
+                if (_y == value) return;
+                _y = value;
+                OnPropertyChanged("Y");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Joystick() {
             InitializeComponent();
             myStoryboard = (Storyboard)Knob.FindResource("CenterKnob");
+        }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void Knob_MouseUp(object sender, MouseButtonEventArgs e) {
@@ -69,14 +97,14 @@ namespace FlightSimulatorApp.Controls {
                 }
 
                 X = knobPosition.X / radius;
-                Trace.WriteLine("X = " + X);
                 Y = knobPosition.Y / radius;
-                Trace.WriteLine("Y = " + Y);
             }
         }
 
         private void centerKnob_Completed(object? sender, EventArgs e) {
             myStoryboard.Stop();
+            X = 0;
+            Y = 0;
         }
     }
 }
