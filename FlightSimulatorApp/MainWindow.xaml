@@ -15,8 +15,6 @@
             <ColumnDefinition Width="Auto"/>
             <!-- #1 Steers + Joystick -->
         </Grid.ColumnDefinitions>
-        
-        <controls:Cockpit Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center"/>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -25,6 +23,19 @@
             <controls:ConnectionButtons HorizontalAlignment="Stretch"/>
             <controls:Map Grid.Row="1"/>
         </Grid>
-
+        <Grid Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+            <controls:CockpitDashboard Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitControls Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
     </Grid>
 </Window>
