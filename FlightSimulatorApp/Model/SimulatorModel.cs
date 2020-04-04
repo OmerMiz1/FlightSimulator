@@ -11,11 +11,27 @@ using System.Threading;
 using System.Windows.Automation;
 
 namespace FlightSimulatorApp.Model {
-    class SimulatorModel : TcpClient, INotifyPropertyChanged {
+    public class SimulatorModel : TcpClient, INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         private Dictionary<string, Double> _valuesFromSim;
         public Dictionary<string, Double> _valuesToSim;
-        private List<string> _valuesFromSimNames;
+        public List<string> _valuesFromSimNames;
+
+        /* Properties FROM server */
+        public String VerticalSpeed { get; set; }
+        public String Heading { get; set; }
+        public String GpsIndicatedGroundSpeedKt { get; set; }
+        public String AirspeedIndicatorIndicatedSpeedKt { get; set; }
+        public String GpsIndicatedAltitudeFt { get; set; }
+        public String AttitudeIndicatoInternalRollDeg { get; set; }
+        public String AttitudeIndicatorInternalPitchDeg { get; set; }
+        public String AltimeterIndicatedAltitudeFt { get; set; }
+
+        /* Properties TO server*/
+        public String Rudder { get; set; }
+        public String Elevators { get; set; }
+        public String Ailerons { get; set; }
+        public String Throttle { get; set; }
 
         private Queue<string> _setRequests;
 
@@ -189,7 +205,6 @@ namespace FlightSimulatorApp.Model {
             _valuesFromSimNames.Add("gps_indicated-altitude-ft");
             _valuesFromSimNames.Add("attitude-indicator_internal-roll-deg");
             _valuesFromSimNames.Add("attitude-indicator_internal-pitch-deg");
-            _valuesFromSimNames.Add("altimeter_indicated-altitude-ft");
             _valuesFromSimNames.Add("altimeter_indicated-altitude-ft");
         }
     }
