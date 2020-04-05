@@ -1,14 +1,19 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using FlightSimulatorApp.Model;
 
 namespace FlightSimulatorApp.ViewModel {
     public class MapVM : INotifyPropertyChanged {
-        public SimulatorModel _simulatorModel { get; private set; }
+        public SimulatorModel myModel { get; private set; }
+        public DictionaryIndexer Variables;
+        private Dictionary<string, string> namesToPath;
+        private VariableNamesManager converter;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private double longtitude;
+        
+        /*private double longtitude;
         public double Longtitude {
             get => longtitude;
             set {
@@ -39,24 +44,53 @@ namespace FlightSimulatorApp.ViewModel {
                     OnPropertyChanged(nameof(Heading));
                 }
             }
-        }
+        }*/
 
-        public MapVM(SimulatorModel simulatorModel) {
-            _simulatorModel = simulatorModel;
+        public MapVM(SimulatorModel model) {
+            myModel = model;
+            converter = new VariableNamesManager();
+            InitVariables();
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            string propName = e.PropertyName;
-            if (propName == nameof(Altitude))
-            {
-                Altitude = _simulatorModel._valuesToSim
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+
+            switch (e.PropertyName) {
+                case "Atitude": {
+                        /*TODO Fix name + Action*/
+                        break;
+                    }
+                case "Latitude": {
+                        /*TODO Fix name + Action*/
+                        break;
+                    }
+                case "Heading": {
+                        /*TODO Fix name + Action*/
+                        break;
+                    }
+                default:
+                    break;
             }
         }
+
+        private void InitVariables() {
+            Variables = new DictionaryIndexer();
+            Variables["Latitude"] = "NO_VALUE_YET";
+            Variables["Longitude"] = "NO_VALUE_YET";
+            Variables["Heading"] = "NO_VALUE_YET";
+        }
+
+        private Dictionary<string, string> NameToPath() {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict["Heading"] = "/orientation/heading-deg";
+            dict["Longitude"] = "/position/longitude-deg";
+            dict["Latitude"] = "/position/latitude-deg";
+            return dict;
+        }
+
 
     }
 }

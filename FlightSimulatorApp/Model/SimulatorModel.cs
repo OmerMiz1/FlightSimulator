@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,11 +14,14 @@ using System.Windows.Automation;
 namespace FlightSimulatorApp.Model {
     public class SimulatorModel : TcpClient, INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
-        private Dictionary<string, Double> _valuesFromSim;
-        public Dictionary<string, Double> _valuesToSim;
-        public List<string> _valuesFromSimNames;
 
-        /* Properties FROM server */
+        // private Dictionary<string, string> Variables;
+        public DictionaryIndexer Variables; /* Should be tested */
+        
+        public List<string> VariablesOut; /* Variables we send updates TO the simulator*/
+        public List<string> VariablesIn; /* Variables we update FROM the simulator*/
+
+        /*/* Properties FROM server #1#
         public String GpsVerticalSpeed { get; set; }
         public String HeadingDegree { get; set; }
         public String GpsGroundSpeed { get; set; }
@@ -27,11 +31,11 @@ namespace FlightSimulatorApp.Model {
         public String AttitudeIndicatorInternalPitchDeg { get; set; }
         public String AltimeterIndicatedAltitudeFt { get; set; }
 
-        /* Properties TO server*/
+        /* Properties TO server#1#
         public String Rudder { get; set; }
         public String Elevators { get; set; }
         public String Ailerons { get; set; }
-        public String Throttle { get; set; }
+        public String Throttle { get; set; }*/
 
         private Queue<string> _setRequests;
 
@@ -43,7 +47,7 @@ namespace FlightSimulatorApp.Model {
         public SimulatorModel(TcpClient tcpClient) : this(tcpClient, false) { }
 
         public SimulatorModel(TcpClient tcpClient, Boolean mode) {
-            InitializeNames();
+            InitVariables();
             _tcpClient = tcpClient;
             _debug = mode;
         }
@@ -75,7 +79,7 @@ namespace FlightSimulatorApp.Model {
         public void Write(string msg) {
             /* Double check writing is possible */
             if (_stream.CanWrite) {
-                byte[] writeBuffer = Encoding.ASCII.GetBytes(msg);
+                byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                 _stream.Write(writeBuffer, 0, writeBuffer.Length);
             } else if (_debug) {
                 Console.WriteLine("Error #2 at Simulator.Write()...");
@@ -107,8 +111,8 @@ namespace FlightSimulatorApp.Model {
             /* Error */
             if (_debug) {
                 /*TODO keep the exception or simple console message?*/
-                throw new System.InvalidOperationException("Error #2 at Simulator.Read()...");
                 Console.WriteLine("Error #2 at Simulator.Read()...");
+                throw new System.InvalidOperationException("Error #2 at Simulator.Read()...");
             }
             return null;
         }
@@ -138,18 +142,17 @@ namespace FlightSimulatorApp.Model {
             _isRunning = false;
         }
 
-        public void NotifyPropertyChanged(string propName) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
+        public void NotifyPropertyChanged(string propName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         private void ReadValuesFromSim() {
             /* Build get requests message (once) */
             StringBuilder strBuilder = new StringBuilder();
-            foreach (string varName in _valuesFromSimNames) {
-                strBuilder.Append("get ");
-                strBuilder.AppendLine(varName);
+            foreach (string varName in VariablesIn) {
+                /*TODO: Possible problem, possible fix =  use AppendLine*/
+                strBuilder.Append("get " + varName);
             }
             string requestMsg = strBuilder.ToString();
 
@@ -167,12 +170,12 @@ namespace FlightSimulatorApp.Model {
                 /* Case response is valid */
                 if (valuesFromSim != null) {
                     /* Enumerate each variable manually (iterator)*/
-                    List<string>.Enumerator varEnum = _valuesFromSimNames.GetEnumerator();
+                    var varEnum = VariablesIn.GetEnumerator();
 
                     /* Split received values and update each one */
-                    string[] newValsArray = valuesFromSim.Split('\n');
+                    string[] newValsArray = valuesFromSim.Split("\r\n");
                     foreach (string newVal in newValsArray) {
-                        _valuesFromSim[varEnum.Current] = Convert.ToDouble(newVal);
+                        Variables[varEnum.Current] = newVal;
                         NotifyPropertyChanged(varEnum.Current);
                     }
 
@@ -191,25 +194,43 @@ namespace FlightSimulatorApp.Model {
         private void WriteValuesToSim() {
             while (_isRunning) {
                 if (_setRequests.Count != 0) {
-                    Write(_setRequests.Dequeue());
+                    /* Send requested value change */
+                    string request = _setRequests.Dequeue();
+                    Write("set " + request);
+
+                    /* Simulator always responds with the new value, check if request was valid.*/
+                    string response = Read();
+                    if (response != request) {
+                        /*TODO debug*/
+                        Console.WriteLine("Err #1 WriteValuesToSim(): Requested set request is invalid...");
+                    }
                 }
             }
         }
 
-        private void InitializeNames() {
+        private void InitVariables() {
             /* Initializes NAMES of variables that model is GETTING FROM simulator */
-            _valuesFromSimNames.Add("indicated-heading-deg");
-            _valuesFromSimNames.Add("gps_indicated-vertical-speed");
-            _valuesFromSimNames.Add("gps_indicated-ground-speed-kt");
-            _valuesFromSimNames.Add("airspeed-indicator_indicated-speed-kt");
-            _valuesFromSimNames.Add("gps_indicated-altitude-ft");
-            _valuesFromSimNames.Add("attitude-indicator_internal-roll-deg");
-            _valuesFromSimNames.Add("attitude-indicator_internal-pitch-deg");
-            _valuesFromSimNames.Add("altimeter_indicated-altitude-ft");
-        }
+            VariablesIn.Add("/orientation/heading-deg");
+            VariablesIn.Add("/instrumentation/gps/indicated-vertical-speed");
+            VariablesIn.Add("/instrumentation/gps/indicated-ground-speed-kt");
+            VariablesIn.Add("/instrumentation/airspeed-indicator/indicated-speed-kt");
+            VariablesIn.Add("/instrumentation/gps/indicated-altitude-ft");
+            VariablesIn.Add("/instrumentation/attitude-indicator/internal-roll-deg");
+            VariablesIn.Add("/instrumentation/attitude-indicator/internal-pitch-deg");
+            VariablesIn.Add("/instrumentation/altimeter/indicated-altitude-ft");
+            
+            /* Optional (to test) */
+            VariablesIn.Add("/position/longitude-deg");
+            VariablesIn.Add("/position/latitude-deg");
 
-        public Dictionary<string, string> NameToPath()
-        {
+            Variables = new DictionaryIndexer();
+            foreach (string var in VariablesIn) {
+                Variables[var] = "NO_VALUE_YET";
+            }
+
+            
+        }
+        /*public Dictionary<string, string> NameToPath() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict["HeadingDegree"] = "indicated-heading-deg";
             dict["GpsVerticalSpeed"] = "gps_indicated-vertical-speed";
@@ -222,8 +243,7 @@ namespace FlightSimulatorApp.Model {
             return dict;
         }
 
-        public Dictionary<string, string> PathToName()
-        {
+        public Dictionary<string, string> PathToName() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict["indicated-heading-deg"] = "HeadingDegree";
             dict["GpsVerticalSpeed"] = "gps_indicated-vertical-speed";
@@ -234,6 +254,6 @@ namespace FlightSimulatorApp.Model {
             dict["PitchDegree"] = "attitude-indicator_internal-pitch-deg";
             dict["AltimeterAltitudeFt"] = "altimeter_indicated-altitude-ft";
             return dict;
-        }
+        }*/
     }
 }
