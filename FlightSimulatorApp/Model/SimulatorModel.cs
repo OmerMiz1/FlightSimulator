@@ -11,7 +11,7 @@ using System.Threading;
 using System.Windows.Automation;
 
 namespace FlightSimulatorApp.Model {
-    class SimulatorModel : TcpClient, INotifyPropertyChanged {
+    public class SimulatorModel : TcpClient, INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         private Dictionary<string, Double> _valuesFromSim;
         public Dictionary<string, Double> _valuesToSim;
