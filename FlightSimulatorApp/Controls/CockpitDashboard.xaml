@@ -18,21 +18,21 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Label Content="Heading Degree: " Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="headingDegree" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="GPS Vertical Speed: " Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="gpsVerticalSpeed" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="GPS Ground Speed: " Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="gpsGroundSpeed" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="Air Speed Indicator: " Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="airSpeedIndicator" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="GPS Altitude ft: " Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="gpsAltitudeSpeed" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="Roll Degree: " Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="rollDegree" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="Pitch Degree: " Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="pitchDegree" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
-        <Label Content="Altimeter Altitude ft: " Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"/>
-        <TextBox Name="altimeterAltitudeFt" Grid.Row="3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="70" FontSize="14" IsEnabled="False" Text="N/A"/>
+        <Label Content="Heading Degree:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="0" Grid.Column="0"/>
+        <TextBox Name="headingDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="0" Grid.Column="1" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="GPS Vertical Speed:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="1" Grid.Column="0"/>
+        <TextBox Name="gpsVerticalSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="1" Grid.Column="1" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="GPS Ground Speed:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="2" Grid.Column="0"/>
+        <TextBox Name="gpsGroundSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="2" Grid.Column="1" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="Air Speed Indicator:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="3" Grid.Column="0"/>
+        <TextBox Name="airSpeedIndicator" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="3" Grid.Column="1" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="GPS Altitude ft:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="0" Grid.Column="2"/>
+        <TextBox Name="gpsAltitudeSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="0" Grid.Column="3" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="Roll Degree:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="1" Grid.Column="2"/>
+        <TextBox Name="rollDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="1" Grid.Column="3" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="Pitch Degree:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="2" Grid.Column="2"/>
+        <TextBox Name="pitchDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="2" Grid.Column="3" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
+        <Label Content="Altimeter Altitude ft:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="3" Grid.Column="2"/>
+        <TextBox Name="altimeterAltitudeFt" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="3" Grid.Column="3" Text="{Binding XPath=EnterPath, FallbackValue=N/A}"/>
     </Grid>
 </UserControl>
