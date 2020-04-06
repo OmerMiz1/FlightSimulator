@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlightSimulatorApp.ViewModel;
 
 namespace FlightSimulatorApp.Controls
 {
@@ -19,8 +20,10 @@ namespace FlightSimulatorApp.Controls
     /// </summary>
     public partial class Map : UserControl
     {
-        public Map()
+        private MapVM myVM;
+        public Map(MapVM viewModel)
         {
+
             InitializeComponent();
         }
     }
