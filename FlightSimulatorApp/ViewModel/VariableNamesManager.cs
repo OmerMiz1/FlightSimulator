@@ -14,6 +14,7 @@
                 case "AltitudeAltimeter": return "/instrumentation/altimeter/indicated-altitude-ft";
                 case "Longitude": return "/position/longitude-deg";
                 case "Latitude": return "/position/latitude-deg";
+                case "Altitude": return "/position/altitude-ft";
                 default: return "Variable Not Found"; /* Error Value */
             }
         }
@@ -30,6 +31,7 @@
                 case "/instrumentation/altimeter/indicated-altitude-ft": return "AltitudeAltimeter";
                 case "/position/longitude-deg": return "Longitude";
                 case "/position/latitude-deg": return "Latitude";
+                case "/position/altitude-ft": return "Altitude";
                 default: return "Variable Not Found"; /* Error Value */
             }
         }

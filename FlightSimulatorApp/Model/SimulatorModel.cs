@@ -218,10 +218,12 @@ namespace FlightSimulatorApp.Model {
             VariablesIn.Add("/instrumentation/attitude-indicator/internal-roll-deg");
             VariablesIn.Add("/instrumentation/attitude-indicator/internal-pitch-deg");
             VariablesIn.Add("/instrumentation/altimeter/indicated-altitude-ft");
-            
+
+
             /* Optional (to test) */
             VariablesIn.Add("/position/longitude-deg");
             VariablesIn.Add("/position/latitude-deg");
+            VariablesIn.Add("/position/altitude-ft");
 
             Variables = new DictionaryIndexer();
             foreach (string var in VariablesIn) {

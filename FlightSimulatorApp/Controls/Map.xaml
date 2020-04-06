@@ -7,30 +7,11 @@
              xmlns:map="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="800"
-             DataContext="Map.xaml">
+             d:DesignHeight="500" d:DesignWidth="800">
 
     <map:Map x:Name="myMap" Margin="5" Mode="AerialWithLabels"
          CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl"
          >
-        <map:Map.Resources>
-            <ControlTemplate x:Key="AirplaneTemplate" TargetType="map:Pushpin">
-                <Grid Height="25" Width="25">
-                    <Image Source="../Images/Airplane.png" Stretch="Uniform" SnapsToDevicePixels="True"/>
-                </Grid>
-            </ControlTemplate>
-        </map:Map.Resources>
-
-        <map:Pushpin x:Name="airplane2" Location="40.308137, 10.871703" Template="{StaticResource AirplaneTemplate}"/>
-        <map:Pushpin x:Name="airplane" Location="32.308137, 34.871703">
-            <!--<map:Pushpin.Template>
-                <ControlTemplate x:Key="AirplaneTemplate" TargetType="map:Pushpin">
-                    <Grid Height="25" Width="25">
-                        <Image Source="Images/Airplane.png" Stretch="Uniform" SnapsToDevicePixels="True"/>
-                    </Grid>
-                </ControlTemplate>
-            </map:Pushpin.Template>-->
-        </map:Pushpin>
-        <map:Pushpin x:Name="airplane1" Location="40.308137, 70.871703" />
+        <map:Pushpin x:Name="airplanePushpin" Location="{Binding Source=""}"/>
     </map:Map>
 </UserControl>

@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using FlightSimulatorApp.Model;
+using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.ViewModel {
     public class MapVM : INotifyPropertyChanged {
         public SimulatorModel myModel { get; private set; }
-        public DictionaryIndexer Variables;
-        private Dictionary<string, string> namesToPath;
-        private VariableNamesManager converter;
+        private VariableNamesManager varNamesMgr;
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
+        private Location location;
         /*private double longtitude;
         public double Longtitude {
             get => longtitude;
@@ -48,7 +49,7 @@ namespace FlightSimulatorApp.ViewModel {
 
         public MapVM(SimulatorModel model) {
             myModel = model;
-            converter = new VariableNamesManager();
+            varNamesMgr = new VariableNamesManager();
             InitVariables();
         }
 
@@ -56,21 +57,22 @@ namespace FlightSimulatorApp.ViewModel {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-
-            switch (e.PropertyName) {
-                case "Atitude": {
-                        /*TODO Fix name + Action*/
-                        break;
-                    }
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            string propName = varNamesMgr.toName(e.PropertyName);
+            switch (propName) {
+                case "Altitude": {
+                    location.Altitude = 
+                    break;
+                }
                 case "Latitude": {
-                        /*TODO Fix name + Action*/
-                        break;
-                    }
+                    /*TODO Fix name + Action*/
+                    break;
+                }
                 case "Heading": {
-                        /*TODO Fix name + Action*/
-                        break;
-                    }
+                    /*TODO Fix name + Action*/
+                    break;
+                }
                 default:
                     break;
             }
@@ -93,5 +95,4 @@ namespace FlightSimulatorApp.ViewModel {
 
 
     }
-}
 }
