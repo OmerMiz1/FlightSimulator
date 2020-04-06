@@ -12,8 +12,21 @@
                     <Image Source="Images/Airplane.png" Stretch="Uniform" SnapsToDevicePixels="True"/>
                  </Grid>
             </ControlTemplate>
-             <!-- Airplane Template -->
-
+             <!-- Dashboard Label Style -->
+             <Style x:Key="DashboardLabelStyle" TargetType="{x:Type Label}">
+                 <Setter Property="VerticalAlignment" Value="Center" />
+                 <Setter Property="HorizontalAlignment" Value="Left" />
+                 <Setter Property="FontSize" Value="14" />
+             </Style>
+             <!-- Dashboard TextBox Style -->
+            <Style x:Key="DashboardTextBoxStyle" TargetType="{x:Type TextBox}">
+                 <Setter Property="VerticalAlignment" Value="Center" />
+                 <Setter Property="HorizontalAlignment" Value="Center" />
+                 <Setter Property="FontSize" Value="14" />
+                 <Setter Property="Width" Value="70" />
+                 <Setter Property="IsEnabled" Value="False" />
+                 <Setter Property="Text" Value="N/A" />
+             </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
