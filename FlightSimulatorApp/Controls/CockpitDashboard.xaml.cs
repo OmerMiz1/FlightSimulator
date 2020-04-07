@@ -19,18 +19,17 @@ namespace FlightSimulatorApp.Controls
     /// </summary>
     public partial class CockpitDashboard : UserControl
     {
-        private CockpitDashboardVM myVM;
+        private CockpitDashboardVM _myVM;
 
         public CockpitDashboard()
         {
             InitializeComponent();
         }
-        
-        public CockpitDashboard(CockpitDashboardVM newVM)
+
+        public void setVM(CockpitDashboardVM newVM)
         {
-            InitializeComponent();
-            myVM = newVM;
-            this.DataContext = myVM;
+            this._myVM = newVM;
+            this.DataContext = this._myVM;
         }
     }
 }

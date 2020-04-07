@@ -21,8 +21,8 @@ namespace FlightSimulatorApp.ViewModel {
         private string _gpsGroundSpeed;
         private string _airSpeedIndicator;
         private string _altitudeGps;
-        private string _attitudeIndicatorInternalRollDeg;
-        private string _attitudeIndicatorInternalPitchDeg;
+        private string _altitudeIndicatorInternalRollDeg;
+        private string _altitudeIndicatorInternalPitchDeg;
         private string _altimeterIndicatedAltitudeFt;
 
         public void NotifyPropertyChanged(string propName)
@@ -52,12 +52,12 @@ namespace FlightSimulatorApp.ViewModel {
             set { _altitudeGps = value; NotifyPropertyChanged("AltitudeGps"); }
         }
         public string AttitudeIndicatorInternalRollDeg {
-            get { return _attitudeIndicatorInternalRollDeg; }
-            set { _attitudeIndicatorInternalRollDeg = value; NotifyPropertyChanged("AttitudeIndicatorInternalRollDeg"); }
+            get { return _altitudeIndicatorInternalRollDeg; }
+            set { _altitudeIndicatorInternalRollDeg = value; NotifyPropertyChanged("AttitudeIndicatorInternalRollDeg"); }
         }
         public string AttitudeIndicatorInternalPitchDeg {
-            get { return _attitudeIndicatorInternalPitchDeg; }
-            set { _attitudeIndicatorInternalPitchDeg = value; NotifyPropertyChanged("AttitudeIndicatorInternalPitchDeg"); }
+            get { return _altitudeIndicatorInternalPitchDeg; }
+            set { _altitudeIndicatorInternalPitchDeg = value; NotifyPropertyChanged("AttitudeIndicatorInternalPitchDeg"); }
         }
         public string AltimeterIndicatedAltitudeFt {
             get { return _altimeterIndicatedAltitudeFt; }

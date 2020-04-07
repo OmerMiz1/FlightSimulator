@@ -17,25 +17,15 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="450"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <controls:ConnectionButtons HorizontalAlignment="Stretch"/>
             <controls:Map Grid.Row="1"/>
         </Grid>
-        <Grid Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="10"/>
-            </Grid.ColumnDefinitions>
-            <controls:CockpitDashboard Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <controls:CockpitControls Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </Grid>
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            <controls:CockpitDashboard VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitControls VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </Window>
