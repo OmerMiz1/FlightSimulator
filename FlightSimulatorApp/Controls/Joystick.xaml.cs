@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,14 +18,43 @@ namespace FlightSimulatorApp.Controls {
     /// <summary>
     /// Interaction logic for Joystick.xaml
     /// </summary>
-    public partial class Joystick : UserControl {
+    public partial class Joystick : UserControl, INotifyPropertyChanged {
         private bool mouseIsDown = false;
         private Point startingPoint;
         private Storyboard myStoryboard;
+        private double _x;
+        private double _y;
+
+        public double X
+        {
+            get { return _x; }
+            set
+            {
+                if (_x == value) return;
+                _x = value;
+                OnPropertyChanged("X");
+            }
+        }
+
+        public double Y {
+            get { return _y; }
+            set {
+                if (_y == value) return;
+                _y = value;
+                OnPropertyChanged("Y");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Joystick() {
             InitializeComponent();
             myStoryboard = (Storyboard)Knob.FindResource("CenterKnob");
+        }
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void Knob_MouseUp(object sender, MouseButtonEventArgs e) {
@@ -64,11 +95,16 @@ namespace FlightSimulatorApp.Controls {
                         knobPosition.Y = -radius * Math.Sin(angle);
                     }
                 }
+
+                X = knobPosition.X / radius;
+                Y = knobPosition.Y / radius;
             }
         }
 
         private void centerKnob_Completed(object? sender, EventArgs e) {
             myStoryboard.Stop();
+            X = 0;
+            Y = 0;
         }
     }
 }

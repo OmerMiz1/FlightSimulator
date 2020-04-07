@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlightSimulatorApp.ViewModel;
 
 namespace FlightSimulatorApp.Controls
 {
@@ -18,9 +19,17 @@ namespace FlightSimulatorApp.Controls
     /// </summary>
     public partial class CockpitDashboard : UserControl
     {
+        private CockpitDashboardVM _myVM;
+
         public CockpitDashboard()
         {
             InitializeComponent();
+        }
+
+        public void setVM(CockpitDashboardVM newVM)
+        {
+            this._myVM = newVM;
+            this.DataContext = this._myVM;
         }
     }
 }
