@@ -6,12 +6,14 @@
              
              xmlns:map="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
+             xmlns:vm="clr-namespace:FlightSimulatorApp.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800">
 
-    <map:Map x:Name="myMap" Margin="5" Mode="AerialWithLabels"
+
+    <map:Map x:Name="myMap" Margin="5" Mode="AerialWithLabels" DataContext="vm:MapVM"
          CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl"
          >
-        <map:Pushpin x:Name="airplanePushpin" Location="{Binding Source=""}"/>
+        <map:Pushpin x:Name="AirplanePushpin" Content="download apex legends" FontSize="2"/>
     </map:Map>
 </UserControl>

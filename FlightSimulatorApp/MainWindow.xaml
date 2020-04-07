@@ -23,7 +23,7 @@
                 <RowDefinition Height="450"/>
             </Grid.RowDefinitions>
             <controls:ConnectionButtons HorizontalAlignment="Stretch"/>
-            <controls:Map Grid.Row="1"/>
+            <controls:Map x:Name="MyMap" Grid.Row="1"/>
         </Grid>
 
     </Grid>
