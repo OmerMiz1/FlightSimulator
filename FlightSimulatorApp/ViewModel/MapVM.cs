@@ -65,7 +65,7 @@ namespace FlightSimulatorApp.ViewModel {
             myModel.PropertyChanged += Model_PropertyChanged;
         }
 
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null) {
+        private void NotifyPropertyChanged( string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

@@ -10,10 +10,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800">
 
-
     <map:Map x:Name="myMap" Margin="5" Mode="AerialWithLabels" DataContext="vm:MapVM"
-         CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl"
-         >
-        <map:Pushpin x:Name="AirplanePushpin" Content="download apex legends" FontSize="2"/>
+         CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl">
+        <map:Pushpin x:Name="AirplanePushpin" Location="30,30" Content="download apex legends" FontSize="2"/>
     </map:Map>
+    <!--<local:Map>
+
+    </local:Map>-->
+
 </UserControl>

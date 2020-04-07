@@ -17,8 +17,10 @@ namespace FlightSimulatorApp {
     public partial class App : Application {
         public MapVM mapViewModel { get; internal set; }
 
-        private void Application_Startup(Object sender, StartupEventArgs e) {
-            InitializeComponent();
+        private void Application_Startup(Object sender, StartupEventArgs e)
+        {
+            MainWindow mainWin = new MainWindow();
+
             /*TODO get from StartUpEventArgs the args for tcp client (default)...*/
             /* Default Values.. TODO Move these to AppConfig!*/
             TcpClient tcpClient = new TcpClient("127.0.0.1", 5402); 

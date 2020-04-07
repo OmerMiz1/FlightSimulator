@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
         
         <controls:Cockpit Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-        <Grid Grid.Column="0">
+        <Grid Name="MapGrid" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="450"/>

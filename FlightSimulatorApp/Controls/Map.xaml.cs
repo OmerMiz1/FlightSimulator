@@ -28,13 +28,17 @@ namespace FlightSimulatorApp.Controls
         public Map() 
         {
             InitializeComponent();
-            myVM = new MapVM();
-            myVM.PropertyChanged += MyVM_PropertyChanged;
         }
 
         public Map(MapVM mapViewModel)
         {
             InitializeComponent();
+            myVM = mapViewModel;
+            myVM.PropertyChanged += MyVM_PropertyChanged;
+        }
+
+        public void SetVM(MapVM mapViewModel)
+        {
             myVM = mapViewModel;
             myVM.PropertyChanged += MyVM_PropertyChanged;
         }
@@ -49,13 +53,11 @@ namespace FlightSimulatorApp.Controls
              */
             Dispatcher.Invoke(() =>
             {
-                this.AirplanePushpin.Location = new Location((sender as MapVM).Location);
-                Debug.WriteLine(AirplanePushpin.Location);
+                // AirplanePushpin.Location = new Location((sender as MapVM).Location);
+                AirplanePushpin.Location = new Location((sender as MapVM)?.Location);
+                Debug.WriteLine("Inside Map.MyVM_PropertyChanged, Location="+AirplanePushpin.Location);
             });
             
         }
-            
-        
-
     }
 }

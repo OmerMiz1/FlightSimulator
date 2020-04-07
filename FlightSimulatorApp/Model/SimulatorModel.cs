@@ -18,16 +18,12 @@ namespace FlightSimulatorApp.Model {
         public DictionaryIndexer Variables; /* Should be tested */
         private Queue<string> setRequests = new Queue<string>();
 
-        private TcpClient myTcpClient;
+        private TcpClient myTcpClient = new TcpClient();
         private NetworkStream stream;
         private Boolean running;
-        private Boolean debug;
 
-        public SimulatorModel(TcpClient tcpClient) : this(tcpClient, false) { }
-        public SimulatorModel(TcpClient tcpClient, Boolean debugMode) {
+        public SimulatorModel() {
             InitVariables();
-            myTcpClient = tcpClient;
-            debug = debugMode;
         }
 
         /* General Implementations */
@@ -35,23 +31,16 @@ namespace FlightSimulatorApp.Model {
             /* Connect to server */
             try {
                 myTcpClient = new TcpClient(ip, port);
-            } catch (Exception e) {
-                if (debug) {
-                    Console.WriteLine("Error #1 SimulatorModel.Connect()..");
-                }
-            }
 
-            if (debug) {
-                Console.WriteLine("TCP Client: Connected successfully to server...");
+            } catch (Exception e) {
+                Debug.WriteLine("Error #1 SimulatorModel.Connect()..");
             }
+            Debug.WriteLine("TCP Client: Connected successfully to server...");
         }
         public void Disconnect() {
             myTcpClient.GetStream().Close();
             myTcpClient.Close();
-
-            if (debug) {
-                Console.WriteLine("TCP Client: Disconnected successfully to server...");
-            }
+            Debug.WriteLine("TCP Client: Disconnected successfully to server...");
         }
 
         public string Read() {
@@ -72,44 +61,43 @@ namespace FlightSimulatorApp.Model {
                 } while (stream.DataAvailable);
 
                 return strBuilder.ToString();
-            } else if (debug) {
-                Console.WriteLine("Error #1 at SimulatorModel.Read()...");
+            } else {
+                Debug.WriteLine("Error #1 at SimulatorModel.Read()...");
             }
 
+
+
             /* Error */
-            if (debug) {
-                /*TODO keep the exception or simple console message?*/
-                Console.WriteLine("Error #2 at Simulator.Read()...");
-                throw new System.InvalidOperationException("Error #2 at Simulator.Read()...");
-            }
-            return null;
+            /*TODO keep the exception or simple console message?*/
+            Debug.WriteLine("Error #2 at Simulator.Read()...");
+            throw new System.InvalidOperationException("Error #2 at Simulator.Read()...");
         }
         public void Write(string msg) {
             /* Double check writing is possible */
             if (stream.CanWrite) {
                 byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                 stream.Write(writeBuffer, 0, writeBuffer.Length);
-            } else if (debug) {
-                Console.WriteLine("Error #2 at Simulator.Write()...");
             }
+            Debug.WriteLine("Error #2 at Simulator.Write()...");
         }
 
         public void Start() {
             running = true;
 
-            /*/* Create stream & set timeout to 10 seconds #1#
+            /* Create stream & set timeout to 10 seconds */
             stream = myTcpClient.GetStream();
             stream.ReadTimeout = 10;
 
-            /* Start getting data from simulator (continuously) #1#
+            /* Start getting data from simulator (continuously) */
             Thread getValuesThread = new Thread(ReadValuesFromSim);
             getValuesThread.Start();
 
-            /* Start responding to set requests from user input (GUI actually) #1#
+            /* Start responding to set requests from user input (GUI actually) */
             Thread setValuesThread = new Thread(WriteValuesToSim);
-            setValuesThread.Start();*/
+            setValuesThread.Start();
 
-            string longiPath = "/position/longitude-deg";
+            /* TODO JUST A TEST */
+            /*string longiPath = "/position/longitude-deg";
             Thread t = new Thread(() =>
             {
                 for (double longi = 0; true; longi++)
@@ -125,19 +113,18 @@ namespace FlightSimulatorApp.Model {
                     Thread.Sleep(50);
                 }
             });
-            t.Start();
+            t.Start();*/
 
-            /*getValuesThread.Join();
+            getValuesThread.Join();
             setValuesThread.Join();
 
-            Disconnect();*/
+            Disconnect();
         }
         public void Stop() {
             running = false;
         }
 
-        public void NotifyPropertyChanged(string propName)
-        {
+        public void NotifyPropertyChanged(string propName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
@@ -154,7 +141,7 @@ namespace FlightSimulatorApp.Model {
             /* Request values from simulator every 100ms */
             while (running) {
                 /* TODO maybe need to show notification to user? */
-                if (!myTcpClient.Connected && debug) {
+                if (!myTcpClient.Connected) {
                     Console.WriteLine("Error #1 SimulatorModel.Start()...");
                 }
 
@@ -174,13 +161,12 @@ namespace FlightSimulatorApp.Model {
                         NotifyPropertyChanged(varEnum.Key.ToString());
                     }
 
-                } else if (debug) {
-                    Console.WriteLine("Error #2 SimulatorModel.Start()...");
+                } else {
+                    Debug.WriteLine("Error #2 SimulatorModel.Start()...");
                 }
                 Thread.Sleep(100);
             }
         }
-
         /**
          *TODO Its not supposed to be like that.
          *TODO Each property update should be triggered from VM and updated as event.
@@ -196,7 +182,7 @@ namespace FlightSimulatorApp.Model {
                     string response = Read();
                     if (response != request) {
                         /*TODO debug*/
-                        Console.WriteLine("Err #1 WriteValuesToSim(): Requested set request is invalid...");
+                        Debug.WriteLine("Err #1 WriteValuesToSim(): Requested set request is invalid...");
                     }
                 }
             }
@@ -204,8 +190,7 @@ namespace FlightSimulatorApp.Model {
 
         private void InitVariables() {
             /* Initializes NAMES of variables that model is GETTING FROM simulator */
-            Variables = new DictionaryIndexer
-            {
+            Variables = new DictionaryIndexer {
                 ["/orientation/heading-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-vertical-speed"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-ground-speed-kt"] = "NO_VALUE_YET",
@@ -221,6 +206,7 @@ namespace FlightSimulatorApp.Model {
                 ["/position/altitude-ft"] = "NO_VALUE_YET"
             };
         }
+
         /*public Dictionary<string, string> NameToPath() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict["HeadingDegree"] = "indicated-heading-deg";
