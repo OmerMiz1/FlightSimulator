@@ -15,13 +15,14 @@
             <ColumnDefinition Width="Auto"/>
             <!-- #1 Steers + Joystick -->
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <controls:Cockpit Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <Grid Name="MapGrid" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="450"/>
             </Grid.RowDefinitions>
             <controls:ConnectionButtons HorizontalAlignment="Stretch"/>
-            <controls:Map Grid.Row="1"/>
+            <controls:Map x:Name="MyMap" Grid.Row="1"/>
         </Grid>
         <Grid Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center">
             <Grid.RowDefinitions>

@@ -18,6 +18,7 @@ namespace FlightSimulatorApp.Controls
     /// </summary>
     public partial class ConnectionButtons : UserControl
     {
+
         public ConnectionButtons()
         {
             InitializeComponent();
