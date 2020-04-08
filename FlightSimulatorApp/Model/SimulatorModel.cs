@@ -12,12 +12,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Automation;
+using FlightSimulatorApp.ViewModel;
 
 namespace FlightSimulatorApp.Model {
     public class SimulatorModel : TcpClient, INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         public DictionaryIndexer Variables; /* Should be tested */
         private Queue<string> setRequests = new Queue<string>();
+        private VariableNamesManager varNamesMgr = new VariableNamesManager();
 
         private TcpClient myTcpClient = new TcpClient();
         private NetworkStream stream;
@@ -32,7 +34,7 @@ namespace FlightSimulatorApp.Model {
             /* Connect to server */
             try {
                 myTcpClient = new TcpClient(ip, port);
-
+                NotifyPropertyChanged("Connected");
             } catch (Exception e) {
                 Debug.WriteLine("Error #1 SimulatorModel.Connect()..");
             }
@@ -104,8 +106,7 @@ namespace FlightSimulatorApp.Model {
             Thread setValuesThread = new Thread(WriteValuesToSim);
             setValuesThread.Start();
 
-            /* TODO JUST A TEST */
-            /*string longiPath = "/position/longitude-deg";
+            /* TODO JUST A TEST *//*string longiPath = "/position/longitude-deg";
             Thread t = new Thread(() =>
             {
                 for (double longi = 0; true; longi++)
@@ -133,7 +134,7 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void NotifyPropertyChanged(string propName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(varNamesMgr.toName(propName)));
         }
 
         /* Personal Implementations */
@@ -148,7 +149,7 @@ namespace FlightSimulatorApp.Model {
             while (entry.MoveNext()) {
                 /*TODO: Possible problem, possible fix =  use AppendLine*/
                 strBuilder.Append("get " + entry.Key + "\r\n");
-                paths.Add(entry.Key as string);
+                paths.Add((string) entry.Key);
             }
             requestMsg = strBuilder.ToString();
 
@@ -173,16 +174,16 @@ namespace FlightSimulatorApp.Model {
                     /* Split received values and update each one */
                     List<string> newValsArray = valuesFromSim.Split("\n").ToList();
                     foreach (string newVal in newValsArray) {
-                        if (newVal != "ERR" && newVal != "") {
+                        if (newVal != "ERR" && newVal != "" && Variables.ContainsKey(pathEnum.Current)) {
                             Variables[pathEnum.Current] = newVal;
                             NotifyPropertyChanged(pathEnum.Current);
                         }
+                        else {
+                            /*TODO Make sure we notify user (with GUI text box/smthing..) about an error!!!! */
+                            Console.WriteLine("ERR");
+                        }
                         pathEnum.MoveNext();
-                        /*TODO Make sure we notify user (with GUI text box/smthing..) about an error!!!! */
-                        Console.WriteLine("ERR");
-
                     }
-
                     pathEnum.Dispose();
                 } else {
                     Debug.WriteLine("Error #2 SimulatorModel.Start()...");
@@ -200,7 +201,6 @@ namespace FlightSimulatorApp.Model {
                     /* Send requested value change */
                     string request = setRequests.Dequeue();
                     Write("set " + request);
-
                     /* Simulator always responds with the new value, check if request was valid.*/
                     string response = Read();
                     if (response != request) {
@@ -230,30 +230,13 @@ namespace FlightSimulatorApp.Model {
             };
         }
 
-        /*public Dictionary<string, string> NameToPath() {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict["HeadingDegree"] = "indicated-heading-deg";
-            dict["GpsVerticalSpeed"] = "gps_indicated-vertical-speed";
-            dict["GpsGroundSpeed"] = "gps_indicated-ground-speed-kt";
-            dict["AirSpeedIndicator"] = "airspeed-indicator_indicated-speed-kt";
-            dict["GpsAltitudeFt"] = "gps_indicated-altitude-ft";
-            dict["RollDegree"] = "attitude-indicator_internal-roll-deg";
-            dict["PitchDegree"] = "attitude-indicator_internal-pitch-deg";
-            dict["AltimeterAltitudeFt"] = "altimeter_indicated-altitude-ft";
-            return dict;
+        public string GetVariable(string varName) {
+            return Variables[varNamesMgr.toPath(varName)];
         }
 
-        public Dictionary<string, string> PathToName() {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict["indicated-heading-deg"] = "HeadingDegree";
-            dict["GpsVerticalSpeed"] = "gps_indicated-vertical-speed";
-            dict["GpsGroundSpeed"] = "gps_indicated-ground-speed-kt";
-            dict["AirSpeedIndicator"] = "airspeed-indicator_indicated-speed-kt";
-            dict["GpsAltitudeFt"] = "gps_indicated-altitude-ft";
-            dict["RollDegree"] = "attitude-indicator_internal-roll-deg";
-            dict["PitchDegree"] = "attitude-indicator_internal-pitch-deg";
-            dict["AltimeterAltitudeFt"] = "altimeter_indicated-altitude-ft";
-            return dict;
-        }*/
+        public void SetVariable(string varName, string varValue) {
+            /*TODO Add checks for values out of their range + Exception !!! */
+            this.setRequests.Enqueue(varNamesMgr.toPath(varName) + " " + varValue);
+        }
     }
 }

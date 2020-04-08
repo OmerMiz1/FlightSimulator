@@ -53,13 +53,6 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        /* NEVER USE THIS CTOR ! ONLY TO BUILD & TEST */
-        public MapVM() {
-            myModel = new SimulatorModel();
-            myModel.PropertyChanged += Model_PropertyChanged;
-        }
-        /* NEVER USE THIS CTOR ! ONLY TO BUILD & TEST */
-
         public MapVM(SimulatorModel model) {
             myModel = model;
             myModel.PropertyChanged += Model_PropertyChanged;
@@ -70,10 +63,10 @@ namespace FlightSimulatorApp.ViewModel {
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            string propName = varNamesMgr.toName(e.PropertyName);
-            string propValueStr = (sender as SimulatorModel)?.Variables[e.PropertyName];
+            string propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
             double propValue = Convert.ToDouble(propValueStr);
-            switch (propName) {
+
+            switch (e.PropertyName) {
                 case "Altitude": {
                     Altitude = propValue;
                     break;
