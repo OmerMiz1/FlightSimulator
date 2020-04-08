@@ -15,7 +15,6 @@
             <ColumnDefinition Width="Auto"/>
             <!-- #1 Steers + Joystick -->
         </Grid.ColumnDefinitions>
-        <controls:Cockpit Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Center"/>
         <Grid Name="MapGrid" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
