@@ -15,6 +15,10 @@
                 case "Longitude": return "/position/longitude-deg";
                 case "Latitude": return "/position/latitude-deg";
                 case "Altitude": return "/position/altitude-ft";
+                case "Elevator": return "/controls/flight/elevator";
+                case "Rudder": return "/controls/flight/rudder";
+                case "Aileron": return "/controls/flight/aileron";
+                case "Throttle": return "/controls/engines/engine/throttle";
                 default: return "Variable Not Found"; /* Error Value */
             }
         }
@@ -32,6 +36,10 @@
                 case "/position/longitude-deg": return "Longitude";
                 case "/position/latitude-deg": return "Latitude";
                 case "/position/altitude-ft": return "Altitude";
+                case "/controls/flight/elevator": return "Elevator";
+                case "/controls/flight/rudder": return "Rudder";
+                case "/controls/flight/aileron": return "Aileron";
+                case "/controls/engines/engine/throttle": return "Throttle";
                 default: return "Variable Not Found"; /* Error Value */
             }
         }

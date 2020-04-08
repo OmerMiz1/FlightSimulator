@@ -35,12 +35,15 @@ namespace FlightSimulatorApp.Model {
             try {
                 myTcpClient = new TcpClient(ip, port);
                 NotifyPropertyChanged("Connected");
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Debug.WriteLine("Error #1 SimulatorModel.Connect()..");
             }
+
             Debug.WriteLine("TCP Client: Connected successfully to server...");
             new Thread(Start).Start();
         }
+
         public void Disconnect() {
             myTcpClient.GetStream().Close();
             myTcpClient.Close();
@@ -63,16 +66,15 @@ namespace FlightSimulatorApp.Model {
                 try {
                     bytesRead = stream.Read(readBuffer, 0, readBuffer.Length);
                     strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
-                } catch (Exception e) {
-
                 }
+                catch (Exception e) { }
                 //} while (stream.DataAvailable);
 
                 return strBuilder.ToString();
-            } else {
+            }
+            else {
                 Debug.WriteLine("Error #1 at SimulatorModel.Read()...");
             }
-
 
 
             /* Error */
@@ -80,15 +82,16 @@ namespace FlightSimulatorApp.Model {
             Debug.WriteLine("Error #2 at Simulator.Read()...");
             throw new System.InvalidOperationException("Error #2 at Simulator.Read()...");
         }
+
         public void Write(string msg) {
             /* Double check writing is possible */
             if (stream.CanWrite) {
                 byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                 stream.Write(writeBuffer, 0, writeBuffer.Length);
-            } else {
+            }
+            else {
                 Debug.WriteLine("Error #2 at Simulator.Write()...");
             }
-
         }
 
         public void Start() {
@@ -106,7 +109,7 @@ namespace FlightSimulatorApp.Model {
             Thread setValuesThread = new Thread(WriteValuesToSim);
             setValuesThread.Start();
 
-            /* TODO JUST A TEST *//*string longiPath = "/position/longitude-deg";
+            /* TODO JUST A TEST */ /*string longiPath = "/position/longitude-deg";
             Thread t = new Thread(() =>
             {
                 for (double longi = 0; true; longi++)
@@ -129,6 +132,7 @@ namespace FlightSimulatorApp.Model {
 
             Disconnect();
         }
+
         public void Stop() {
             running = false;
         }
@@ -151,6 +155,7 @@ namespace FlightSimulatorApp.Model {
                 strBuilder.Append("get " + entry.Key + "\r\n");
                 paths.Add((string) entry.Key);
             }
+
             requestMsg = strBuilder.ToString();
 
             /* Request values from simulator every 100ms */
@@ -166,7 +171,6 @@ namespace FlightSimulatorApp.Model {
 
                 /* Case response is valid */
                 if (valuesFromSim != null) {
-
                     /* Enumerate each variable manually (iterator)*/
                     var pathEnum = paths.GetEnumerator();
                     pathEnum.MoveNext();
@@ -182,15 +186,20 @@ namespace FlightSimulatorApp.Model {
                             /*TODO Make sure we notify user (with GUI text box/smthing..) about an error!!!! */
                             Console.WriteLine("ERR");
                         }
+
                         pathEnum.MoveNext();
                     }
+
                     pathEnum.Dispose();
-                } else {
+                }
+                else {
                     Debug.WriteLine("Error #2 SimulatorModel.Start()...");
                 }
+
                 Thread.Sleep(100);
             }
         }
+
         /**
          *TODO Its not supposed to be like that.
          *TODO Each property update should be triggered from VM and updated as event.
@@ -198,11 +207,12 @@ namespace FlightSimulatorApp.Model {
         private void WriteValuesToSim() {
             while (running) {
                 if (setRequests.Count != 0) {
-                    /* Send requested value change */
+                    /* Send requested value change and read respond afterwards */
                     string request = setRequests.Dequeue();
                     Write("set " + request);
-                    /* Simulator always responds with the new value, check if request was valid.*/
                     string response = Read();
+
+                    /* Check if request was valid. */
                     if (response != request) {
                         /*TODO debug*/
                         Debug.WriteLine("Err #1 WriteValuesToSim(): Requested set request is invalid...");
@@ -236,7 +246,44 @@ namespace FlightSimulatorApp.Model {
 
         public void SetVariable(string varName, string varValue) {
             /*TODO Add checks for values out of their range + Exception !!! */
-            this.setRequests.Enqueue(varNamesMgr.toPath(varName) + " " + varValue);
+            string varPath = varNamesMgr.toPath(varName);
+            double newValue = Convert.ToDouble(varValue);
+            double curValue = Convert.ToDouble(Variables[varPath]);
+
+            /*switch (varName) {
+                case "Heading": {
+                    if (curValue <  )
+                }
+                case "VerticalSpeed": {
+
+                }
+                case "GroundSpeed": {
+
+                }
+                case "Speed": {
+
+                }
+                case "AltitudeGps": {
+
+                }
+                case "Roll": {
+
+                }
+                case "Pitch": {
+
+                }
+                case "AltitudeAltimeter": {
+
+                }
+                case "Longitude": {
+                }
+                case "Latitude": { 
+                }
+                case "Altitude": { 
+                }
+            }*/
+
+            setRequests.Enqueue(varPath + " " + varValue);
         }
     }
 }
