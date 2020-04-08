@@ -55,7 +55,7 @@ namespace FlightSimulatorApp.ViewModel {
 
         /* NEVER USE THIS CTOR ! ONLY TO BUILD & TEST */
         public MapVM() {
-            myModel = new SimulatorModel(new TcpClient());
+            myModel = new SimulatorModel();
             myModel.PropertyChanged += Model_PropertyChanged;
         }
         /* NEVER USE THIS CTOR ! ONLY TO BUILD & TEST */

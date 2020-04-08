@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -36,6 +37,7 @@ namespace FlightSimulatorApp.Model {
                 Debug.WriteLine("Error #1 SimulatorModel.Connect()..");
             }
             Debug.WriteLine("TCP Client: Connected successfully to server...");
+            new Thread(Start).Start();
         }
         public void Disconnect() {
             myTcpClient.GetStream().Close();
@@ -55,10 +57,14 @@ namespace FlightSimulatorApp.Model {
                  * because the messaged received from sim are short.
                  * Still i think its a good idea just in-case.
                  ***/
-                do {
+                //do {
+                try {
                     bytesRead = stream.Read(readBuffer, 0, readBuffer.Length);
                     strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
-                } while (stream.DataAvailable);
+                } catch (Exception e) {
+
+                }
+                //} while (stream.DataAvailable);
 
                 return strBuilder.ToString();
             } else {
@@ -77,8 +83,10 @@ namespace FlightSimulatorApp.Model {
             if (stream.CanWrite) {
                 byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                 stream.Write(writeBuffer, 0, writeBuffer.Length);
+            } else {
+                Debug.WriteLine("Error #2 at Simulator.Write()...");
             }
-            Debug.WriteLine("Error #2 at Simulator.Write()...");
+
         }
 
         public void Start() {
@@ -132,35 +140,50 @@ namespace FlightSimulatorApp.Model {
         private void ReadValuesFromSim() {
             /* Build get requests message (once) */
             StringBuilder strBuilder = new StringBuilder();
-            foreach (var varName in Variables) {
+            List<string> paths = new List<string>();
+            string requestMsg, valuesFromSim;
+
+            /*More info at: https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.system-collections-idictionary-getenumerator?view=netframework-4.8 */
+            var entry = Variables.GetEnumerator();
+            while (entry.MoveNext()) {
                 /*TODO: Possible problem, possible fix =  use AppendLine*/
-                strBuilder.Append("get " + varName);
+                strBuilder.Append("get " + entry.Key + "\r\n");
+                paths.Add(entry.Key as string);
             }
-            string requestMsg = strBuilder.ToString();
+            requestMsg = strBuilder.ToString();
 
             /* Request values from simulator every 100ms */
             while (running) {
                 /* TODO maybe need to show notification to user? */
                 if (!myTcpClient.Connected) {
-                    Console.WriteLine("Error #1 SimulatorModel.Start()...");
+                    Debug.WriteLine("Error #1 SimulatorModel.Start()...");
                 }
 
                 /* Send request for updates & read response */
                 Write(requestMsg);
-                string valuesFromSim = Read();
+                valuesFromSim = Read();
 
                 /* Case response is valid */
                 if (valuesFromSim != null) {
+
                     /* Enumerate each variable manually (iterator)*/
-                    var varEnum = Variables.GetEnumerator();
+                    var pathEnum = paths.GetEnumerator();
+                    pathEnum.MoveNext();
 
                     /* Split received values and update each one */
-                    string[] newValsArray = valuesFromSim.Split("\r\n");
+                    List<string> newValsArray = valuesFromSim.Split("\n").ToList();
                     foreach (string newVal in newValsArray) {
-                        Variables[varEnum.Key.ToString()] = newVal;
-                        NotifyPropertyChanged(varEnum.Key.ToString());
+                        if (newVal != "ERR" && newVal != "") {
+                            Variables[pathEnum.Current] = newVal;
+                            NotifyPropertyChanged(pathEnum.Current);
+                        }
+                        pathEnum.MoveNext();
+                        /*TODO Make sure we notify user (with GUI text box/smthing..) about an error!!!! */
+                        Console.WriteLine("ERR");
+
                     }
 
+                    pathEnum.Dispose();
                 } else {
                     Debug.WriteLine("Error #2 SimulatorModel.Start()...");
                 }

@@ -24,7 +24,7 @@ namespace FlightSimulatorApp {
             /*TODO get from StartUpEventArgs the args for tcp client (default)...*/
             /* Default Values.. TODO Move these to AppConfig!*/
             TcpClient tcpClient = new TcpClient("127.0.0.1", 5402); 
-            SimulatorModel simulatorModel = new SimulatorModel(tcpClient, true);
+            SimulatorModel simulatorModel = new SimulatorModel();
             MapVM mapViewModel = new MapVM(simulatorModel);
             Map map = new Map(mapViewModel);
         }
