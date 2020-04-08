@@ -19,20 +19,20 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Label Content="Heading Degree:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="0" Grid.Column="0"/>
-        <TextBox Name="headingDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="0" Grid.Column="1" Text="{Binding Path=HeadingDegree, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="headingDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="0" Grid.Column="1" Text="{Binding Path=Heading, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="GPS Vertical Speed:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="1" Grid.Column="0"/>
-        <TextBox Name="gpsVerticalSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="1" Grid.Column="1" Text="{Binding Path=GpsVerticalSpeed, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="gpsVerticalSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="1" Grid.Column="1" Text="{Binding Path=VerticalSpeed, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="GPS Ground Speed:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="2" Grid.Column="0"/>
-        <TextBox Name="gpsGroundSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="2" Grid.Column="1" Text="{Binding Path=GpsGroundSpeed, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="gpsGroundSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="2" Grid.Column="1" Text="{Binding Path=GroundSpeed, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="Air Speed Indicator:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="3" Grid.Column="0"/>
-        <TextBox Name="airSpeedIndicator" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="3" Grid.Column="1" Text="{Binding Path=AirSpeedIndicator, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="airSpeedIndicator" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="3" Grid.Column="1" Text="{Binding Path=Speed, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="GPS Altitude ft:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="0" Grid.Column="2"/>
         <TextBox Name="gpsAltitudeSpeed" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="0" Grid.Column="3" Text="{Binding Path=AltitudeGps, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="Roll Degree:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="1" Grid.Column="2"/>
-        <TextBox Name="rollDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="1" Grid.Column="3" Text="{Binding Path=AltitudeIndicatorInternalRollDeg, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="rollDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="1" Grid.Column="3" Text="{Binding Path=Roll, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="Pitch Degree:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="2" Grid.Column="2"/>
-        <TextBox Name="pitchDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="2" Grid.Column="3" Text="{Binding Path=AltitudeIndicatorInternalPitchDeg, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="pitchDegree" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="2" Grid.Column="3" Text="{Binding Path=Pitch, FallbackValue=N/A, Mode=OneWay}"/>
         <Label Content="Altimeter Altitude ft:" Style="{StaticResource DashboardLabelStyle}" Grid.Row="3" Grid.Column="2"/>
-        <TextBox Name="altimeterAltitudeFt" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="3" Grid.Column="3" Text="{Binding Path=AltimeterIndicatedAltitudeFt, FallbackValue=N/A, Mode=OneWay}"/>
+        <TextBox Name="altimeterAltitudeFt" Style="{StaticResource DashboardTextBoxStyle}" Grid.Row="3" Grid.Column="3" Text="{Binding Path=AltitudeAltimeter, FallbackValue=N/A, Mode=OneWay}"/>
     </Grid>
 </UserControl>
