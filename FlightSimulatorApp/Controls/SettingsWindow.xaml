@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
         mc:Ignorable="d"
-        Title="Settings" Height="150" Width="300">
+        Title="Settings" Height="150" Width="300" Closing="CancelButton_Click">
     <Grid>
         <StackPanel Orientation="Vertical">
             <Grid>
@@ -18,18 +18,18 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="IP:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                <TextBox Name="IPTextBox" Text="127.0.0.1" Width="80" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" TextChanged="IPTextBox_TextChanged"/>
+                <TextBox Name="IPTextBox" Width="80" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" TextChanged="IPTextBox_TextChanged"/>
                 <Label Content="Port:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                <TextBox Name="PortTextBox" Text="5402" Width="80" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center"/>
+                <TextBox Name="PortTextBox" Width="80" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" TextChanged="PortTextBox_TextChanged"/>
             </Grid>
-            <Label Name="StatusLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Status: Good"/>
+            <Label Name="StatusLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Status: IP is valid, port is valid." FontWeight="Normal" Foreground="Green"/>
             <Grid Height="Auto" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Name="OKButton" Content="OK" VerticalAlignment="Center"/>
-                <Button Name="CancelButton" Content="Cancel" Grid.Column="1" VerticalAlignment="Center"/>
+                <Button Name="OKButton" Content="OK" VerticalAlignment="Center" IsEnabled="True" Click="OKButton_Click"/>
+                <Button Name="CancelButton" Content="Cancel" Grid.Column="1" VerticalAlignment="Center" Click="CancelButton_Click"/>
             </Grid>
         </StackPanel>
     </Grid>
