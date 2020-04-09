@@ -23,6 +23,7 @@ namespace FlightSimulatorApp.Controls
     public partial class Map : UserControl
     {
         private MapVM myVM;
+        private Image airplaneImage;
 
         /* CTOR FOR DEBUG AND TESTING.. */
         public Map() 
@@ -35,6 +36,7 @@ namespace FlightSimulatorApp.Controls
             InitializeComponent();
             myVM = mapViewModel;
             myVM.PropertyChanged += MyVM_PropertyChanged;
+            AirplanePushpin.
         }
 
         public void SetVM(MapVM mapViewModel)
