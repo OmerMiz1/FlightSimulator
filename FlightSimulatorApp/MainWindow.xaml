@@ -24,8 +24,8 @@
             <controls:Map x:Name="MyMap" Grid.Row="1"/>
         </Grid>
         <StackPanel Grid.Column="1" Orientation="Vertical">
-            <controls:CockpitDashboard VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <controls:CockpitControls VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitDashboard x:Name="myDashboard" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitControls x:Name="myControls" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -53,13 +53,6 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        /* NEVER USE THIS CTOR ! ONLY TO BUILD & TEST */
-        public MapVM() {
-            myModel = new SimulatorModel();
-            myModel.PropertyChanged += Model_PropertyChanged;
-        }
-        /* NEVER USE THIS CTOR ! ONLY TO BUILD & TEST */
-
         public MapVM(SimulatorModel model) {
             myModel = model;
             myModel.PropertyChanged += Model_PropertyChanged;

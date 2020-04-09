@@ -33,6 +33,8 @@ namespace FlightSimulatorApp
             simulatorModel.Connect("127.0.0.1", 5402);
 
             MyMap.SetVM(new MapVM(simulatorModel));
+
+            myDashboard.setVM(new CockpitDashboardVM(simulatorModel));
         }
     }
 }
