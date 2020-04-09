@@ -26,5 +26,10 @@ namespace FlightSimulatorApp.Model {
         {
             return ((IDictionary) dic).GetEnumerator();
         }
+
+        public bool ContainsKey(string key)
+        {
+            return dic.ContainsKey(key);
+        }
     }
 }
