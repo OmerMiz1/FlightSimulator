@@ -36,7 +36,6 @@ namespace FlightSimulatorApp.Controls
             InitializeComponent();
             myVM = mapViewModel;
             myVM.PropertyChanged += MyVM_PropertyChanged;
-            AirplanePushpin.
         }
 
         public void SetVM(MapVM mapViewModel)
