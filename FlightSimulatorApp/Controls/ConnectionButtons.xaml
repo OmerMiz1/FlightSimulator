@@ -5,14 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
              mc:Ignorable="d">
-    <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Button Name ="connectButton" Content="Connect" Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch" Background="Green" Click="connectButton_Click"/>
-        <Button Name="disconnectButton" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" IsEnabled="False" Click="disconnectButton_Click"/>
-        <Button Name="settingsButton" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name ="connectButton" Content="Connect" Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch" Background="Green" Click="connectButton_Click"/>
+                <Button Name="disconnectButton" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" IsEnabled="False" Click="disconnectButton_Click"/>
+                <Button Name="settingsButton" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
+            </Grid>
+            <Label Name="StatusLabel" Content="Status: Disconnected"/>
+        </StackPanel>
     </Grid>
 </UserControl>

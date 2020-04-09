@@ -40,7 +40,8 @@ namespace FlightSimulatorApp.Controls {
         }
 
         private void settingsButton_Click(object sender, RoutedEventArgs e) {
-
+            SettingsWindow mySettings = new SettingsWindow();
+            mySettings.Show();
         }
         
         public void NotifyPropertyChanged(string propertyName) {
