@@ -23,6 +23,7 @@ namespace FlightSimulatorApp.Controls
     public partial class Map : UserControl
     {
         private MapVM myVM;
+        private Image airplaneImage;
 
         /* CTOR FOR DEBUG AND TESTING.. */
         public Map() 
