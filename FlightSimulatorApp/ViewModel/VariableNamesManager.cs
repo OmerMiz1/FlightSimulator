@@ -14,6 +14,7 @@
                 case "AltitudeAltimeter": return "/instrumentation/altimeter/indicated-altitude-ft";
                 case "Longitude": return "/position/longitude-deg";
                 case "Latitude": return "/position/latitude-deg";
+                //TODO remove altitude! no need for this one
                 case "Altitude": return "/position/altitude-ft";
                 case "Elevator": return "/controls/flight/elevator";
                 case "Rudder": return "/controls/flight/rudder";
@@ -35,6 +36,7 @@
                 case "/instrumentation/altimeter/indicated-altitude-ft": return "AltitudeAltimeter";
                 case "/position/longitude-deg": return "Longitude";
                 case "/position/latitude-deg": return "Latitude";
+                //TODO remove altitude! no need for this one
                 case "/position/altitude-ft": return "Altitude";
                 case "/controls/flight/elevator": return "Elevator";
                 case "/controls/flight/rudder": return "Rudder";

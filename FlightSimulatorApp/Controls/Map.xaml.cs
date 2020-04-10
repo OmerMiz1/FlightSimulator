@@ -56,7 +56,6 @@ namespace FlightSimulatorApp.Controls
             {
                 // AirplanePushpin.Location = new Location((sender as MapVM).Location);
                 AirplanePushpin.Location = new Location((sender as MapVM)?.Location);
-                Debug.WriteLine("Inside Map.MyVM_PropertyChanged, Location="+AirplanePushpin.Location);
             });
             
         }
