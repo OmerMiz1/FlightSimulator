@@ -20,12 +20,14 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <controls:ConnectionButtons HorizontalAlignment="Stretch"/>
-            <controls:Map x:Name="MyMap" Grid.Row="1"/>
+            <controls:ConnectionButtons x:Name="MyConnectionButtons"
+                                        HorizontalAlignment="Stretch"/>
+            <controls:Map x:Name="MyMap"
+                          Grid.Row="1"/>
         </Grid>
         <StackPanel Grid.Column="1" Orientation="Vertical">
-            <controls:CockpitDashboard x:Name="myDashboard" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <controls:CockpitControls x:Name="myControls" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitDashboard x:Name="MyCockpitDashboard" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitControls x:Name="MyCockpitControls" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

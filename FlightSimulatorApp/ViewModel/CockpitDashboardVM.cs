@@ -10,18 +10,65 @@ namespace FlightSimulatorApp.ViewModel {
     {
         private SimulatorModel mySimulatorModel;
         private VariableNamesManager varNamesMgr = new VariableNamesManager();
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public CockpitDashboardVM(SimulatorModel newSimulatorModel)
+        /* Fields & Properties declarations */
+        private double _verticalSpeed;
+        private double _heading;
+        private double _groundSpeed;
+        private double _speed;
+        private double _altitudeGps;
+        private double _roll;
+        private double _pitch;
+        private double _altitudeAltimeter;
+        public double VerticalSpeed {
+            get { return _verticalSpeed; }
+            set { _verticalSpeed = value; NotifyPropertyChanged("GpsVerticalSpeed"); }
+        }
+        public double Heading {
+            get { return _heading; }
+            set { _heading = value; NotifyPropertyChanged("HeadingDegree"); }
+        }
+        public double GroundSpeed {
+            get { return _groundSpeed; }
+            set { _groundSpeed = value; NotifyPropertyChanged("GpsGroundSpeed"); }
+        }
+        public double Speed {
+            get { return _speed; }
+            set { _speed = value; NotifyPropertyChanged("AirSpeedIndicator"); }
+        }
+        public double AltitudeGps {
+            get { return _altitudeGps; }
+            set { _altitudeGps = value; NotifyPropertyChanged("AltitudeGps"); }
+        }
+        public double Roll {
+            get { return _roll; }
+            set { _roll = value; NotifyPropertyChanged("AttitudeIndicatorInternalRollDeg"); }
+        }
+        public double Pitch {
+            get { return _pitch; }
+            set { _pitch = value; NotifyPropertyChanged("AttitudeIndicatorInternalPitchDeg"); }
+        }
+        public double AltitudeAltimeter {
+            get { return _altitudeAltimeter; }
+            set { _altitudeAltimeter = value; NotifyPropertyChanged("AltimeterIndicatedAltitudeFt"); }
+        }
+
+        public CockpitDashboardVM(SimulatorModel model)
         {
-            this.mySimulatorModel = newSimulatorModel;
+            mySimulatorModel = model;
             mySimulatorModel.PropertyChanged += Model_PropertyChanged;
         }
 
+        public void NotifyPropertyChanged(string propName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            string propName = varNamesMgr.toName(e.PropertyName);
-            string propValueStr = (sender as SimulatorModel)?.Variables[e.PropertyName];
+            string propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
             double propValue = Convert.ToDouble(propValueStr);
-            switch (propName) {
+            switch (e.PropertyName) {
                 case "VerticalSpeed": {
                     VerticalSpeed = propValue;
                     break;
@@ -59,53 +106,8 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        
 
-        private double _verticalSpeed;
-        private double _heading;
-        private double _groundSpeed;
-        private double _speed;
-        private double _altitudeGps;
-        private double _roll;
-        private double _pitch;
-        private double _altitudeAltimeter;
-
-        public void NotifyPropertyChanged(string propName)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
-
-        public double VerticalSpeed {
-            get { return _verticalSpeed; }
-            set { _verticalSpeed = value; NotifyPropertyChanged("GpsVerticalSpeed"); }
-        }
-        public double Heading {
-            get { return _heading; }
-            set { _heading = value; NotifyPropertyChanged("HeadingDegree"); }
-        }
-        public double GroundSpeed {
-            get { return _groundSpeed; }
-            set { _groundSpeed = value; NotifyPropertyChanged("GpsGroundSpeed"); }
-        }
-        public double Speed {
-            get { return _speed; }
-            set { _speed = value; NotifyPropertyChanged("AirSpeedIndicator"); }
-        }
-        public double AltitudeGps {
-            get { return _altitudeGps; }
-            set { _altitudeGps = value; NotifyPropertyChanged("AltitudeGps"); }
-        }
-        public double Roll {
-            get { return _roll; }
-            set { _roll = value; NotifyPropertyChanged("AttitudeIndicatorInternalRollDeg"); }
-        }
-        public double Pitch {
-            get { return _pitch; }
-            set { _pitch = value; NotifyPropertyChanged("AttitudeIndicatorInternalPitchDeg"); }
-        }
-        public double AltitudeAltimeter {
-            get { return _altitudeAltimeter; }
-            set { _altitudeAltimeter = value; NotifyPropertyChanged("AltimeterIndicatedAltitudeFt"); }
-        }
+        
     }
 }
