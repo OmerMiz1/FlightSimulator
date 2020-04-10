@@ -105,9 +105,5 @@ namespace FlightSimulatorApp.ViewModel {
                     break;
             }
         }
-
-        
-
-        
     }
 }

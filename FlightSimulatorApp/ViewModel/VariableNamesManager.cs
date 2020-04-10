@@ -4,7 +4,7 @@
     {
         public string toPath(string name) {
             switch (name) {
-                case "Heading": return "/orientation/heading-deg";
+                case "Heading": return "/instrumentation/heading-indicator/indicated-heading-deg";
                 case "VerticalSpeed": return "/instrumentation/gps/indicated-vertical-speed";
                 case "GroundSpeed": return "/instrumentation/gps/indicated-ground-speed-kt";
                 case "Speed": return "/instrumentation/airspeed-indicator/indicated-speed-kt";
@@ -15,6 +15,7 @@
                 case "Longitude": return "/position/longitude-deg";
                 case "Latitude": return "/position/latitude-deg";
                 /*TODO Altitude should return the same path as AltitudeGps !!!!! */
+                //TODO remove altitude! no need for this one
                 case "Altitude": return "/position/altitude-ft";
                 case "Elevator": return "/controls/flight/elevator";
                 case "Rudder": return "/controls/flight/rudder";
@@ -26,7 +27,7 @@
 
         public string toName(string path) {
             switch (path) {
-                case "/orientation/heading-deg": return "Heading";
+                case "/instrumentation/heading-indicator/indicated-heading-deg": return "Heading";
                 case "/instrumentation/gps/indicated-vertical-speed": return "VerticalSpeed";
                 case "/instrumentation/gps/indicated-ground-speed-kt": return "GroundSpeed";
                 case "/instrumentation/airspeed-indicator/indicated-speed-kt": return "Speed";
@@ -36,6 +37,7 @@
                 case "/instrumentation/altimeter/indicated-altitude-ft": return "AltitudeAltimeter";
                 case "/position/longitude-deg": return "Longitude";
                 case "/position/latitude-deg": return "Latitude";
+                //TODO remove altitude! no need for this one
                 case "/position/altitude-ft": return "Altitude";
                 case "/controls/flight/elevator": return "Elevator";
                 case "/controls/flight/rudder": return "Rudder";

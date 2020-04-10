@@ -24,6 +24,10 @@ namespace FlightSimulatorApp.Controls {
         private Storyboard myStoryboard;
         private double _x;
         private double _y;
+        public delegate void ValueChanged(double newX);
+
+        private ValueChanged X_ValueChanged = null;
+        private ValueChanged Y_ValueChanged = null;
 
         public double X
         {
@@ -33,6 +37,7 @@ namespace FlightSimulatorApp.Controls {
                 if (_x == value) return;
                 _x = value;
                 OnPropertyChanged("X");
+                X_ValueChanged?.Invoke(value);
             }
         }
 
@@ -42,7 +47,17 @@ namespace FlightSimulatorApp.Controls {
                 if (_y == value) return;
                 _y = value;
                 OnPropertyChanged("Y");
+                Y_ValueChanged?.Invoke(value);
             }
+        }
+
+        public void AddsXValueChanged(ValueChanged newDelegate)
+        {
+            X_ValueChanged += newDelegate;
+        }
+
+        public void AddYValueChanged(ValueChanged newDelegate) {
+            Y_ValueChanged += newDelegate;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

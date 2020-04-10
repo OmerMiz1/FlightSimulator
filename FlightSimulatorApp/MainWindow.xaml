@@ -15,7 +15,7 @@
             <ColumnDefinition Width="Auto"/>
             <!-- #1 Steers + Joystick -->
         </Grid.ColumnDefinitions>
-        <Grid Name="MapGrid" Grid.Column="0">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -26,8 +26,12 @@
                           Grid.Row="1"/>
         </Grid>
         <StackPanel Grid.Column="1" Orientation="Vertical">
-            <controls:CockpitDashboard x:Name="MyCockpitDashboard" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <controls:CockpitControls x:Name="MyCockpitControls" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <controls:CockpitDashboard x:Name="MyCockpitDashboard" 
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+            <controls:CockpitControls x:Name="MyCockpitControls"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>
