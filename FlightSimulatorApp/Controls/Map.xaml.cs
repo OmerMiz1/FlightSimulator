@@ -23,11 +23,11 @@ namespace FlightSimulatorApp.Controls
     public partial class Map : UserControl
     {
         private MapVM _myVM;
+        public Map() { InitializeComponent(); }
 
-        public Map(MapVM mapViewModel)
+        public void SetVM(MapVM viewModel)
         {
-            InitializeComponent();
-            _myVM = mapViewModel;
+            _myVM = viewModel;
             _myVM.PropertyChanged += MyVM_PropertyChanged;
         }
 

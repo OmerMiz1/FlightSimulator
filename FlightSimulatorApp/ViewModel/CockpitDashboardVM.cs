@@ -23,19 +23,19 @@ namespace FlightSimulatorApp.ViewModel {
         private double _altitudeAltimeter;
         public double VerticalSpeed {
             get { return _verticalSpeed; }
-            set { _verticalSpeed = value; NotifyPropertyChanged("GpsVerticalSpeed"); }
+            set { _verticalSpeed = value; NotifyPropertyChanged("VerticalSpeed"); }
         }
         public double Heading {
             get { return _heading; }
-            set { _heading = value; NotifyPropertyChanged("HeadingDegree"); }
+            set { _heading = value; NotifyPropertyChanged("Heading"); }
         }
         public double GroundSpeed {
             get { return _groundSpeed; }
-            set { _groundSpeed = value; NotifyPropertyChanged("GpsGroundSpeed"); }
+            set { _groundSpeed = value; NotifyPropertyChanged("GroundSpeed"); }
         }
         public double Speed {
             get { return _speed; }
-            set { _speed = value; NotifyPropertyChanged("AirSpeedIndicator"); }
+            set { _speed = value; NotifyPropertyChanged("Speed"); }
         }
         public double AltitudeGps {
             get { return _altitudeGps; }
@@ -43,15 +43,15 @@ namespace FlightSimulatorApp.ViewModel {
         }
         public double Roll {
             get { return _roll; }
-            set { _roll = value; NotifyPropertyChanged("AttitudeIndicatorInternalRollDeg"); }
+            set { _roll = value; NotifyPropertyChanged("Roll"); }
         }
         public double Pitch {
             get { return _pitch; }
-            set { _pitch = value; NotifyPropertyChanged("AttitudeIndicatorInternalPitchDeg"); }
+            set { _pitch = value; NotifyPropertyChanged("Pitch"); }
         }
         public double AltitudeAltimeter {
             get { return _altitudeAltimeter; }
-            set { _altitudeAltimeter = value; NotifyPropertyChanged("AltimeterIndicatedAltitudeFt"); }
+            set { _altitudeAltimeter = value; NotifyPropertyChanged("AltitudeAltimeter"); }
         }
 
         public CockpitDashboardVM(SimulatorModel model)

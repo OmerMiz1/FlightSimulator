@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -23,20 +24,7 @@ namespace FlightSimulatorApp
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-        public Map Map {
-            set { MyMap = value; }
-        }
-        public ConnectionButtons ConnectionButtons {
-            set { MyConnectionButtons = value; }
-        }
-        public CockpitDashboard CockpitDashboard {
-            set { MyCockpitDashboard = value; }
-        }
-        public CockpitControls CockpitControls {
-            set { MyCockpitControls = value; }
-        }
-
+    { 
         public MainWindow()
         {
             InitializeComponent();

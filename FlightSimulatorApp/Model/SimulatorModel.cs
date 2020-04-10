@@ -41,6 +41,7 @@ namespace FlightSimulatorApp.Model {
                 NotifyPropertyChanged("Connected");
             }
             catch (Exception e) {
+                /*TODO Show message showing "Server not found..."*/
                 Debug.WriteLine("Error #1 SimulatorModel.Connect()..");
             }
 
@@ -54,8 +55,6 @@ namespace FlightSimulatorApp.Model {
 
         public void Disconnect() {
             Stop();
-
-            _tcpClient.GetStream().Close();
             _tcpClient.Close();
 
             Debug.WriteLine("TCP Client: Disconnected successfully to server...");
@@ -80,7 +79,6 @@ namespace FlightSimulatorApp.Model {
                 // }
                 // catch (Exception e) { }
                 //} while (_stream.DataAvailable);
-
                 return strBuilder.ToString();
             }
             else {

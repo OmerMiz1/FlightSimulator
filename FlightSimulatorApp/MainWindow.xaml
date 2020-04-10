@@ -8,12 +8,10 @@
         mc:Ignorable="d" Height="600"
         Title="MainWindow">
     <!--Main Grid-->
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <!-- #0 Map + Connect/Disconnect -->
             <ColumnDefinition Width="Auto"/>
-            <!-- #1 Steers + Joystick -->
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>

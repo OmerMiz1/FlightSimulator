@@ -23,8 +23,11 @@ namespace FlightSimulatorApp.Controls {
         public string IP { get; set; }
         public string port { get; set; }
 
-        public ConnectionButtons(ConnectionButtonsVM viewModel) {
+        public ConnectionButtons() {
             InitializeComponent();
+        }
+
+        public void SetVM(ConnectionButtonsVM viewModel) {
             _myVM = viewModel;
             _myVM.PropertyChanged += VM_PropertyChanged;
         }

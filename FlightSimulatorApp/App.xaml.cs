@@ -24,9 +24,12 @@ namespace FlightSimulatorApp {
             Regex ValidIPRegex =
                 new Regex(
                     "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
+            
+            /* View */
             MainWindow mainWindow = new MainWindow();
-            SimulatorModel model = new SimulatorModel();
 
+            /* Model */
+            SimulatorModel model = new SimulatorModel();
             /* No (or not enough) args so use default values */
             if (e.Args.Length < 2) {
                 model.Ip = DEFAULT_IP;
@@ -45,16 +48,13 @@ namespace FlightSimulatorApp {
                 }
             }
 
-            /* Instantiate View, View Model and Model layers */
-            Map map = new Map(new MapVM(model));
-            CockpitDashboard cockpitDashboard = new CockpitDashboard(new CockpitDashboardVM(model));
-            ConnectionButtons connectionBtns = new ConnectionButtons(new ConnectionButtonsVM(model));
-            // CockpitControls cockpitControls = new CockpitControls(new CockpitControlsVM(model));
+            /* View Model */
+            mainWindow.MyMap.SetVM(new MapVM(model));
+            mainWindow.MyConnectionButtons.SetVM(new ConnectionButtonsVM(model));
+            mainWindow.MyCockpitDashboard.SetVM(new CockpitDashboardVM(model));
+            mainWindow.MyCockpitControls.setVM(new CockpitControlsVM(model));
 
-            mainWindow.Map = map;
-            mainWindow.ConnectionButtons = connectionBtns;
-            mainWindow.CockpitDashboard = cockpitDashboard;
-            // mainWindow.CockpitControls = CockpitControls;
+            mainWindow.Show();
         }
     }
 }

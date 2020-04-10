@@ -16,12 +16,9 @@
              Mode="AerialWithLabels"
              DataContext="vm:MapVM">
         <map:Pushpin x:Name="AirplanePushpin"
+                     Location="{Binding Path=Location}"
                      Background="Purple"
                      Content="Airplane"
                      FontSize="5"/>
-        <!--<map:MapLayer x:Name="layer">
-            <Image Source="../Images/Airplane.png" Height="30" Width="30">
-            </Image>
-        </map:MapLayer>-->
     </map:Map>
 </UserControl>
