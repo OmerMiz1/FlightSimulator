@@ -14,6 +14,7 @@
                 case "AltitudeAltimeter": return "/instrumentation/altimeter/indicated-altitude-ft";
                 case "Longitude": return "/position/longitude-deg";
                 case "Latitude": return "/position/latitude-deg";
+                /*TODO Altitude should return the same path as AltitudeGps !!!!! */
                 //TODO remove altitude! no need for this one
                 case "Altitude": return "/position/altitude-ft";
                 case "Elevator": return "/controls/flight/elevator";

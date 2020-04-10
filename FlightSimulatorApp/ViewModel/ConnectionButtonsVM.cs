@@ -4,44 +4,43 @@ using FlightSimulatorApp.Model;
 
 namespace FlightSimulatorApp.ViewModel {
     public class ConnectionButtonsVM : INotifyPropertyChanged {
-        private SimulatorModel myModel;
+        private SimulatorModel _model;
         public event PropertyChangedEventHandler PropertyChanged;
-        private string ip;
-        private int port;
-        private bool isConnected;
+        private string _ip;
+        private int _port;
+        private bool _isConnected;
 
         public string Ip {
-            get => ip;
+            get => _ip;
             set {
-                if (ip != value) {
-                    ip = value;
+                if (_ip != value) {
+                    _ip = value;
                     NotifyPropertyChanged("Ip");
                 }
             }
         }
         public int Port {
-            get => port;
+            get => _port;
             set {
-                if (port != value) {
-                    port = value;
+                if (_port != value) {
+                    _port = value;
                     NotifyPropertyChanged("Port");
                 }
             }
         }
-
         public bool IsConnected {
-            get => isConnected;
+            get => _isConnected;
             set {
-                if (isConnected != value) {
-                    isConnected = value;
+                if (_isConnected != value) {
+                    _isConnected = value;
                     NotifyPropertyChanged("IsConnected");
                 }
             }
         }
 
-        public void setModel(SimulatorModel model) {
-            myModel = model;
-
+        public ConnectionButtonsVM(SimulatorModel model) {
+            _model = model;
+            model.PropertyChanged += Model_PropertyChanged;
         }
 
         private void NotifyPropertyChanged(string propertyName) {
@@ -49,11 +48,11 @@ namespace FlightSimulatorApp.ViewModel {
         }
 
         public void Connect() {
-            myModel.Connect(ip, port);
+            _model.Connect();
         }
 
         public void Disconnect() {
-            myModel.Disconnect();
+            _model.Disconnect();
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {

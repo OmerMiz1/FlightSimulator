@@ -24,19 +24,22 @@ namespace FlightSimulatorApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Map Map {
+            set { MyMap = value; }
+        }
+        public ConnectionButtons ConnectionButtons {
+            set { MyConnectionButtons = value; }
+        }
+        public CockpitDashboard CockpitDashboard {
+            set { MyCockpitDashboard = value; }
+        }
+        public CockpitControls CockpitControls {
+            set { MyCockpitControls = value; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
-            /*TODO get from StartUpEventArgs the args for tcp client (default)...*/
-            /* Default Values.. TODO Move these to AppConfig!*/
-            SimulatorModel simulatorModel = new SimulatorModel();
-            simulatorModel.Connect("127.0.0.1", 5402);
-
-            MyMap.SetVM(new MapVM(simulatorModel));
-
-            MyDashboard.setVM(new CockpitDashboardVM(simulatorModel));
-
-            MyControls.setVM(new CockpitControlsVM(simulatorModel));
         }
     }
 }

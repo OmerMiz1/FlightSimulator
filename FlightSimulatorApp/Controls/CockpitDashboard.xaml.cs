@@ -10,26 +10,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlightSimulatorApp.Model;
 using FlightSimulatorApp.ViewModel;
 
-namespace FlightSimulatorApp.Controls
-{
+namespace FlightSimulatorApp.Controls {
     /// <summary>
     /// Interaction logic for CockpitDashboard.xaml
     /// </summary>
-    public partial class CockpitDashboard : UserControl
-    {
+    public partial class CockpitDashboard : UserControl {
         private CockpitDashboardVM _myVM;
 
-        public CockpitDashboard()
-        {
+        public CockpitDashboard(CockpitDashboardVM viewModel) {
             InitializeComponent();
-        }
-
-        public void setVM(CockpitDashboardVM newVM)
-        {
-            this._myVM = newVM;
-            this.DataContext = this._myVM;
+            _myVM = viewModel;
         }
     }
 }

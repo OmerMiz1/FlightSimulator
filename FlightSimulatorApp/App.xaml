@@ -3,21 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:map="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
              xmlns:local="clr-namespace:FlightSimulatorApp"
-             StartupUri="MainWindow.xaml">
+             Startup="App_Startup">
     <Application.Resources>
          <ResourceDictionary>
-             <!-- Airplane Template -->
-             <ControlTemplate x:Key="airplaneTemplate" TargetType="map:Pushpin">
-                 <Grid Height="25" Width="25">
-                    <Image Source="Images/Airplane.png" Stretch="Uniform" SnapsToDevicePixels="True"/>
-                 </Grid>
-            </ControlTemplate>
+
              <!-- Dashboard Label Style -->
              <Style x:Key="DashboardLabelStyle" TargetType="{x:Type Label}">
                  <Setter Property="VerticalAlignment" Value="Center" />
                  <Setter Property="HorizontalAlignment" Value="Left" />
                  <Setter Property="FontSize" Value="14" />
              </Style>
+
              <!-- Dashboard TextBox Style -->
             <Style x:Key="DashboardTextBoxStyle" TargetType="{x:Type TextBox}">
                  <Setter Property="VerticalAlignment" Value="Center" />
@@ -27,6 +23,7 @@
                  <Setter Property="IsEnabled" Value="False" />
                  <Setter Property="Text" Value="N/A" />
              </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
