@@ -4,7 +4,7 @@
     {
         public string toPath(string name) {
             switch (name) {
-                case "Heading": return "/orientation/heading-deg";
+                case "Heading": return "/instrumentation/heading-indicator/indicated-heading-deg";
                 case "VerticalSpeed": return "/instrumentation/gps/indicated-vertical-speed";
                 case "GroundSpeed": return "/instrumentation/gps/indicated-ground-speed-kt";
                 case "Speed": return "/instrumentation/airspeed-indicator/indicated-speed-kt";
@@ -25,7 +25,7 @@
 
         public string toName(string path) {
             switch (path) {
-                case "/orientation/heading-deg": return "Heading";
+                case "/instrumentation/heading-indicator/indicated-heading-deg": return "Heading";
                 case "/instrumentation/gps/indicated-vertical-speed": return "VerticalSpeed";
                 case "/instrumentation/gps/indicated-ground-speed-kt": return "GroundSpeed";
                 case "/instrumentation/airspeed-indicator/indicated-speed-kt": return "Speed";

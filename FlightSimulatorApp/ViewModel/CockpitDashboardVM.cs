@@ -9,7 +9,6 @@ namespace FlightSimulatorApp.ViewModel {
     public class CockpitDashboardVM : INotifyPropertyChanged
     {
         private SimulatorModel mySimulatorModel;
-        private VariableNamesManager varNamesMgr = new VariableNamesManager();
 
         public CockpitDashboardVM(SimulatorModel newSimulatorModel)
         {

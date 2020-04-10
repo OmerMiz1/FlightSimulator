@@ -34,7 +34,9 @@ namespace FlightSimulatorApp
 
             MyMap.SetVM(new MapVM(simulatorModel));
 
-            myDashboard.setVM(new CockpitDashboardVM(simulatorModel));
+            MyDashboard.setVM(new CockpitDashboardVM(simulatorModel));
+
+            MyControls.setVM(new CockpitControlsVM(simulatorModel));
         }
     }
 }

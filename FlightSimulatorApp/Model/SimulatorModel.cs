@@ -224,7 +224,7 @@ namespace FlightSimulatorApp.Model {
         private void InitVariables() {
             /* Initializes NAMES of variables that model is GETTING FROM simulator */
             Variables = new DictionaryIndexer {
-                ["/orientation/heading-deg"] = "NO_VALUE_YET",
+                ["/instrumentation/heading-indicator/indicated-heading-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-vertical-speed"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-ground-speed-kt"] = "NO_VALUE_YET",
                 ["/instrumentation/airspeed-indicator/indicated-speed-kt"] = "NO_VALUE_YET",

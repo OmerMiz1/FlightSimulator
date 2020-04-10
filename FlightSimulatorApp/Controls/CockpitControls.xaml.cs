@@ -29,9 +29,11 @@ namespace FlightSimulatorApp.Controls
         public void setVM(CockpitControlsVM newVM)
         {
             this._myVM = newVM;
-            this.DataContext = this._myVM;
-            Binding xToElevators = new Binding("Elevators");
-            xToElevators.Source = this.Joystick.X;
+        }
+
+        private void AileronSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this._myVM.Ailerons = e.NewValue;
         }
     }
 }
