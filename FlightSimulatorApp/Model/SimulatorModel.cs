@@ -44,7 +44,7 @@ namespace FlightSimulatorApp.Model {
             try { /* Connect to server */
                 _tcpClient = new TcpClient(Ip, Port);
                 NotifyConnectionChanged("Connected");
-                Debug.WriteLine("TCP Client: Connected successfully to server...");
+                //Debug.WriteLine("TCP Client: Connected successfully to server...");
             }
             catch (SocketException se) { /* Usually this error points that server is not on yet */
                 NotifyConnectionChanged("Error: Connection Failed, try to turn on the server -> Click on 'Connect'");
@@ -69,7 +69,7 @@ namespace FlightSimulatorApp.Model {
             _tcpClient.Close();
             _setRequests.Clear();
             NotifyConnectionChanged("Disconnected");
-            Debug.WriteLine("TCP Client: Disconnected successfully to server...");
+            //Debug.WriteLine("TCP Client: Disconnected successfully to server...");
         }
 
         public string Read() {
@@ -78,21 +78,24 @@ namespace FlightSimulatorApp.Model {
                 byte[] readBuffer = new byte[4096];
                 int bytesRead = 0;
                 StringBuilder strBuilder = new StringBuilder();
-
+                
                 /** Read all data sent from simulator
                  * NOTE: Probably there's no need in the string builder
                  * because the messaged received from sim are short.
                  * Still i think its a good idea just in-case.
                  **/
-                try {
-                    bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
-                    strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
-                }
-                catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
-                    NotifyConnectionChanged("Error: Connection to server lost\\broken");
-                    Stop();
-                    /* TODO Unknown exception thrown, might be because server was shut down mid way*/
-                }
+                do {
+                    try {
+                        bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
+                        strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
+                    }
+                    catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
+                        NotifyConnectionChanged("Error: Connection to server lost\\broken");
+                        Stop();
+                        /* TODO Unknown exception thrown, might be because server was shut down mid way*/
+                    }
+                } while (_stream.DataAvailable);
+                Debug.WriteLine("@@@@Read from server:\n" + strBuilder.ToString());
                 return strBuilder.ToString();
             }
 
@@ -106,6 +109,7 @@ namespace FlightSimulatorApp.Model {
                 try {
                     byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                     _stream.Write(writeBuffer, 0, writeBuffer.Length);
+                    Debug.WriteLine("####Sent to server:\n" + msg);
                 }
                 catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
                     NotifyConnectionChanged("Error: Connection to server lost\\broken");
@@ -143,7 +147,7 @@ namespace FlightSimulatorApp.Model {
                         longi = 0;
                     }
 
-                    Debug.WriteLine("Inside SimulatorModel.Start, longi=" + longi + "now...");
+                    //Debug.WriteLine("Inside SimulatorModel.Start, longi=" + longi + "now...");
                     _variables[longiPath] = longi.ToString();
                     NotifyPropertyChanged(longiPath);
                     Thread.Sleep(50);
@@ -167,7 +171,7 @@ namespace FlightSimulatorApp.Model {
             }
             else {
                 /*TODO WHAT SHOULD WE PRINT IF HAPPENS?*/
-                Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
+                //Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
             }
         }
 
@@ -198,7 +202,7 @@ namespace FlightSimulatorApp.Model {
             while (_running) {
                 /* TODO maybe need to show notification to user? */
                 if (!_tcpClient.Connected) {
-                    Debug.WriteLine("Error #1 SimulatorModel.Start()...");
+                    //Debug.WriteLine("Error #1 SimulatorModel.Start()...");
                 }
 
                 /* Send request for updates & read response */
@@ -256,8 +260,8 @@ namespace FlightSimulatorApp.Model {
                     /* Check if request was valid. */
                     if (response != request) {
                         /*TODO debug*/
-                        Debug.WriteLine("response= " + response);
-                        Debug.WriteLine("request= " + request);
+                        //Debug.WriteLine("response= " + response);
+                        //Debug.WriteLine("request= " + request);
                     }
                 }
             }

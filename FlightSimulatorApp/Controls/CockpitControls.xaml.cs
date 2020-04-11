@@ -37,7 +37,7 @@ namespace FlightSimulatorApp.Controls {
                 return;
             }
 
-            _myVM.Ailerons = e.NewValue;
+            _myVM.Aileron = e.NewValue;
         }
 
         private void ThrottleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -61,7 +61,7 @@ namespace FlightSimulatorApp.Controls {
                 return;
             }
 
-            this._myVM.Elevators = newValue;
+            _myVM.Elevator = newValue;
         }
     }
 }

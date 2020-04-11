@@ -16,7 +16,7 @@
              Mode="AerialWithLabels"
              DataContext="vm:MapVM">
         <map:Pushpin x:Name="AirplanePushpin"
-                     Location="0,0"
+                     Location="32.307097,34.871453"
                      Background="Purple"
                      Content="Airplane"
                      FontSize="5"/>

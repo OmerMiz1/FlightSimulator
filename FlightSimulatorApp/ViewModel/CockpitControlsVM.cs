@@ -12,8 +12,8 @@ namespace FlightSimulatorApp.ViewModel {
         public event PropertyChangedEventHandler PropertyChanged;
         private SimulatorModel mySimulatorModel;
         private double _rudder;
-        private double _elevators;
-        private double _ailerons;
+        private double _elevator;
+        private double _aileron;
         private double _throttle;
 
         public CockpitControlsVM(SimulatorModel newSimulatorModel) {
@@ -29,20 +29,20 @@ namespace FlightSimulatorApp.ViewModel {
                 mySimulatorModel.SetVariable("Rudder", value.ToString());
             }
         }
-        public double Elevators {
-            get => this._elevators;
+        public double Elevator {
+            get => this._elevator;
             set {
-                _elevators = value;
-                NotifyPropertyChanged("Elevators");
-                mySimulatorModel.SetVariable("Elevators", value.ToString());
+                _elevator = value;
+                NotifyPropertyChanged("Elevator");
+                mySimulatorModel.SetVariable("Elevator", value.ToString());
             }
         }
-        public double Ailerons {
-            get => _ailerons;
+        public double Aileron {
+            get => _aileron;
             set {
-                _ailerons = value;
-                NotifyPropertyChanged("Ailerons");
-                mySimulatorModel.SetVariable("Ailerons", value.ToString());
+                _aileron = value;
+                NotifyPropertyChanged("Aileron");
+                mySimulatorModel.SetVariable("Aileron", value.ToString());
             }
         }
         public double Throttle {
@@ -62,12 +62,12 @@ namespace FlightSimulatorApp.ViewModel {
                     Rudder = propValue;
                     break;
                 }
-                case "Elevators": {
-                    Elevators = propValue;
+                case "Elevator": {
+                    Elevator = propValue;
                     break;
                 }
-                case "Ailerons": {
-                    Ailerons = propValue;
+                case "Aileron": {
+                    Aileron = propValue;
                     break;
                 }
                 case "Throttle": {
