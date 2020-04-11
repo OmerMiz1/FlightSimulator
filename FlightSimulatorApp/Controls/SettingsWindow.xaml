@@ -22,7 +22,7 @@
                 <Label Content="Port:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
                 <TextBox Name="PortTextBox" Width="80" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" TextAlignment="Center" TextChanged="PortTextBox_TextChanged"/>
             </Grid>
-            <Label Name="StatusLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Status: IP is valid, port is valid." FontWeight="Normal" Foreground="Green"/>
+            <Label Name="StatusLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Status: IP is valid, Port is valid." FontWeight="Normal" Foreground="Green"/>
             <Grid Height="Auto" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>

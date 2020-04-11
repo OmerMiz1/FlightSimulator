@@ -77,11 +77,11 @@ namespace FlightSimulatorApp.Controls {
             }
             if (portIsValid)
             {
-                StatusLabel.Content += "port is valid.";
+                StatusLabel.Content += "Port is valid.";
             }
             else
             {
-                StatusLabel.Content += "port isn't valid.";
+                StatusLabel.Content += "Port isn't valid.";
             }
             if (IPIsValid && portIsValid)
             {
