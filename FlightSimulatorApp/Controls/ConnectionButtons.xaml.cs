@@ -20,8 +20,42 @@ namespace FlightSimulatorApp.Controls {
     /// </summary>
     public partial class ConnectionButtons : UserControl {
         private ConnectionButtonsVM _myVM;
-        public string IP { get; set; }
-        public string port { get; set; }
+
+        public string IP
+        {
+            get
+            {
+                if (_myVM == null)
+                {
+                    return "127.0.0.1";
+                }
+                return _myVM.Ip;
+            }
+            set
+            {
+                if (_myVM == null)
+                {
+                    return;
+                }
+                _myVM.Ip = value;
+            }
+        }
+
+        public string Port
+        {
+            get {
+                if (_myVM == null) {
+                    return "5402";
+                }
+                return _myVM.Port.ToString();
+            }
+            set {
+                if (_myVM == null) {
+                    return;
+                }
+                _myVM.Port = int.Parse(value);
+            }
+        }
 
         public ConnectionButtons() {
             InitializeComponent();
@@ -30,6 +64,7 @@ namespace FlightSimulatorApp.Controls {
         public void SetVM(ConnectionButtonsVM viewModel) {
             _myVM = viewModel;
             _myVM.PropertyChanged += VM_PropertyChanged;
+            DataContext = _myVM;
         }
 
         private void connectButton_Click(object sender, RoutedEventArgs e) {
@@ -47,7 +82,7 @@ namespace FlightSimulatorApp.Controls {
         }
 
         private void settingsButton_Click(object sender, RoutedEventArgs e) {
-            SettingsWindow mySettings = new SettingsWindow(IP, port, this);
+            SettingsWindow mySettings = new SettingsWindow(IP, Port, this);
             connectButton.IsEnabled = false;
             disconnectButton.IsEnabled = false;
             settingsButton.IsEnabled = false;
@@ -55,7 +90,7 @@ namespace FlightSimulatorApp.Controls {
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            if (_myVM.IsConnected) {
+            if (_myVM.StatusColor == Brushes.Green) {
                 connectButton.IsEnabled = false;
                 disconnectButton.IsEnabled = true;
                 settingsButton.IsEnabled = false;
@@ -69,7 +104,7 @@ namespace FlightSimulatorApp.Controls {
         public void notifySettingsEnded(string newIP, string newPort)
         {
             IP = newIP;
-            port = newPort;
+            Port = newPort;
             connectButton.IsEnabled = true;
         }
     }

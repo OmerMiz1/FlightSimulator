@@ -17,7 +17,7 @@
                 <Button Name="disconnectButton" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" IsEnabled="False" Click="disconnectButton_Click"/>
                 <Button Name="settingsButton" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
             </Grid>
-            <Label Name="StatusLabel" Content="Status: Disconnected"/>
+            <Label Name="StatusLabel" Content="{Binding Path=Status, FallbackValue=Status: Disconnected}" Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontSize="20"/>
         </StackPanel>
     </Grid>
 </UserControl>
