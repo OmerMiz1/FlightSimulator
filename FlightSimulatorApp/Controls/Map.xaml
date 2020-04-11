@@ -17,7 +17,6 @@
              DataContext="vm:MapVM">
         <map:Pushpin x:Name="AirplanePushpin"
                      Template="{StaticResource airplaneTemplate}"
-                     Heading="{Binding Path=Heading}"
                      Location="32.307097,34.871453"
                      Background="Purple"
                      Content="Airplane"

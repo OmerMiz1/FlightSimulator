@@ -18,6 +18,7 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontWeight" Value="DemiBold"/>
             </Style>
 
             <!-- Dashboard Value Labels Style -->
