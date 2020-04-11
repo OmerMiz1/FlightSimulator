@@ -22,7 +22,10 @@ namespace FlightSimulatorApp.Model {
         private Boolean _running = false;
         public string Ip { get; set; }
         public int Port { get; set; }
-        public Boolean Connected { get => _tcpClient.Connected; }
+
+        public Boolean Connected {
+            get => _tcpClient.Connected;
+        }
 
         /* Variables related fields */
         private DictionaryIndexer _variables;
@@ -37,33 +40,33 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void Connect() {
-            try {
-                /* Connect to server */
+            try { /* Connect to server */
                 _tcpClient = new TcpClient(Ip, Port);
                 NotifyConnectionChanged("Connected");
+                Debug.WriteLine("TCP Client: Connected successfully to server...");
             }
-            catch (SocketException se) {
-                NotifyConnectionChanged("Failed");
+            catch (SocketException se) { /* Usually this error points that server is not on yet */
+                NotifyConnectionChanged("Connection Failed: Try to turn on the server -> Click on 'Connect'");
+                return;
             }
-            
-            Debug.WriteLine("TCP Client: Connected successfully to server...");
+            catch (Exception e) { /* Unexpected error */
+                NotifyConnectionChanged("Connection Failed: Unexpected error occured");
+                return;
+            }
 
-            /* Check that connection established before start of communication */
+            /* Check connection & Start communicating. NOTE:
+               Named the thread for easier debugging */
             if (_tcpClient.Connected) {
-                /* Named the thread for easier debugging */
                 Thread t = new Thread(Start);
                 t.Name = "SimulatorModel.Start Thread";
                 t.Start();
             }
-            else {
-                /* TODO Show a message saying "Connection Failed" */
-            }
-            
         }
 
         public void Disconnect() {
             Stop();
             _tcpClient.Close();
+            _setRequests.Clear();
             NotifyConnectionChanged("Disconnected");
             Debug.WriteLine("TCP Client: Disconnected successfully to server...");
         }
@@ -158,7 +161,8 @@ namespace FlightSimulatorApp.Model {
         public void NotifyPropertyChanged(string propName) {
             if (_varNamesMgr.toName(propName) != "Variable Not Found") {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_varNamesMgr.toName(propName)));
-            } else {
+            }
+            else {
                 /*TODO WHAT SHOULD WE PRINT IF HAPPENS?*/
                 Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
             }
@@ -224,6 +228,7 @@ namespace FlightSimulatorApp.Model {
                         break;
                     }
                 }
+
                 pathEnum.Dispose();
                 Thread.Sleep(100);
             }
@@ -271,8 +276,10 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void SetVariable(string varName, string varValue) {
-            string varPath = _varNamesMgr.toPath(varName);
-            _setRequests.Enqueue(varPath + " " + varValue);
+            if (_tcpClient.Connected) {
+                string varPath = _varNamesMgr.toPath(varName);
+                _setRequests.Enqueue(varPath + " " + varValue);
+            }
         }
     }
 }

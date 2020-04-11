@@ -51,7 +51,7 @@ namespace FlightSimulatorApp.Controls {
             }
         }
 
-        public void AddsXValueChanged(ValueChanged newDelegate)
+        public void AddXValueChanged(ValueChanged newDelegate)
         {
             X_ValueChanged += newDelegate;
         }

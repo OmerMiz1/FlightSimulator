@@ -30,15 +30,13 @@ namespace FlightSimulatorApp {
 
             /* Model */
             SimulatorModel model = new SimulatorModel();
-            /* No (or not enough) args so use default values */
-            if (e.Args.Length < 2) {
-                model.Ip = DEFAULT_IP;
-                model.Port = DEFAULT_PORT;
-            }
-            /* Parse arguments into ip and port */
-            else {
-                int port = -1;
-                foreach (string curArg in e.Args) {
+            /* No Args (or not enough) args so use default values */
+            model.Ip = DEFAULT_IP;
+            model.Port = DEFAULT_PORT;
+            int port = -1;
+
+            /* Try to parse arguments into ip and port */
+            foreach (string curArg in e.Args) {
                     if (ValidIPRegex.IsMatch(curArg)) {
                         model.Ip = curArg;
                     }
@@ -46,7 +44,7 @@ namespace FlightSimulatorApp {
                         model.Port = port;
                     }
                 }
-            }
+            
 
             /* View Model */
             mainWindow.MyMap.SetVM(new MapVM(model));

@@ -27,13 +27,13 @@ namespace FlightSimulatorApp.Controls
         public CockpitControls()
         {
             InitializeComponent();
-            this.Joystick.AddsXValueChanged(Rudder_ValueChanged);
-            this.Joystick.AddYValueChanged(Elevator_ValueChanged);
+            Joystick.AddXValueChanged(Rudder_ValueChanged);
+            Joystick.AddYValueChanged(Elevator_ValueChanged);
         }
 
-        public void setVM(CockpitControlsVM newVM)
+        public void setVM(CockpitControlsVM viewModel)
         {
-            this._myVM = newVM;
+            _myVM = viewModel;
         }
 
         private void AileronSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -41,14 +41,14 @@ namespace FlightSimulatorApp.Controls
             {
                 return;
             }
-            this._myVM.Ailerons = e.NewValue;
+            _myVM.Ailerons = e.NewValue;
         }
 
         private void ThrottleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (_myVM == null) {
                 return;
             }
-            this._myVM.Throttle = e.NewValue;
+            _myVM.Throttle = e.NewValue;
         }
 
         private void Rudder_ValueChanged(double newValue)
@@ -56,7 +56,7 @@ namespace FlightSimulatorApp.Controls
             if (_myVM == null) {
                 return;
             }
-            this._myVM.Rudder = newValue;
+            _myVM.Rudder = newValue;
         }
         
         private void Elevator_ValueChanged(double newValue)

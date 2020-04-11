@@ -8,19 +8,50 @@ using FlightSimulatorApp.Annotations;
 using FlightSimulatorApp.Model;
 
 namespace FlightSimulatorApp.ViewModel {
-    public class CockpitControlsVM : INotifyPropertyChanged
-    {
-
+    public class CockpitControlsVM : INotifyPropertyChanged {
+        public event PropertyChangedEventHandler PropertyChanged;
         private SimulatorModel mySimulatorModel;
         private double _rudder;
         private double _elevators;
         private double _ailerons;
         private double _throttle;
 
-        public CockpitControlsVM(SimulatorModel newSimulatorModel)
-        {
-            this.mySimulatorModel = newSimulatorModel;
+        public CockpitControlsVM(SimulatorModel newSimulatorModel) {
+            mySimulatorModel = newSimulatorModel;
             mySimulatorModel.PropertyChanged += Model_PropertyChanged;
+        }
+
+        public double Rudder {
+            get => _rudder;
+            set {
+                _rudder = value;
+                NotifyPropertyChanged("Rudder");
+                mySimulatorModel.SetVariable("Rudder", value.ToString());
+            }
+        }
+        public double Elevators {
+            get => this._elevators;
+            set {
+                _elevators = value;
+                NotifyPropertyChanged("Elevators");
+                mySimulatorModel.SetVariable("Elevators", value.ToString());
+            }
+        }
+        public double Ailerons {
+            get => _ailerons;
+            set {
+                _ailerons = value;
+                NotifyPropertyChanged("Ailerons");
+                mySimulatorModel.SetVariable("Ailerons", value.ToString());
+            }
+        }
+        public double Throttle {
+            get => _throttle;
+            set {
+                _throttle = value;
+                NotifyPropertyChanged("Throttle");
+                mySimulatorModel.SetVariable("Throttle", value.ToString());
+            }
         }
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
@@ -48,28 +79,7 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        public double Rudder
-        {
-            get { return this._rudder; }
-            set { this._rudder = value; OnPropertyChanged("Rudder"); }
-        }
-        public double Elevators {
-            get { return this._elevators; }
-            set { this._elevators = value; OnPropertyChanged("Elevators"); }
-        }
-        public double Ailerons {
-            get { return this._ailerons; }
-            set { this._ailerons = value; OnPropertyChanged("Ailerons"); }
-        }
-        public double Throttle {
-            get { return this._throttle; }
-            set { this._throttle = value; OnPropertyChanged("Throttle"); }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
+        private void NotifyPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

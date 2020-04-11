@@ -11,7 +11,7 @@ using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp.ViewModel {
     public class MapVM : INotifyPropertyChanged {
-        public SimulatorModel myModel { get; private set; }
+        public SimulatorModel mySimulatorModel { get; private set; }
         private VariableNamesManager varNamesMgr = new VariableNamesManager();
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -53,9 +53,9 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        public MapVM(SimulatorModel model) {
-            myModel = model;
-            myModel.PropertyChanged += Model_PropertyChanged;
+        public MapVM(SimulatorModel simulatorModel) {
+            mySimulatorModel = simulatorModel;
+            mySimulatorModel.PropertyChanged += Model_PropertyChanged;
         }
 
         private void NotifyPropertyChanged( string propertyName) {
