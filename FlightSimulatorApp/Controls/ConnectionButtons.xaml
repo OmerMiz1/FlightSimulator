@@ -19,8 +19,8 @@
             </Grid>
 
             <!-- Label is inside a view box so font size will fit the box size -->
-            <Viewbox Height="35" >
-                <Label Name="StatusLabel" Content="{Binding Path=Status, FallbackValue=Status: Disconnected}" Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontSize="10"/>
+            <Viewbox Width="350" Height="35">
+                <TextBlock Name="StatusLabel" Text="{Binding Path=Status, FallbackValue=Status: Disconnected}" Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="4,0,0,0"/>
             </Viewbox>
         </StackPanel>
     </Grid>

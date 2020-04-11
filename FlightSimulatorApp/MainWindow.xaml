@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlightSimulatorApp"
         xmlns:controls="clr-namespace:FlightSimulatorApp.Controls"
-        mc:Ignorable="d" Height="600"
+        mc:Ignorable="d" Height="600" Width="1100"
         Title="MainWindow">
     <!--Main Grid-->
     <Viewbox StretchDirection="Both" Stretch="Fill">
@@ -30,9 +30,9 @@
                     <RowDefinition Height="300" />
                 </Grid.RowDefinitions>
 
-                <controls:CockpitDashboard x:Name="MyCockpitDashboard"/>
+                <controls:CockpitDashboard x:Name="MyCockpitDashboard" Margin="0,0,5,0"/>
                 <controls:CockpitControls x:Name="MyCockpitControls"
-                                          Grid.Row="1"/>
+                                          Grid.Row="1" Margin="0,0,0,5"/>
             </Grid>
         </Grid>
     </Viewbox>
