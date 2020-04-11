@@ -13,9 +13,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Name ="connectButton" Content="Connect" Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch" Background="Green" Click="connectButton_Click"/>
-                <Button Name="disconnectButton" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" IsEnabled="False" Click="disconnectButton_Click"/>
-                <Button Name="settingsButton" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
+                <Button Name ="connectButton" IsEnabled="{Binding Path=ConnectButtonEnabled}" Content="Connect" Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch" Background="Green" Click="connectButton_Click"/>
+                <Button Name="disconnectButton" IsEnabled="{Binding Path=DisconnectButtonEnabled}" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" Click="disconnectButton_Click"/>
+                <Button Name="settingsButton" IsEnabled="{Binding Path=SettingsButtonEnabled}" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
             </Grid>
             <Label Name="StatusLabel" Content="{Binding Path=Status, FallbackValue=Status: Disconnected}" Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontSize="20"/>
         </StackPanel>
