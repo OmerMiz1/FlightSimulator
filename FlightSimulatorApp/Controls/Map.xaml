@@ -15,16 +15,12 @@
              Margin="5"
              Mode="AerialWithLabels"
              DataContext="vm:MapVM">
-        <map:Pushpin x:Name="AirplanePushpin"
-                     Location="0,0"
-                     Background="Purple"
-                     Content="Airplane"
-                     FontSize="5"/>
-        <map:MapLayer x:Name="layer" Position="{Binding ElementName=AirplanePushpin, Path=Location}">
-            
-        </map:MapLayer>
-        <Canvas map:MapLayer.Position="{Binding Path=Location}">
-            <Image Source="../Images/Airplane.png" Height="30" Width="30"></Image>
-        </Canvas>
+        <map:Pushpin x:Name="AirplanePushpin" VerticalAlignment="Center" HorizontalAlignment="Center"
+                 Location="32.002582, 34.889057"
+                 Background="Purple"
+                 Content="Airplane"
+                 FontSize="5" Template="{StaticResource CustomPushpinTemplate}" Heading="-60" Margin="35,41,0,0">
+        </map:Pushpin>
+        <map:MapLayer x:Name="layer" Position="{Binding ElementName=AirplanePushpin, Path=Location}"/>
     </map:Map>
 </UserControl>

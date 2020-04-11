@@ -6,22 +6,27 @@
              Startup="App_Startup">
     <Application.Resources>
          <ResourceDictionary>
-
              <!-- Dashboard Name Labels Style -->
              <Style x:Key="DashboardNameLabelStyle" TargetType="{x:Type Label}">
                  <Setter Property="VerticalAlignment" Value="Center" />
                  <Setter Property="HorizontalAlignment" Value="Left" />
                  <Setter Property="FontSize" Value="14" />
              </Style>
-
-            <!-- Dashboard Value Labels Style -->
+             <!-- Dashboard Value Labels Style -->
              <Style x:Key="DashboardValueLabelStyle" TargetType="{x:Type Label}">
                  <Setter Property="VerticalAlignment" Value="Center" />
                  <Setter Property="HorizontalAlignment" Value="Left" />
                  <Setter Property="FontSize" Value="12" />
                 <Setter Property="ContentStringFormat" Value="{}{0:F5}" />
              </Style>
-
-         </ResourceDictionary>
+             <!-- Airplane Pushpin -->
+             <ControlTemplate x:Key="CustomPushpinTemplate" TargetType="map:Pushpin">
+                <Grid x:Name="ContentGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Height="35" Width="35">
+                    <Grid.Background>
+                            <ImageBrush ImageSource="/Images/Airplane.png" AlignmentX="Center" AlignmentY="Center"/>
+                    </Grid.Background>
+                </Grid>
+            </ControlTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
