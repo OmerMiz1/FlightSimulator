@@ -10,10 +10,41 @@ namespace FlightSimulatorApp.ViewModel {
         public event PropertyChangedEventHandler PropertyChanged;
         private string _ip;
         private int _port;
+        private string _status = "Status: Disconnected";
+        private Brush _statusColor = Brushes.Red;
+        private bool _connectButtonEnabled = true;
+        private bool _disconnectButtonEnabled = false;
+        private bool _settingsButtonEnabled = true;
+
+        public bool ConnectButtonEnabled
+        {
+            get { return _connectButtonEnabled; }
+            set { _connectButtonEnabled = value; NotifyPropertyChanged("ConnectButtonEnabled"); }
+        }
+
+        public bool DisconnectButtonEnabled {
+            get { return _disconnectButtonEnabled; }
+            set { _disconnectButtonEnabled = value; NotifyPropertyChanged("DisconnectButtonEnabled"); }
+        }
+
+        public bool SettingsButtonEnabled {
+            get { return _settingsButtonEnabled; }
+            set { _settingsButtonEnabled = value; NotifyPropertyChanged("SettingsButtonEnabled"); }
+        }
+
         // private bool _isConnected = false;
         // private bool _connectionFailed = false;
-        public string Status { get; set; } = "Status: Disconnected";
-        public Brush StatusColor { get; set; } = Brushes.Red;
+        public string Status
+        {
+            get { return _status; }
+            set { _status = value; NotifyPropertyChanged("Status"); }
+        }
+
+        public Brush StatusColor
+        {
+            get { return _statusColor; }
+            set { _statusColor = value; NotifyPropertyChanged("StatusColor"); }
+        }
 
         public string Ip {
             get => _ip;
@@ -93,23 +124,39 @@ namespace FlightSimulatorApp.ViewModel {
         // }
 
         private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e) {
-            switch (e.PropertyName) {
-                case "Connected":
-                {
-                    Status = "Status: Connected";
-                    StatusColor = Brushes.Green;
-                    break;
-                }
-                case "Disconnected": {
-                    Status = "Status: Disconnected";
-                    StatusColor = Brushes.Red;
-                    break;
-                }
-                default: {
-                    Status = "Status: " + e.PropertyName;
-                    StatusColor = Brushes.Yellow;
-                    break;
-                }
+            if (e.PropertyName == "Connected")
+            {
+                Status = "Status: Connected";
+                StatusColor = Brushes.Green;
+                ConnectButtonEnabled = false;
+                DisconnectButtonEnabled = true;
+                SettingsButtonEnabled = false;
+            } else if (e.PropertyName == "Disconnected")
+            {
+                Status = "Status: Disconnected";
+                StatusColor = Brushes.Red;
+                ConnectButtonEnabled = true;
+                DisconnectButtonEnabled = false;
+                SettingsButtonEnabled = true;
+            } else if (e.PropertyName.StartsWith("Error"))
+            {
+                Status = e.PropertyName;
+                StatusColor = Brushes.Red;
+                ConnectButtonEnabled = false;
+                DisconnectButtonEnabled = true;
+                SettingsButtonEnabled = false;
+            } else if (e.PropertyName.StartsWith("Warning"))
+            {
+                Status = e.PropertyName;
+                StatusColor = Brushes.Orange;
+            }
+            else
+            {
+                Status = e.PropertyName;
+                StatusColor = Brushes.Orange;
+                ConnectButtonEnabled = false;
+                DisconnectButtonEnabled = false;
+                SettingsButtonEnabled = false;
             }
         }
     }

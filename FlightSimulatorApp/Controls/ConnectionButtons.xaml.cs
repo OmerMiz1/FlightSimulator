@@ -63,49 +63,32 @@ namespace FlightSimulatorApp.Controls {
 
         public void SetVM(ConnectionButtonsVM viewModel) {
             _myVM = viewModel;
-            _myVM.PropertyChanged += VM_PropertyChanged;
             DataContext = _myVM;
         }
 
         private void connectButton_Click(object sender, RoutedEventArgs e) {
             _myVM.Connect();
-            connectButton.IsEnabled = false;
-            disconnectButton.IsEnabled = true;
-            settingsButton.IsEnabled = false;
         }
 
         private void disconnectButton_Click(object sender, RoutedEventArgs e) {
             _myVM.Disconnect();
-            connectButton.IsEnabled = true;
-            disconnectButton.IsEnabled = false;
-            settingsButton.IsEnabled = true;
         }
 
         private void settingsButton_Click(object sender, RoutedEventArgs e) {
             SettingsWindow mySettings = new SettingsWindow(IP, Port, this);
-            connectButton.IsEnabled = false;
-            disconnectButton.IsEnabled = false;
-            settingsButton.IsEnabled = false;
+            _myVM.ConnectButtonEnabled = false;
+            _myVM.DisconnectButtonEnabled = false;
+            _myVM.SettingsButtonEnabled = false;
             mySettings.Show();
-        }
-
-        private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            if (_myVM.StatusColor == Brushes.Green) {
-                connectButton.IsEnabled = false;
-                disconnectButton.IsEnabled = true;
-                settingsButton.IsEnabled = false;
-                return;
-            }
-            connectButton.IsEnabled = true; 
-            disconnectButton.IsEnabled = false;
-            settingsButton.IsEnabled = true;
         }
 
         public void notifySettingsEnded(string newIP, string newPort)
         {
             IP = newIP;
             Port = newPort;
-            connectButton.IsEnabled = true;
+            _myVM.ConnectButtonEnabled = true;
+            _myVM.DisconnectButtonEnabled = false;
+            _myVM.SettingsButtonEnabled = true;
         }
     }
 }
