@@ -22,7 +22,6 @@ namespace FlightSimulatorApp.Model {
         private Boolean _running = false;
         public string Ip { get; set; }
         public int Port { get; set; }
-
         public Boolean Connected {
             get => _tcpClient.Connected;
         }
@@ -46,15 +45,15 @@ namespace FlightSimulatorApp.Model {
                 Debug.WriteLine("TCP Client: Connected successfully to server...");
             }
             catch (SocketException se) { /* Usually this error points that server is not on yet */
-                NotifyConnectionChanged("Connection Failed: Try to turn on the server -> Click on 'Connect'");
+                NotifyConnectionChanged("Error: Connection Failed, try to turn on the server -> Click on 'Connect'");
                 return;
             }
             catch (Exception e) { /* Unexpected error */
-                NotifyConnectionChanged("Connection Failed: Unexpected error occured");
+                NotifyConnectionChanged("Error: Connection Failed, unexpected error occured");
                 return;
             }
 
-            /* Check connection & Start communicating. NOTE:
+            /** Check connection & Start communicating. NOTE:
                Named the thread for easier debugging */
             if (_tcpClient.Connected) {
                 Thread t = new Thread(Start);
@@ -78,39 +77,42 @@ namespace FlightSimulatorApp.Model {
                 int bytesRead = 0;
                 StringBuilder strBuilder = new StringBuilder();
 
-                /*** Read all data sent from simulator
+                /** Read all data sent from simulator
                  * NOTE: Probably there's no need in the string builder
                  * because the messaged received from sim are short.
                  * Still i think its a good idea just in-case.
-                 ***/
-                //do {
-                // try {
-                bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
-                strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
-                // }
-                // catch (Exception e) { }
-                //} while (_stream.DataAvailable);
+                 **/
+                try {
+                    bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
+                    strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
+                }
+                catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
+                    NotifyConnectionChanged("Error: Connection to server lost\\broken");
+                    Stop();
+                    /* TODO Unknown exception thrown, might be because server was shut down mid way*/
+                }
                 return strBuilder.ToString();
             }
-            else {
-                Debug.WriteLine("Error #1 at SimulatorModel.Read()...");
-            }
 
-
-            /* Error */
-            /*TODO keep the exception or simple console message?*/
-            Debug.WriteLine("Error #2 at Simulator.Read()...");
-            throw new System.InvalidOperationException("Error #2 at Simulator.Read()...");
+            /*TODO Determine if its an Error or Warning !!! */
+            NotifyPropertyChanged("Warning: Network stream unable to read from server");
+            return null;
         }
 
         public void Write(string msg) {
             /* Double check writing is possible */
             if (_stream.CanWrite) {
-                byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
-                _stream.Write(writeBuffer, 0, writeBuffer.Length);
+                try {
+                    byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
+                    _stream.Write(writeBuffer, 0, writeBuffer.Length);
+                }
+                catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
+                    NotifyConnectionChanged("Error: Connection to server lost\\broken");
+                    Stop();
+                }
             }
-            else {
-                Debug.WriteLine("Error #2 at Simulator.Write()...");
+            else { /*TODO Determine if its an Error or Warning !!! */
+                NotifyConnectionChanged("Warning: Network stream unable to write to server");
             }
         }
 
@@ -129,8 +131,8 @@ namespace FlightSimulatorApp.Model {
             Thread setValuesThread = new Thread(WriteValuesToSim);
             setValuesThread.Start();
 
-            /* TODO JUST A TEST */
-            /*string longiPath = "/position/longitude-deg";
+            /** TODO JUST A TEST 
+            string longiPath = "/position/longitude-deg";
             Thread t = new Thread(() =>
             {
                 for (double longi = 0; true; longi++)
@@ -179,7 +181,7 @@ namespace FlightSimulatorApp.Model {
             List<string>.Enumerator pathEnum;
             string requestMsg, valuesFromSim;
 
-            /* Build get requests message (once). More info at:
+            /** Build get requests message (once). More info at:
              *  https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.system-collections-idictionary-getenumerator?view=netframework-4.8
              */
             var entry = _variables.GetEnumerator();
