@@ -64,7 +64,10 @@ namespace FlightSimulatorApp.ViewModel {
 
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
             string propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
-            double propValue = Convert.ToDouble(propValueStr);
+            Double propValue;
+            if (!Double.TryParse(propValueStr, out propValue)) {
+                return;
+            }
 
             switch (e.PropertyName) {
                 case "Altitude": {

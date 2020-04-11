@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FlightSimulatorApp.Model;
 
@@ -8,7 +9,9 @@ namespace FlightSimulatorApp.ViewModel {
         public event PropertyChangedEventHandler PropertyChanged;
         private string _ip;
         private int _port;
-        private bool _isConnected;
+        private bool _isConnected = false;
+        private bool _connectionFailed = false;
+
 
         public string Ip {
             get => _ip;
@@ -38,9 +41,14 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
+        public bool ConnectionFailed {
+            get => _connectionFailed;
+            set { _connectionFailed = value; }
+        }
+
         public ConnectionButtonsVM(SimulatorModel model) {
             _model = model;
-            model.PropertyChanged += Model_PropertyChanged;
+            model.ConnectionChanged += Model_ConnectionChanged;
         }
 
         private void NotifyPropertyChanged(string propertyName) {
@@ -55,14 +63,20 @@ namespace FlightSimulatorApp.ViewModel {
             _model.Disconnect();
         }
 
-        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+        private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e) {
             switch (e.PropertyName) {
                 case "Connected": {
                     IsConnected = true;
+                    _connectionFailed = false;
                     break;
                 }
                 case "Disconnected": {
                     IsConnected = false;
+                    break;
+                }
+                case "Failed": {
+                    IsConnected = false;
+                    _connectionFailed = true;
                     break;
                 }
                 default:

@@ -19,9 +19,10 @@ namespace FlightSimulatorApp.Model {
         /* Server related fields */
         private TcpClient _tcpClient = new TcpClient();
         private NetworkStream _stream;
-        private Boolean _running;
+        private Boolean _running = false;
         public string Ip { get; set; }
         public int Port { get; set; }
+        public Boolean Connected { get => _tcpClient.Connected; }
 
         /* Variables related fields */
         private DictionaryIndexer _variables;
@@ -29,34 +30,41 @@ namespace FlightSimulatorApp.Model {
         private VariableNamesManager _varNamesMgr = new VariableNamesManager();
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler ConnectionChanged;
 
         public SimulatorModel() {
             InitVariables();
         }
 
         public void Connect() {
-            /* Connect to server */
             try {
+                /* Connect to server */
                 _tcpClient = new TcpClient(Ip, Port);
-                NotifyPropertyChanged("Connected");
+                NotifyConnectionChanged("Connected");
             }
-            catch (Exception e) {
-                /*TODO Show message showing "Server not found..."*/
-                Debug.WriteLine("Error #1 SimulatorModel.Connect()..");
+            catch (SocketException se) {
+                NotifyConnectionChanged("Failed");
             }
-
+            
             Debug.WriteLine("TCP Client: Connected successfully to server...");
 
-            /* Named the thread for easier debugging */
-            Thread t = new Thread(Start);
-            t.Name = "SimulatorModel.Start Thread";
-            t.Start();
+            /* Check that connection established before start of communication */
+            if (_tcpClient.Connected) {
+                /* Named the thread for easier debugging */
+                Thread t = new Thread(Start);
+                t.Name = "SimulatorModel.Start Thread";
+                t.Start();
+            }
+            else {
+                /* TODO Show a message saying "Connection Failed" */
+            }
+            
         }
 
         public void Disconnect() {
             Stop();
             _tcpClient.Close();
-
+            NotifyConnectionChanged("Disconnected");
             Debug.WriteLine("TCP Client: Disconnected successfully to server...");
         }
 
@@ -148,7 +156,16 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void NotifyPropertyChanged(string propName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_varNamesMgr.toName(propName)));
+            if (_varNamesMgr.toName(propName) != "Variable Not Found") {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_varNamesMgr.toName(propName)));
+            } else {
+                /*TODO WHAT SHOULD WE PRINT IF HAPPENS?*/
+                Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
+            }
+        }
+
+        public void NotifyConnectionChanged(string connected) {
+            ConnectionChanged?.Invoke(this, new PropertyChangedEventArgs(connected));
         }
 
         /* Personal Implementations */
@@ -192,8 +209,7 @@ namespace FlightSimulatorApp.Model {
                         /*TODO notify user about error for 2 ~ 5 seconds and make it disappear. */
                     }
                     else if (newVal == "") {
-                        /*TODO should indicate of a bug in our code! */
-                        Debug.WriteLine("A Weird BUG", Thread.CurrentThread.Name);
+                        // DO NOTHING
                     }
                     else if (_variables.ContainsKey(pathEnum.Current)) {
                         _variables[pathEnum.Current] = newVal;
@@ -245,11 +261,8 @@ namespace FlightSimulatorApp.Model {
                 ["/instrumentation/attitude-indicator/internal-roll-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/attitude-indicator/internal-pitch-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/altimeter/indicated-altitude-ft"] = "NO_VALUE_YET",
-
-                /* Optional (to test) */
                 ["/position/longitude-deg"] = "NO_VALUE_YET",
                 ["/position/latitude-deg"] = "NO_VALUE_YET",
-                ["/position/altitude-ft"] = "NO_VALUE_YET"
             };
         }
 

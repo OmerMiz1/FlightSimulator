@@ -23,13 +23,18 @@
             <controls:Map x:Name="MyMap"
                           Grid.Row="1"/>
         </Grid>
-        <StackPanel Grid.Column="1" Orientation="Vertical">
+        <Grid Grid.Column="1" RenderSize="100,100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
             <controls:CockpitDashboard x:Name="MyCockpitDashboard" 
                                        VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"/>
+                                       HorizontalAlignment="Stretch"/>
             <controls:CockpitControls x:Name="MyCockpitControls"
                                       VerticalAlignment="Center"
-                                      HorizontalAlignment="Center"/>
-        </StackPanel>
+                                      HorizontalAlignment="Stretch"
+                                      Grid.Row="1"/>
+        </Grid>
     </Grid>
 </Window>
