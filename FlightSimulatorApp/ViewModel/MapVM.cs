@@ -14,7 +14,7 @@ namespace FlightSimulatorApp.ViewModel {
         public SimulatorModel mySimulatorModel { get; private set; }
         private VariableNamesManager varNamesMgr = new VariableNamesManager();
         public event PropertyChangedEventHandler PropertyChanged;
-
+        private double _heading;
         private Location location = new Location();
         public Location Location {
             get => location;
@@ -53,6 +53,14 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
+        public double Heading {
+            get => _heading;
+            set {
+                _heading = value;
+                NotifyPropertyChanged("Heading");
+            }
+        }
+
         public MapVM(SimulatorModel simulatorModel) {
             mySimulatorModel = simulatorModel;
             mySimulatorModel.PropertyChanged += Model_PropertyChanged;
@@ -83,7 +91,7 @@ namespace FlightSimulatorApp.ViewModel {
                     break;
                 }
                 case "Heading": {
-                    /*TODO Currently empty, only needed if using airplane icon to show direction */
+                    Heading = propValue;
                     break;
                 }
                 default:

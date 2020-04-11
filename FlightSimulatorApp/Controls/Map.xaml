@@ -16,15 +16,26 @@
              Mode="AerialWithLabels"
              DataContext="vm:MapVM">
         <map:Pushpin x:Name="AirplanePushpin"
+                     Template="{StaticResource airplaneTemplate}"
+                     Heading="{Binding Path=Heading}"
                      Location="32.307097,34.871453"
                      Background="Purple"
                      Content="Airplane"
-                     FontSize="5"/>
-        <map:MapLayer x:Name="layer" Position="{Binding ElementName=AirplanePushpin, Path=Location}">
-            
-        </map:MapLayer>
-        <Canvas map:MapLayer.Position="{Binding Path=Location}">
-            <Image Source="../Images/Airplane.png" Height="30" Width="30"></Image>
-        </Canvas>
+                     FontSize="5"
+                     />
+        
+        
+        <!-- <map:Pushpin Location="0,0" Heading="180"/> -->
+        <!-- <map:Pushpin Location="0,0" Heading="90"/> -->
+        <!-- <map:Pushpin Location="0,0" Heading="270"/> -->
+        <!-- <map:Pushpin Location="0,0"/> -->
+        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}" Heading="180"/> -->
+        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}" Heading="90"/> -->
+        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}" Heading="270"/> -->
+        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}"/> -->
+        <!-- <map:Pushpin Location="0,20" Heading="180"/> -->
+        <!-- <map:Pushpin Location="0,20"/> -->
+        <!-- <map:Pushpin Location="0,40" Heading="180"/> -->
+        <!-- <map:Pushpin Location="0,40"/> -->
     </map:Map>
 </UserControl>

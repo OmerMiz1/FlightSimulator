@@ -5,23 +5,29 @@
              xmlns:local="clr-namespace:FlightSimulatorApp"
              Startup="App_Startup">
     <Application.Resources>
-         <ResourceDictionary>
+        <ResourceDictionary>
+            <!-- Airplane Template -->
+            <ControlTemplate x:Key="airplaneTemplate" TargetType="map:Pushpin">
+                <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2,26,200,30">
+                    <Image Source="Images/Airplane.png" Stretch="Uniform" Height="30" Width="30" OpacityMask="{x:Null}" />
+                </Canvas>
+            </ControlTemplate>
 
-             <!-- Dashboard Name Labels Style -->
-             <Style x:Key="DashboardNameLabelStyle" TargetType="{x:Type Label}">
-                 <Setter Property="VerticalAlignment" Value="Center" />
-                 <Setter Property="HorizontalAlignment" Value="Left" />
-                 <Setter Property="FontSize" Value="14" />
-             </Style>
+            <!-- Dashboard Name Labels Style -->
+            <Style x:Key="DashboardNameLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
 
             <!-- Dashboard Value Labels Style -->
-             <Style x:Key="DashboardValueLabelStyle" TargetType="{x:Type Label}">
-                 <Setter Property="VerticalAlignment" Value="Center" />
-                 <Setter Property="HorizontalAlignment" Value="Left" />
-                 <Setter Property="FontSize" Value="12" />
+            <Style x:Key="DashboardValueLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="FontSize" Value="12" />
                 <Setter Property="ContentStringFormat" Value="{}{0:F5}" />
-             </Style>
+            </Style>
 
-         </ResourceDictionary>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
