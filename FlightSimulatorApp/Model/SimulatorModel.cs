@@ -26,6 +26,8 @@ namespace FlightSimulatorApp.Model {
             get => _tcpClient.Connected;
         }
 
+        private static Mutex mtx = new Mutex();
+
         /* Variables related fields */
         private DictionaryIndexer _variables;
         private Queue<string> _setRequests = new Queue<string>();
@@ -98,7 +100,6 @@ namespace FlightSimulatorApp.Model {
             NotifyPropertyChanged("Warning: Network stream unable to read from server");
             return null;
         }
-
         public void Write(string msg) {
             /* Double check writing is possible */
             if (_stream.CanWrite) {
@@ -201,8 +202,10 @@ namespace FlightSimulatorApp.Model {
                 }
 
                 /* Send request for updates & read response */
+                mtx.WaitOne();
                 Write(requestMsg);
                 valuesFromSim = Read();
+                mtx.ReleaseMutex();
 
                 /* Enumerate each variable manually (iterator)*/
                 pathEnum = paths.GetEnumerator();
@@ -245,13 +248,16 @@ namespace FlightSimulatorApp.Model {
                 if (_setRequests.Count != 0) {
                     /* Send requested value change and read respond afterwards */
                     string request = _setRequests.Dequeue();
+                    mtx.WaitOne();
                     Write("set " + request);
                     string response = Read();
+                    mtx.ReleaseMutex();
 
                     /* Check if request was valid. */
                     if (response != request) {
                         /*TODO debug*/
-                        Debug.WriteLine("Err #1 Requested set request is invalid...", Thread.CurrentThread.Name);
+                        Debug.WriteLine("response= " + response);
+                        Debug.WriteLine("request= " + request);
                     }
                 }
             }
@@ -278,10 +284,9 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void SetVariable(string varName, string varValue) {
-            if (_tcpClient.Connected) {
-                string varPath = _varNamesMgr.toPath(varName);
-                _setRequests.Enqueue(varPath + " " + varValue);
-            }
+            string varPath = _varNamesMgr.toPath(varName);
+            _setRequests.Enqueue(varPath + " " + varValue);
+            
         }
     }
 }

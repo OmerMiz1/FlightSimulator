@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using FlightSimulatorApp.Model;
 
@@ -16,34 +19,46 @@ namespace FlightSimulatorApp.ViewModel {
         private bool _disconnectButtonEnabled = false;
         private bool _settingsButtonEnabled = true;
 
-        public bool ConnectButtonEnabled
-        {
+        public bool ConnectButtonEnabled {
             get { return _connectButtonEnabled; }
-            set { _connectButtonEnabled = value; NotifyPropertyChanged("ConnectButtonEnabled"); }
+            set {
+                _connectButtonEnabled = value;
+                NotifyPropertyChanged("ConnectButtonEnabled");
+            }
         }
 
         public bool DisconnectButtonEnabled {
             get { return _disconnectButtonEnabled; }
-            set { _disconnectButtonEnabled = value; NotifyPropertyChanged("DisconnectButtonEnabled"); }
+            set {
+                _disconnectButtonEnabled = value;
+                NotifyPropertyChanged("DisconnectButtonEnabled");
+            }
         }
 
         public bool SettingsButtonEnabled {
             get { return _settingsButtonEnabled; }
-            set { _settingsButtonEnabled = value; NotifyPropertyChanged("SettingsButtonEnabled"); }
+            set {
+                _settingsButtonEnabled = value;
+                NotifyPropertyChanged("SettingsButtonEnabled");
+            }
         }
 
         // private bool _isConnected = false;
         // private bool _connectionFailed = false;
-        public string Status
-        {
+        public string Status {
             get { return _status; }
-            set { _status = value; NotifyPropertyChanged("Status"); }
+            set {
+                _status = value;
+                NotifyPropertyChanged("Status");
+            }
         }
 
-        public Brush StatusColor
-        {
+        public Brush StatusColor {
             get { return _statusColor; }
-            set { _statusColor = value; NotifyPropertyChanged("StatusColor"); }
+            set {
+                _statusColor = value;
+                NotifyPropertyChanged("StatusColor");
+            }
         }
 
         public string Ip {
@@ -57,6 +72,7 @@ namespace FlightSimulatorApp.ViewModel {
                 }
             }
         }
+
         public int Port {
             get => _port;
             set {
@@ -124,40 +140,50 @@ namespace FlightSimulatorApp.ViewModel {
         // }
 
         private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == "Connected")
-            {
+            if (e.PropertyName == "Connected") {
                 Status = "Status: Connected";
                 StatusColor = Brushes.Green;
                 ConnectButtonEnabled = false;
                 DisconnectButtonEnabled = true;
                 SettingsButtonEnabled = false;
-            } else if (e.PropertyName == "Disconnected")
-            {
-                Status = "Status: Disconnected";
+            }
+            else if (e.PropertyName == "Disconnected") {
+                if (Status.Contains("Error") || Status.Contains("Warning")) {
+                    Delay(5000).ContinueWith(_ => Status = "Status: Disconnected");
+                }
+                else {
+                    Status = "Status: Disconnected";
+                }
                 StatusColor = Brushes.Red;
                 ConnectButtonEnabled = true;
                 DisconnectButtonEnabled = false;
                 SettingsButtonEnabled = true;
-            } else if (e.PropertyName.StartsWith("Error"))
-            {
+            }
+            else if (e.PropertyName.StartsWith("Error")) {
                 Status = e.PropertyName;
                 StatusColor = Brushes.Red;
-                ConnectButtonEnabled = false;
-                DisconnectButtonEnabled = true;
-                SettingsButtonEnabled = false;
-            } else if (e.PropertyName.StartsWith("Warning"))
-            {
+                ConnectButtonEnabled = true;
+                DisconnectButtonEnabled = false;
+                SettingsButtonEnabled = true;
+            }
+            else if (e.PropertyName.StartsWith("Warning")) {
                 Status = e.PropertyName;
                 StatusColor = Brushes.Orange;
             }
-            else
-            {
+            else {
                 Status = e.PropertyName;
                 StatusColor = Brushes.Orange;
                 ConnectButtonEnabled = false;
                 DisconnectButtonEnabled = false;
                 SettingsButtonEnabled = false;
             }
+        }
+
+        /* Method taken from: https://stackoverflow.com/questions/15341962/how-to-put-a-task-to-sleep-or-delay-in-c-sharp-4-0/15342122#15342122 */
+        static Task Delay(int milliseconds) {
+            var tcs = new TaskCompletionSource<object>();
+            new Timer(_ => tcs.SetResult(null)).Change(milliseconds, -1);
+            return tcs.Task;
         }
     }
 }

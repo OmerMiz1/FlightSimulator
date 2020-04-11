@@ -8,33 +8,32 @@
         mc:Ignorable="d" Height="600"
         Title="MainWindow">
     <!--Main Grid-->
-    <Grid x:Name="MainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <controls:ConnectionButtons x:Name="MyConnectionButtons"
-                                        HorizontalAlignment="Stretch"/>
-            <controls:Map x:Name="MyMap"
-                          Grid.Row="1"/>
+    <Viewbox StretchDirection="Both" Stretch="Fill">
+        <Grid x:Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" MaxHeight="100" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <controls:ConnectionButtons x:Name="MyConnectionButtons"
+                                            HorizontalAlignment="Stretch" />
+                <controls:Map x:Name="MyMap" Grid.Row="1" />
+            </Grid>
+            <Grid Grid.Column="1" Height="{Binding ElementName=MainGrid, Path=Height}" Width="auto">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="300" />
+                </Grid.RowDefinitions>
+
+                <controls:CockpitDashboard x:Name="MyCockpitDashboard"/>
+                <controls:CockpitControls x:Name="MyCockpitControls"
+                                          Grid.Row="1"/>
+            </Grid>
         </Grid>
-        <Grid Grid.Column="1" RenderSize="100,100">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <controls:CockpitDashboard x:Name="MyCockpitDashboard" 
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Stretch"/>
-            <controls:CockpitControls x:Name="MyCockpitControls"
-                                      VerticalAlignment="Center"
-                                      HorizontalAlignment="Stretch"
-                                      Grid.Row="1"/>
-        </Grid>
-    </Grid>
+    </Viewbox>
 </Window>

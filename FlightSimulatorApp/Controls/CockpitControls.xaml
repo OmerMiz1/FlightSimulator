@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
              mc:Ignorable="d">
+    <Viewbox StretchDirection="Both" Stretch="Uniform">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -70,4 +71,5 @@
         <Label Content="Rudder" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1"/>
         <Label Content="{Binding ElementName=Joystick, Path=X}" ContentStringFormat="{}{0:F2}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
     </Grid>
+    </Viewbox>
 </UserControl>
