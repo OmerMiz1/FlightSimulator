@@ -7,23 +7,21 @@
     <Application.Resources>
          <ResourceDictionary>
 
-             <!-- Dashboard Label Style -->
-             <Style x:Key="DashboardLabelStyle" TargetType="{x:Type Label}">
+             <!-- Dashboard Name Labels Style -->
+             <Style x:Key="DashboardNameLabelStyle" TargetType="{x:Type Label}">
                  <Setter Property="VerticalAlignment" Value="Center" />
                  <Setter Property="HorizontalAlignment" Value="Left" />
                  <Setter Property="FontSize" Value="14" />
              </Style>
 
-             <!-- Dashboard TextBox Style -->
-            <Style x:Key="DashboardTextBoxStyle" TargetType="{x:Type TextBox}">
+            <!-- Dashboard Value Labels Style -->
+             <Style x:Key="DashboardValueLabelStyle" TargetType="{x:Type Label}">
                  <Setter Property="VerticalAlignment" Value="Center" />
-                 <Setter Property="HorizontalAlignment" Value="Center" />
-                 <Setter Property="FontSize" Value="14" />
-                 <Setter Property="Width" Value="70" />
-                 <Setter Property="IsEnabled" Value="False" />
-                 <Setter Property="Text" Value="N/A" />
+                 <Setter Property="HorizontalAlignment" Value="Left" />
+                 <Setter Property="FontSize" Value="12" />
+                <Setter Property="ContentStringFormat" Value="{}{0:F5}" />
              </Style>
 
-        </ResourceDictionary>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>
