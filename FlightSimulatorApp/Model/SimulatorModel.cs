@@ -93,7 +93,6 @@ namespace FlightSimulatorApp.Model {
                     catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
                         NotifyConnectionChanged("Error: Connection to server lost\\broken");
                         Stop();
-                        /* TODO Unknown exception thrown, might be because server was shut down mid way*/
                     }
                 } while (_stream.DataAvailable);
                 return strBuilder.ToString();
@@ -104,6 +103,9 @@ namespace FlightSimulatorApp.Model {
             return null;
         }
         public void Write(string msg) {
+            
+
+
             /* Double check writing is possible */
             if (_stream.CanWrite) {
                 try {
@@ -131,10 +133,12 @@ namespace FlightSimulatorApp.Model {
 
             /* Start getting data from simulator (continuously) */
             Thread getValuesThread = new Thread(ReadValuesFromSim);
+            getValuesThread.Name = "###Get Values Thread";
             getValuesThread.Start();
 
             /* Start responding to set requests from user input (GUI actually) */
             Thread setValuesThread = new Thread(WriteValuesToSim);
+            setValuesThread.Name = "@@@Set Values Thread";
             setValuesThread.Start();
 
             /** TODO JUST A TEST 
@@ -208,9 +212,11 @@ namespace FlightSimulatorApp.Model {
 
                 /* Send request for updates & read response */
                 mtx.WaitOne();
+                Debug.WriteLine("Locked mutex...",Thread.CurrentThread.Name);
                 Write(requestMsg);
                 valuesFromSim = Read();
-                Debug.WriteLine("Reading from server:\n" + valuesFromSim);
+                //Debug.WriteLine("Reading from server:\n" + valuesFromSim);
+                Debug.WriteLine("Unlocking mutex...", Thread.CurrentThread.Name);
                 mtx.ReleaseMutex();
 
                 /* Enumerate each variable manually (iterator)*/
@@ -242,12 +248,12 @@ namespace FlightSimulatorApp.Model {
                     }
                 }
 
-                if (iterations > 10) {
+                /*if (iterations > 10) {
                     Debug.WriteLine("TOO MANY VALUES: Total updated values = " + iterations);
                 }
                 else {
                     Debug.WriteLine("Total updated values = " + iterations);
-                }
+                }*/
                 pathEnum.Dispose();
                 Thread.Sleep(100);
             }
@@ -263,8 +269,10 @@ namespace FlightSimulatorApp.Model {
                     /* Send requested value change and read respond afterwards */
                     string request = _setRequests.Dequeue();
                     mtx.WaitOne();
+                    Debug.WriteLine("Locked mutex...",Thread.CurrentThread.Name);
                     Write("set " + request);
                     string response = Read();
+                    Debug.WriteLine("Unlocking mutex...",Thread.CurrentThread.Name);
                     mtx.ReleaseMutex();
                 }
             }
@@ -293,7 +301,6 @@ namespace FlightSimulatorApp.Model {
         public void SetVariable(string varName, string varValue) {
             string varPath = _varNamesMgr.toPath(varName);
             _setRequests.Enqueue(varPath + " " + varValue);
-            
         }
     }
 }
