@@ -10,6 +10,8 @@ namespace FlightSimulatorApp.ViewModel
         private double _heading;
         private Location _location = new Location();
         private VariableNamesManager _varNamesMgr = new VariableNamesManager();
+        private bool LongitudeOutOfBounds = false;
+        private bool LatitudeOutOfBounds = false;
 
         public Location Location
         {
@@ -27,13 +29,26 @@ namespace FlightSimulatorApp.ViewModel
         {
             get => _location.Longitude;
             set {
-                if (value < Location.MinLongitude) {
-                    /*TODO Show status: "Warning: Airplane out of bounds\n Longitude is below minimal bound"*/
-                } else if (Location.MaxLongitude > value) {
-                    /*TODO Show status: "Warning: Airplane out of bounds\n Longitude is above maximal bound"*/
+                var normalized = value;
+                if (value < Location.MinLongitude)
+                {
+                    normalized = Location.MinLongitude;
+                    _myModel.NotifyStatusChanged("Warning: Airplane out of bounds\n Longitude is below minimal bound");
+                    LongitudeOutOfBounds = true;
+                } else if (value > Location.MaxLongitude) {
+                    normalized = Location.MaxLongitude;
+                    _myModel.NotifyStatusChanged("Warning: Airplane out of bounds\n Longitude is above maximal bound");
+                    LongitudeOutOfBounds = true;
+                } else if (LongitudeOutOfBounds)
+                {
+                    _myModel.NotifyStatusChanged("Connected");
+                    LongitudeOutOfBounds = false;
                 }
-                _location.Longitude = value;
-                NotifyPropertyChanged("Longitude");
+                _location.Longitude = normalized;
+                if (value != normalized)
+                {
+                    NotifyPropertyChanged("Longitude");
+                }
             }
         }
         public double Latitude
@@ -46,11 +61,16 @@ namespace FlightSimulatorApp.ViewModel
                  https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values*/
                 if (value < Location.MinLatitude) {
                     normalized = Location.MinLatitude;
-                    /*TODO Show status: "Warning: Airplane out of bounds\n Latitude is below minimal bound"*/
-                    
+                    _myModel.NotifyStatusChanged("Warning: Airplane out of bounds\n Latitude is below minimal bound");
+                    LatitudeOutOfBounds = true;
                 } else if (value > Location.MaxLatitude) {
                     normalized = Location.MaxLatitude;
-                    /*TODO Show status: "Warning: Airplane out of bounds\n Latitude is above maximal bound"*/
+                    _myModel.NotifyStatusChanged("Warning: Airplane out of bounds\n Latitude is above maximal bound");
+                    LatitudeOutOfBounds = true;
+                } else if (LatitudeOutOfBounds)
+                {
+                    _myModel.NotifyStatusChanged("Connected");
+                    LatitudeOutOfBounds = false;
                 }
                 _location.Latitude = normalized;
                 if (value != normalized) {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows;
 using FlightSimulatorApp.Model;
 
 namespace FlightSimulatorApp.ViewModel
 {
     public class CockpitDashboardVM : INotifyPropertyChanged
     {
+        private double _verticalSpeed;
         private double _altitudeAltimeter;
         private double _altitudeGps;
         private double _groundSpeed;
@@ -14,15 +16,10 @@ namespace FlightSimulatorApp.ViewModel
         private double _roll;
         private double _speed;
 
-        /* Fields & Properties declarations */
-        private double _verticalSpeed;
-        private VariableNamesManager varNamesMgr = new VariableNamesManager();
-
         public CockpitDashboardVM(SimulatorModel model)
         {
             model.PropertyChanged += Model_PropertyChanged;
         }
-
         public double VerticalSpeed
         {
             get => _verticalSpeed;
@@ -32,7 +29,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("VerticalSpeed");
             }
         }
-
         public double Heading
         {
             get => _heading;
@@ -42,7 +38,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Heading");
             }
         }
-
         public double GroundSpeed
         {
             get => _groundSpeed;
@@ -52,7 +47,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("GroundSpeed");
             }
         }
-
         public double Speed
         {
             get => _speed;
@@ -62,7 +56,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Speed");
             }
         }
-
         public double AltitudeGps
         {
             get => _altitudeGps;
@@ -72,7 +65,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("AltitudeGps");
             }
         }
-
         public double Roll
         {
             get => _roll;
@@ -82,7 +74,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Roll");
             }
         }
-
         public double Pitch
         {
             get => _pitch;
@@ -92,7 +83,6 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Pitch");
             }
         }
-
         public double AltitudeAltimeter
         {
             get => _altitudeAltimeter;
