@@ -103,8 +103,10 @@ namespace FlightSimulatorApp.Model {
             return null;
         }
         public void Write(string msg) {
-            
-
+            /* Clear server buffer and get rid of data not related to this query */
+            if (_stream.CanRead && _stream.DataAvailable) {
+                Read();
+            }
 
             /* Double check writing is possible */
             if (_stream.CanWrite) {
@@ -133,32 +135,13 @@ namespace FlightSimulatorApp.Model {
 
             /* Start getting data from simulator (continuously) */
             Thread getValuesThread = new Thread(ReadValuesFromSim);
-            getValuesThread.Name = "###Get Values Thread";
+            getValuesThread.Name = "Get Values Thread";
             getValuesThread.Start();
 
             /* Start responding to set requests from user input (GUI actually) */
             Thread setValuesThread = new Thread(WriteValuesToSim);
-            setValuesThread.Name = "@@@Set Values Thread";
+            setValuesThread.Name = "Set Values Thread";
             setValuesThread.Start();
-
-            /** TODO JUST A TEST 
-            string longiPath = "/position/longitude-deg";
-            Thread t = new Thread(() =>
-            {
-                for (double longi = 0; true; longi++)
-                {
-                    if (longi > 40)
-                    {
-                        longi = 0;
-                    }
-
-                    Debug.WriteLine("Inside SimulatorModel.Start, longi=" + longi + "now...");
-                    _variables[longiPath] = longi.ToString();
-                    NotifyPropertyChanged(longiPath);
-                    Thread.Sleep(50);
-                }
-            });
-            t.Start();*/
 
             getValuesThread.Join();
             setValuesThread.Join();
@@ -212,11 +195,8 @@ namespace FlightSimulatorApp.Model {
 
                 /* Send request for updates & read response */
                 mtx.WaitOne();
-                Debug.WriteLine("Locked mutex...",Thread.CurrentThread.Name);
                 Write(requestMsg);
                 valuesFromSim = Read();
-                //Debug.WriteLine("Reading from server:\n" + valuesFromSim);
-                Debug.WriteLine("Unlocking mutex...", Thread.CurrentThread.Name);
                 mtx.ReleaseMutex();
 
                 /* Enumerate each variable manually (iterator)*/
@@ -224,7 +204,6 @@ namespace FlightSimulatorApp.Model {
                 pathEnum.MoveNext();
 
                 /* Split received values and update each one */
-                int iterations = 0; /*TODO DEBUG*/
                 List<string> newValsArray = valuesFromSim.Split("\n").ToList();
                 foreach (string newVal in newValsArray) {
                     if (newVal == "ERR") {
@@ -242,18 +221,11 @@ namespace FlightSimulatorApp.Model {
                         Console.WriteLine("ERR");
                     }
 
-                    iterations++;
                     if (!pathEnum.MoveNext()) {
                         break;
                     }
                 }
 
-                /*if (iterations > 10) {
-                    Debug.WriteLine("TOO MANY VALUES: Total updated values = " + iterations);
-                }
-                else {
-                    Debug.WriteLine("Total updated values = " + iterations);
-                }*/
                 pathEnum.Dispose();
                 Thread.Sleep(100);
             }
@@ -266,13 +238,12 @@ namespace FlightSimulatorApp.Model {
         private void WriteValuesToSim() {
             while (_running) {
                 if (_setRequests.Count != 0) {
-                    /* Send requested value change and read respond afterwards */
+                    /** Send requested value change and read respond afterwards
+                     there is no actual use in what is read, so for now just read*/
                     string request = _setRequests.Dequeue();
                     mtx.WaitOne();
-                    Debug.WriteLine("Locked mutex...",Thread.CurrentThread.Name);
                     Write("set " + request);
-                    string response = Read();
-                    Debug.WriteLine("Unlocking mutex...",Thread.CurrentThread.Name);
+                    /*string response =*/ Read();
                     mtx.ReleaseMutex();
                 }
             }
