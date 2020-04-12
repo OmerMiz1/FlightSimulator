@@ -1,25 +1,32 @@
 ﻿<UserControl x:Class="FlightSimulatorApp.Controls.ConnectionButtons"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d">
     <Grid>
         <StackPanel Orientation="Vertical">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Name ="connectButton" IsEnabled="{Binding Path=ConnectButtonEnabled}" Content="Connect" Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch" Background="Green" Click="connectButton_Click"/>
-                <Button Name="disconnectButton" IsEnabled="{Binding Path=DisconnectButtonEnabled}" Content="Disconnect" Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch" Background="Red" Click="disconnectButton_Click"/>
-                <Button Name="settingsButton" IsEnabled="{Binding Path=SettingsButtonEnabled}" Content="Settings" Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch" Background="Yellow" Click="settingsButton_Click"/>
+                <Button Name="connectButton" IsEnabled="{Binding Path=ConnectButtonEnabled}" Content="Connect"
+                        Margin="3" Padding="5" FontSize="20" Grid.Column="0" HorizontalAlignment="Stretch"
+                        Background="Green" Click="connectButton_Click" />
+                <Button Name="disconnectButton" IsEnabled="{Binding Path=DisconnectButtonEnabled}" Content="Disconnect"
+                        Margin="3" Padding="5" FontSize="20" Grid.Column="1" HorizontalAlignment="Stretch"
+                        Background="Red" Click="disconnectButton_Click" />
+                <Button Name="settingsButton" IsEnabled="{Binding Path=SettingsButtonEnabled}" Content="Settings"
+                        Margin="3" Padding="5" FontSize="20" Grid.Column="2" HorizontalAlignment="Stretch"
+                        Background="Yellow" Click="settingsButton_Click" />
             </Grid>
             <!-- Label is inside a view box so font size will fit the box size -->
             <Viewbox Width="350" Height="35">
-                <TextBlock Name="StatusLabel" Text="{Binding Path=Status, FallbackValue=Status: Disconnected}" Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontWeight="Bold" FontSize="10" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="4,0,0,0"/>
+                <TextBlock Name="StatusLabel" Text="{Binding Path=Status, FallbackValue=Status: Disconnected}"
+                           Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontWeight="Bold" FontSize="10"
+                           HorizontalAlignment="Center" TextWrapping="Wrap" Margin="4,0,0,0" />
             </Viewbox>
         </StackPanel>
     </Grid>

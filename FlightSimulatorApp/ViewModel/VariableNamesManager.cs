@@ -2,8 +2,10 @@
 {
     public class VariableNamesManager
     {
-        public string toPath(string name) {
-            switch (name) {
+        public string toPath(string name)
+        {
+            switch (name)
+            {
                 case "Heading": return "/instrumentation/heading-indicator/indicated-heading-deg";
                 case "VerticalSpeed": return "/instrumentation/gps/indicated-vertical-speed";
                 case "GroundSpeed": return "/instrumentation/gps/indicated-ground-speed-kt";
@@ -25,8 +27,10 @@
             }
         }
 
-        public string toName(string path) {
-            switch (path) {
+        public string toName(string path)
+        {
+            switch (path)
+            {
                 case "/instrumentation/heading-indicator/indicated-heading-deg": return "Heading";
                 case "/instrumentation/gps/indicated-vertical-speed": return "VerticalSpeed";
                 case "/instrumentation/gps/indicated-ground-speed-kt": return "GroundSpeed";
