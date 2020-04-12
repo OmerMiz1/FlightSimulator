@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
-using FlightSimulatorApp.Controls;
 using FlightSimulatorApp.Model;
 using FlightSimulatorApp.ViewModel;
-using Microsoft.Maps.MapControl.WPF;
 
-namespace FlightSimulatorApp {
+namespace FlightSimulatorApp
+{
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
         /* Default values declarations */
         public static string DefaultIp { get; } = "127.0.0.1";
         public static int DefaultPort { get; } = 5402;
 
-        private void App_Startup(Object sender, StartupEventArgs e) {
-            Regex ValidIPRegex =
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
+            var ValidIPRegex =
                 new Regex(
                     "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
 

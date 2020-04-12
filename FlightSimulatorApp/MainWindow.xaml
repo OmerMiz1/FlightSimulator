@@ -11,8 +11,8 @@
     <Viewbox StretchDirection="Both" Stretch="Fill">
         <Grid x:Name="MainGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" MinWidth="400"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*" MinWidth="400" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -30,11 +30,11 @@
                     <RowDefinition Height="300" />
                 </Grid.RowDefinitions>
 
-                <controls:CockpitDashboard x:Name="MyCockpitDashboard" 
-                                           Margin="0,0,5,0" 
-                                           Width="300"/>
+                <controls:CockpitDashboard x:Name="MyCockpitDashboard"
+                                           Margin="0,0,5,0"
+                                           Width="300" />
                 <controls:CockpitControls x:Name="MyCockpitControls"
-                                          Grid.Row="1" 
+                                          Grid.Row="1"
                                           Margin="0,0,0,5" />
             </Grid>
         </Grid>

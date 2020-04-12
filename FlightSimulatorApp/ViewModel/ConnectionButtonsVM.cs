@@ -1,18 +1,19 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using FlightSimulatorApp.Model;
 
-namespace FlightSimulatorApp.ViewModel {
-    public class ConnectionButtonsVM : INotifyPropertyChanged {
-        private SimulatorModel _model;
-        public event PropertyChangedEventHandler PropertyChanged;
+namespace FlightSimulatorApp.ViewModel
+{
+    public class ConnectionButtonsVM : INotifyPropertyChanged
+    {
+        private bool _connectButtonEnabled = true;
+        private bool _disconnectButtonEnabled;
         private string _ip;
+        private readonly SimulatorModel _model;
         private int _port;
+        private bool _settingsButtonEnabled = true;
         private string _status = "Status: Disconnected";
         private Brush _statusColor = Brushes.Red;
         private bool _connectButtonEnabled = true;
@@ -20,25 +21,39 @@ namespace FlightSimulatorApp.ViewModel {
         private bool _settingsButtonEnabled = true;
         private static bool StatusChanged = false;
 
-        public bool ConnectButtonEnabled {
-            get { return _connectButtonEnabled; }
-            set {
+        public ConnectionButtonsVM(SimulatorModel model)
+        {
+            _model = model;
+            model.ConnectionChanged += Model_ConnectionChanged;
+            Ip = model.Ip;
+            Port = model.Port;
+        }
+
+        public bool ConnectButtonEnabled
+        {
+            get => _connectButtonEnabled;
+            set
+            {
                 _connectButtonEnabled = value;
                 NotifyPropertyChanged("ConnectButtonEnabled");
             }
         }
 
-        public bool DisconnectButtonEnabled {
-            get { return _disconnectButtonEnabled; }
-            set {
+        public bool DisconnectButtonEnabled
+        {
+            get => _disconnectButtonEnabled;
+            set
+            {
                 _disconnectButtonEnabled = value;
                 NotifyPropertyChanged("DisconnectButtonEnabled");
             }
         }
 
-        public bool SettingsButtonEnabled {
-            get { return _settingsButtonEnabled; }
-            set {
+        public bool SettingsButtonEnabled
+        {
+            get => _settingsButtonEnabled;
+            set
+            {
                 _settingsButtonEnabled = value;
                 NotifyPropertyChanged("SettingsButtonEnabled");
             }
@@ -46,28 +61,35 @@ namespace FlightSimulatorApp.ViewModel {
 
         // private bool _isConnected = false;
         // private bool _connectionFailed = false;
-        public string Status {
-            get { return _status; }
-            set {
+        public string Status
+        {
+            get => _status;
+            set
+            {
                 _status = value;
                 StatusChanged = true;
                 NotifyPropertyChanged("Status");
             }
         }
 
-        public Brush StatusColor {
-            get { return _statusColor; }
-            set {
+        public Brush StatusColor
+        {
+            get => _statusColor;
+            set
+            {
                 _statusColor = value;
                 NotifyPropertyChanged("StatusColor");
             }
         }
 
-        public string Ip {
+        public string Ip
+        {
             get => _ip;
-            set {
+            set
+            {
                 //If you remove this condition make sure it won't cause an infinite loop while initializing
-                if (_ip != value) {
+                if (_ip != value)
+                {
                     _ip = value;
                     NotifyPropertyChanged("Ip");
                     _model.Ip = value;
@@ -75,11 +97,14 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        public int Port {
+        public int Port
+        {
             get => _port;
-            set {
+            set
+            {
                 //If you remove this condition make sure it won't cause an infinite loop while initializing
-                if (_port != value) {
+                if (_port != value)
+                {
                     _port = value;
                     NotifyPropertyChanged("Port");
                     _model.Port = value;
@@ -87,27 +112,27 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        public ConnectionButtonsVM(SimulatorModel model) {
-            _model = model;
-            model.ConnectionChanged += Model_ConnectionChanged;
-            Ip = model.Ip;
-            Port = model.Port;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged(string propertyName) {
+        private void NotifyPropertyChanged(string propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void Connect() {
+        public void Connect()
+        {
             _model.Connect();
         }
 
-        public void Disconnect() {
+        public void Disconnect()
+        {
             _model.Disconnect();
         }
 
-        private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == "Connected") {
+        private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Connected")
+            {
                 Status = "Status: Connected";
                 StatusColor = Brushes.Green;
                 ConnectButtonEnabled = false;
@@ -124,24 +149,26 @@ namespace FlightSimulatorApp.ViewModel {
                     });
                 } else {
                     Status = "Status: Disconnected";
-                }
                 StatusColor = Brushes.Red;
                 ConnectButtonEnabled = true;
                 DisconnectButtonEnabled = false;
                 SettingsButtonEnabled = true;
             }
-            else if (e.PropertyName.StartsWith("Error")) {
+            else if (e.PropertyName.StartsWith("Error"))
+            {
                 Status = e.PropertyName;
                 StatusColor = Brushes.Red;
                 ConnectButtonEnabled = true;
                 DisconnectButtonEnabled = false;
                 SettingsButtonEnabled = true;
             }
-            else if (e.PropertyName.StartsWith("Warning")) {
+            else if (e.PropertyName.StartsWith("Warning"))
+            {
                 Status = e.PropertyName;
                 StatusColor = Brushes.Orange;
             }
-            else {
+            else
+            {
                 Status = e.PropertyName;
                 StatusColor = Brushes.Orange;
                 ConnectButtonEnabled = false;
@@ -151,7 +178,8 @@ namespace FlightSimulatorApp.ViewModel {
         }
 
         /* Method taken from: https://stackoverflow.com/questions/15341962/how-to-put-a-task-to-sleep-or-delay-in-c-sharp-4-0/15342122#15342122 */
-        static Task Delay(int milliseconds) {
+        private static Task Delay(int milliseconds)
+        {
             var tcs = new TaskCompletionSource<object>();
             new Timer(_ => tcs.SetResult(null)).Change(milliseconds, -1);
             return tcs.Task;

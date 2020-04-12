@@ -1,38 +1,44 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Windows;
-using System.Windows.Automation;
 using FlightSimulatorApp.ViewModel;
-using ThreadState = System.Threading.ThreadState;
 
-namespace FlightSimulatorApp.Model {
-    public class SimulatorModel : TcpClient, INotifyPropertyChanged {
+namespace FlightSimulatorApp.Model
+{
+    public class SimulatorModel : TcpClient, INotifyPropertyChanged
+    {
+        private static readonly Mutex mtx = new Mutex();
+        private bool _running;
+        private readonly Queue<string> _setRequests = new Queue<string>();
+        private DictionaryIndexer _setRequestsDic = new DictionaryIndexer();
+
+        private NetworkStream _stream;
+
         /* Server related fields */
         private TcpClient _tcpClient = new TcpClient();
-        private NetworkStream _stream;
-        private Boolean _running = false;
-        public string Ip { get; set; }
-        public int Port { get; set; }
+
+        public Boolean Connected {
+            get => _tcpClient.Connected;
+        }
 
         private Thread getValuesThread;
         private Thread setValuesThread;
-        private static Mutex mtx = new Mutex();
 
         /* Variables related fields */
         private VariableNamesManager _varNamesMgr = new VariableNamesManager();
         private DictionaryIndexer _variables = new DictionaryIndexer();
         private Queue<string> _setRequests = new Queue<string>();
+
+        public string Ip { get; set; }
+        public int Port { get; set; }
+
+        public new bool  Connected => _tcpClient.Connected;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangedEventHandler ConnectionChanged;
@@ -44,23 +50,34 @@ namespace FlightSimulatorApp.Model {
         public void Connect() {
             /* Connect to server */
             try { 
+        public void Connect()
+        {
+            try
+            {
+                /* Connect to server */
                 _tcpClient = new TcpClient(Ip, Port);
                 NotifyConnectionChanged("Connected");
                 Debug.WriteLine("TCP Client: Connected successfully to server...");
             }
-            catch (SocketException se) { /* Usually this error points that server is not on yet */
-                NotifyConnectionChanged("Error Connection Failed:\n 1. Try to turn on the server\n 2. Click on 'Connect'");
+            catch (SocketException)
+            {
+                /* Usually this error points that server is not on yet */
+                NotifyConnectionChanged(
+                    "Error Connection Failed:\n 1. Try to turn on the server\n 2. Click on 'Connect'");
                 return;
             }
-            catch (Exception e) { /* Unexpected error */
+            catch (Exception)
+            {
+                /* Unexpected error */
                 NotifyConnectionChanged("Error Connection Failed:\n Unexpected error occured");
                 return;
             }
             
             /* Check connection & Start communicating. NOTE:
                Named the thread for easier debugging */
-            if (_tcpClient.Connected) {
-                Thread t = new Thread(Start);
+            if (_tcpClient.Connected)
+            {
+                var t = new Thread(Start);
                 t.Name = "SimulatorModel.Start Thread";
                 t.Start();
             }
@@ -74,40 +91,49 @@ namespace FlightSimulatorApp.Model {
             Debug.WriteLine("TCP Client: Disconnected successfully to server...");
         }
 
-        public string Read() {
+        public string Read()
+        {
             /* Double check reading is possible */
-            if (_tcpClient.Connected) {
-                byte[] readBuffer = new byte[4096];
-                int bytesRead = 0;
-                StringBuilder strBuilder = new StringBuilder();
+            if (_tcpClient.Connected)
+            {
+                var readBuffer = new byte[4096];
+                var bytesRead = 0;
+                var strBuilder = new StringBuilder();
 
                 /** Read all data sent from simulator
                  * NOTE: Probably there's no need in the string builder
                  * because the messaged received from sim are short.
                  * Still i think its a good idea just in-case.
                  **/
-                do {
-                    try {
+                do
+                {
+                    try
+                    {
                         bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
                         strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
                     }
-                    catch (ArgumentNullException e) {
+                    catch (ArgumentNullException)
+                    {
                         Debug.WriteLine("Argument Null Exception thrown at Read()");
                     }
-                    catch (ObjectDisposedException e) {
+                    catch (ObjectDisposedException)
+                    {
                         Debug.WriteLine("Object Disposed Exception thrown at Read()");
                     }
-                    catch (InvalidOperationException e) {
+                    catch (InvalidOperationException)
+                    {
                         Debug.WriteLine("Invalid Operation Exception thrown at Read()");
                     }
-                    catch (IOException e) {
+                    catch (IOException e)
+                    {
                         Debug.WriteLine("I/O Exception thrown at Read()");
                         Debug.WriteLine("Inner Exception:\n" + e.InnerException);
                     }
-                    catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
-                        if (!_tcpClient.Connected) {
+                    catch (Exception)
+                    {
+                        /* Error occured - might be server shut down unexpectedly */
+                        if (!_tcpClient.Connected)
                             NotifyConnectionChanged("Error (Reading): Connection to server lost\\broken");
-                        }
                         /**Debug.WriteLine("<<<<<<<<<<<<<< ERROR REASON <<<<<<<<<<<<<<");
                         Debug.WriteLine("Stack Trace: \n"+e.StackTrace);
                         Debug.WriteLine("Message: \n"+e.Message);
@@ -118,12 +144,15 @@ namespace FlightSimulatorApp.Model {
                         Stop();
                     }
                 } while (_stream.DataAvailable);
+
                 return strBuilder.ToString();
             }
+
             return "";
         }
 
-        public void Write(string msg) {
+        public void Write(string msg)
+        {
             /* Clear server buffer and get rid of data not related to this query */
             /*var buffer = new byte[4096];
             while (_stream.DataAvailable) {
@@ -132,19 +161,22 @@ namespace FlightSimulatorApp.Model {
             /*if (_stream.CanRead && _stream.DataAvailable) {
                 Read();
             }*/
-            if (_tcpClient.Connected) {
-                try {
-                    byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
+            if (_tcpClient.Connected)
+                try
+                {
+                    var writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                     _stream.Write(writeBuffer, 0, writeBuffer.Length);
-                } catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
+                }
+                catch (Exception)
+                {
+                    /* Error occured - might be server shut down unexpectedly */
                     NotifyConnectionChanged("Error (Writing): Connection to server lost\\broken");
                     Stop();
                 }
-            }
-            
         }
 
-        public void Start() {
+        public void Start()
+        {
             /* Clear any requests sent before starting this server*/
             _running = true;
             _setRequests.Clear();
@@ -169,28 +201,29 @@ namespace FlightSimulatorApp.Model {
             Disconnect();
         }
 
-        public void Stop() {
+        public void Stop()
+        {
             _running = false;
         }
 
-        public void NotifyPropertyChanged(string propName) {
-            if (_varNamesMgr.toName(propName) != "Variable Not Found") {
+        public void NotifyPropertyChanged(string propName)
+        {
+            if (_varNamesMgr.toName(propName) != "Variable Not Found")
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_varNamesMgr.toName(propName)));
-            }
-            else {
-                /*TODO WHAT SHOULD WE PRINT IF HAPPENS?*/
+            else /*TODO WHAT SHOULD WE PRINT IF HAPPENS?*/
                 Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
-            }
         }
 
-        public void NotifyConnectionChanged(string connected) {
+        public void NotifyConnectionChanged(string connected)
+        {
             ConnectionChanged?.Invoke(this, new PropertyChangedEventArgs(connected));
         }
 
         /* Personal Implementations */
-        private void ReadValuesFromSim() {
-            StringBuilder strBuilder = new StringBuilder();
-            List<string> paths = new List<string>();
+        private void ReadValuesFromSim()
+        {
+            var strBuilder = new StringBuilder();
+            var paths = new List<string>();
             List<string>.Enumerator pathEnum;
             string requestMsg, valuesFromSimRaw;
 
@@ -198,7 +231,8 @@ namespace FlightSimulatorApp.Model {
              *  https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.system-collections-idictionary-getenumerator?view=netframework-4.8
              */
             var entry = _variables.GetEnumerator();
-            while (entry.MoveNext()) {
+            while (entry.MoveNext())
+            {
                 /*TODO: Possible problem, possible fix =  use AppendLine*/
                 strBuilder.Append("get " + entry.Key + "\r\n");
                 paths.Add((string) entry.Key);
@@ -211,7 +245,7 @@ namespace FlightSimulatorApp.Model {
             while (_running) {
                 /* TODO maybe need to show notification to user? */
                 if (!_tcpClient.Connected) {
-                    NotifyConnectionChanged("");
+                    NotifyConnectionChanged("Disconnect");
                 }
 
                 /* Send request for updates & read response */
@@ -225,11 +259,9 @@ namespace FlightSimulatorApp.Model {
                 pathEnum.MoveNext();
 
                 /* Split received values and update each one */
-                List<string> valuesFromSim = valuesFromSimRaw.Split("\n").ToList();
+                var valuesFromSim = valuesFromSimRaw.Split("\n").ToList();
                 valuesFromSim.RemoveAll(string.IsNullOrEmpty);
-                foreach (var v in valuesFromSim) {
-                    Debug.WriteLine(v);
-                }
+                foreach (var v in valuesFromSim) Debug.WriteLine(v);
 
                 Debug.WriteLine("---------------");
                 /*TODO DEBUG START*/ /**
@@ -258,58 +290,62 @@ namespace FlightSimulatorApp.Model {
                 Debug.WriteLine("");
                 */ /*TODO DEBUG END*/
 
-                if (valuesFromSim.Count == paths.Count) {
-                    foreach (string newVal in valuesFromSim) {
-                        if (newVal == "ERR") {
+                if (valuesFromSim.Count == paths.Count)
+                    foreach (var newVal in valuesFromSim)
+                    {
+                        if (newVal == "ERR")
+                        {
                             /*TODO notify user about error for 2 ~ 5 seconds and make it disappear. */
                         }
-                        else if (newVal == "") {
+                        else if (newVal == "")
+                        {
                             // DO NOTHING
                         }
-                        else if (_variables.ContainsKey(pathEnum.Current)) {
+                        else if (_variables.ContainsKey(pathEnum.Current))
+                        {
                             _variables[pathEnum.Current] = newVal;
                             NotifyPropertyChanged(pathEnum.Current);
                         }
-                        else {
+                        else
+                        {
                             /*TODO Make sure we notify user (with GUI text box/smthing..) about an error!!!! */
                             Console.WriteLine("ERR");
                         }
 
-                        if (!pathEnum.MoveNext()) {
-                            break;
-                        }
+                        if (!pathEnum.MoveNext()) break;
                     }
-                }
 
                 pathEnum.Dispose();
                 Thread.Sleep(100);
             }
         }
 
-        private void WriteValuesToSim() {
-            while (_running) {
-
-                if (_setRequests.Count != 0) {
+        private void WriteValuesToSim()
+        {
+            while (_running)
+                if (_setRequests.Count != 0)
+                {
                     /*Send requested value change and read respond afterwards
-                     there is no actual use in what is read, so for now just read*/
-                    string request = _setRequests.Dequeue();
+                         there is no actual use in what is read, so for now just read*/
+                    var request = _setRequests.Dequeue();
                     mtx.WaitOne();
                     Write("set " + request);
                     Read();
                     mtx.ReleaseMutex();
                 }
-                /**try {
+            /**try {
                     Thread.Sleep(100);
                 }
                 catch (ThreadInterruptedException tie) {
                     //DO NOTHING JUST CONTINUE
                 }*/
-            }
         }
 
-        private void InitVariables() {
+        private void InitVariables()
+        {
             /* Initializes NAMES of variables that model is GETTING FROM simulator */
-            _variables = new DictionaryIndexer {
+            _variables = new DictionaryIndexer
+            {
                 ["/instrumentation/heading-indicator/indicated-heading-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-vertical-speed"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-ground-speed-kt"] = "NO_VALUE_YET",
@@ -319,19 +355,19 @@ namespace FlightSimulatorApp.Model {
                 ["/instrumentation/attitude-indicator/internal-pitch-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/altimeter/indicated-altitude-ft"] = "NO_VALUE_YET",
                 ["/position/longitude-deg"] = "NO_VALUE_YET",
-                ["/position/latitude-deg"] = "NO_VALUE_YET",
+                ["/position/latitude-deg"] = "NO_VALUE_YET"
             };
         }
 
-        public string GetVariable(string varName) {
+        public string GetVariable(string varName)
+        {
             return _variables[_varNamesMgr.toPath(varName)];
         }
 
-        public void SetVariable(string varName, string varValue) {
-            if (_setRequests.Count() > 8) {
-                _setRequests.Dequeue();
-            }
-            string varPath = _varNamesMgr.toPath(varName);
+        public void SetVariable(string varName, string varValue)
+        {
+            if (_setRequests.Count() > 8) _setRequests.Dequeue();
+            var varPath = _varNamesMgr.toPath(varName);
             _setRequests.Enqueue(varPath + " " + varValue);
             /**if (setValuesThread.ThreadState != ThreadState.Running) {
                 setValuesThread.Interrupt();

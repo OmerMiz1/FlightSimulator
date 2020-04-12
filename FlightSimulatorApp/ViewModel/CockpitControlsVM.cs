@@ -1,85 +1,100 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using FlightSimulatorApp.Annotations;
 using FlightSimulatorApp.Model;
 
-namespace FlightSimulatorApp.ViewModel {
-    public class CockpitControlsVM : INotifyPropertyChanged {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private SimulatorModel mySimulatorModel;
-        private double _rudder;
-        private double _elevator;
+namespace FlightSimulatorApp.ViewModel
+{
+    public class CockpitControlsVM : INotifyPropertyChanged
+    {
         private double _aileron;
+        private double _elevator;
+        private double _rudder;
         private double _throttle;
+        private readonly SimulatorModel mySimulatorModel;
 
-        public CockpitControlsVM(SimulatorModel newSimulatorModel) {
+        public CockpitControlsVM(SimulatorModel newSimulatorModel)
+        {
             mySimulatorModel = newSimulatorModel;
             mySimulatorModel.PropertyChanged += Model_PropertyChanged;
         }
 
-        public double Rudder {
+        public double Rudder
+        {
             get => _rudder;
-            set {
+            set
+            {
                 _rudder = value;
                 NotifyPropertyChanged("Rudder");
                 mySimulatorModel.SetVariable("Rudder", value.ToString());
             }
         }
-        public double Elevator {
-            get => this._elevator;
-            set {
+
+        public double Elevator
+        {
+            get => _elevator;
+            set
+            {
                 _elevator = value;
                 NotifyPropertyChanged("Elevator");
                 mySimulatorModel.SetVariable("Elevator", value.ToString());
             }
         }
-        public double Aileron {
+
+        public double Aileron
+        {
             get => _aileron;
-            set {
+            set
+            {
                 _aileron = value;
                 NotifyPropertyChanged("Aileron");
                 mySimulatorModel.SetVariable("Aileron", value.ToString());
             }
         }
-        public double Throttle {
+
+        public double Throttle
+        {
             get => _throttle;
-            set {
+            set
+            {
                 _throttle = value;
                 NotifyPropertyChanged("Throttle");
                 mySimulatorModel.SetVariable("Throttle", value.ToString());
             }
         }
 
-        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            string propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
-            double propValue = Convert.ToDouble(propValueStr);
-            switch (e.PropertyName) {
-                case "Rudder": {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
+            var propValue = Convert.ToDouble(propValueStr);
+            switch (e.PropertyName)
+            {
+                case "Rudder":
+                {
                     Rudder = propValue;
                     break;
                 }
-                case "Elevator": {
+                case "Elevator":
+                {
                     Elevator = propValue;
                     break;
                 }
-                case "Aileron": {
+                case "Aileron":
+                {
                     Aileron = propValue;
                     break;
                 }
-                case "Throttle": {
+                case "Throttle":
+                {
                     Throttle = propValue;
                     break;
                 }
-                default:
-                    break;
             }
         }
 
-        private void NotifyPropertyChanged(string propertyName) {
+        private void NotifyPropertyChanged(string propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

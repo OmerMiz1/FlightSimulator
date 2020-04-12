@@ -5,8 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 
              xmlns:map="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-             xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
-             xmlns:vm="clr-namespace:FlightSimulatorApp.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800">
     <map:Map x:Name="myMap"
@@ -19,8 +17,10 @@
                      Location="32.5,20"
                      Background="Purple"
                      Content="Airplane"
-                     FontSize="5"/>
-        <map:Pushpin Location="0,0" Content="{Binding ElementName=AirplanePushpin, Path=Location.Longitude}" FontSize="10"></map:Pushpin>
-        <map:Pushpin Location="0,20" Content="{Binding ElementName=AirplanePushpin, Path=Location.Latitude}" FontSize="10"></map:Pushpin>
+                     FontSize="5" />
+        <map:Pushpin Location="0,0" Content="{Binding ElementName=AirplanePushpin, Path=Location.Longitude}"
+                     FontSize="10" />
+        <map:Pushpin Location="0,20" Content="{Binding ElementName=AirplanePushpin, Path=Location.Latitude}"
+                     FontSize="10" />
     </map:Map>
 </UserControl>
