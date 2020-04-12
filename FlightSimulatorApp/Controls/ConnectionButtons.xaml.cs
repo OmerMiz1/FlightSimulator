@@ -24,7 +24,7 @@ namespace FlightSimulatorApp.Controls {
         public string IP {
             get {
                 if (_myVM == null) {
-                    return "127.0.0.1";
+                    return App.DefaultIp;
                 }
                 return _myVM.Ip;
             }
@@ -39,7 +39,7 @@ namespace FlightSimulatorApp.Controls {
         public string Port {
             get {
                 if (_myVM == null) {
-                    return "5402";
+                    return App.DefaultPort.ToString();
                 }
                 return _myVM.Port.ToString();
             }

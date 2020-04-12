@@ -18,6 +18,7 @@ namespace FlightSimulatorApp.ViewModel {
         private bool _connectButtonEnabled = true;
         private bool _disconnectButtonEnabled = false;
         private bool _settingsButtonEnabled = true;
+        private static bool StatusChanged = false;
 
         public bool ConnectButtonEnabled {
             get { return _connectButtonEnabled; }
@@ -49,6 +50,7 @@ namespace FlightSimulatorApp.ViewModel {
             get { return _status; }
             set {
                 _status = value;
+                StatusChanged = true;
                 NotifyPropertyChanged("Status");
             }
         }
@@ -113,10 +115,14 @@ namespace FlightSimulatorApp.ViewModel {
                 SettingsButtonEnabled = false;
             }
             else if (e.PropertyName == "Disconnected") {
+                StatusChanged = false;
                 if (Status.Contains("Error") || Status.Contains("Warning")) {
-                    Delay(5000).ContinueWith(_ => Status = "Status: Disconnected");
-                }
-                else {
+                    Delay(5000).ContinueWith(_ => {
+                        if (!StatusChanged)
+                            return Status;
+                        return Status = "Status: Disconnected";
+                    });
+                } else {
                     Status = "Status: Disconnected";
                 }
                 StatusColor = Brushes.Red;

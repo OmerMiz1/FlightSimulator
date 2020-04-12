@@ -25,19 +25,14 @@ namespace FlightSimulatorApp.Model {
         public string Ip { get; set; }
         public int Port { get; set; }
 
-        public Boolean Connected {
-            get => _tcpClient.Connected;
-        }
-
         private Thread getValuesThread;
         private Thread setValuesThread;
         private static Mutex mtx = new Mutex();
 
         /* Variables related fields */
-        private DictionaryIndexer _variables = new DictionaryIndexer();
-        private DictionaryIndexer _setRequestsDic = new DictionaryIndexer();
-        private Queue<string> _setRequests = new Queue<string>();
         private VariableNamesManager _varNamesMgr = new VariableNamesManager();
+        private DictionaryIndexer _variables = new DictionaryIndexer();
+        private Queue<string> _setRequests = new Queue<string>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangedEventHandler ConnectionChanged;
@@ -47,7 +42,8 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void Connect() {
-            try { /* Connect to server */
+            /* Connect to server */
+            try { 
                 _tcpClient = new TcpClient(Ip, Port);
                 NotifyConnectionChanged("Connected");
                 Debug.WriteLine("TCP Client: Connected successfully to server...");
@@ -60,8 +56,8 @@ namespace FlightSimulatorApp.Model {
                 NotifyConnectionChanged("Error Connection Failed:\n Unexpected error occured");
                 return;
             }
-
-            /** Check connection & Start communicating. NOTE:
+            
+            /* Check connection & Start communicating. NOTE:
                Named the thread for easier debugging */
             if (_tcpClient.Connected) {
                 Thread t = new Thread(Start);
@@ -71,6 +67,7 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void Disconnect() {
+            Stop();
             _tcpClient.Close();
             _setRequests.Clear();
             NotifyConnectionChanged("Disconnected");
@@ -214,7 +211,7 @@ namespace FlightSimulatorApp.Model {
             while (_running) {
                 /* TODO maybe need to show notification to user? */
                 if (!_tcpClient.Connected) {
-                    Debug.WriteLine("Error #1 SimulatorModel.Start()...");
+                    NotifyConnectionChanged("");
                 }
 
                 /* Send request for updates & read response */

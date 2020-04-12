@@ -18,9 +18,9 @@ namespace FlightSimulatorApp {
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
-        public MapVM mapViewModel { get; internal set; }
-        private const string DEFAULT_IP = "127.0.0.1";
-        private const int DEFAULT_PORT = 5402;
+        /* Default values declarations */
+        public static string DefaultIp { get; } = "127.0.0.1";
+        public static int DefaultPort { get; } = 5402;
 
         private void App_Startup(Object sender, StartupEventArgs e) {
             Regex ValidIPRegex =
@@ -33,8 +33,8 @@ namespace FlightSimulatorApp {
             /* Model */
             SimulatorModel model = new SimulatorModel();
             /* No Args (or not enough) args so use default values */
-            model.Ip = DEFAULT_IP;
-            model.Port = DEFAULT_PORT;
+            model.Ip = DefaultIp;
+            model.Port = DefaultPort;
             int port = -1;
 
             /* Try to parse arguments into ip and port */

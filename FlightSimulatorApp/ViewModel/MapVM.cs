@@ -30,19 +30,12 @@ namespace FlightSimulatorApp.ViewModel {
         public double Longitude {
             get => location.Longitude;
             set {
-                double normalized = value;
-                /** Once airplane reaches top\bottom boundries, show as if airplane is at
-                 * the min/max possible value. More about the equation at:
-                 https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values*/
-                while (normalized > Location.MaxLongitude) {
-                    normalized -= Location.MaxLongitude * 2;
-
+                if (value < Location.MinLongitude) {
+                    /*TODO Show status: "Warning: Airplane out of bounds\n Longitude is below minimal bound"*/
+                } else if (Location.MaxLongitude > value) {
+                    /*TODO Show status: "Warning: Airplane out of bounds\n Longitude is above maximal bound"*/
                 }
-                while (normalized < Location.MinLongitude) {
-                    normalized += Location.MaxLongitude * 2;
-
-                }
-                location.Longitude = normalized;
+                location.Longitude = value;
                 NotifyPropertyChanged("Longitude");
             }
         }
@@ -53,14 +46,18 @@ namespace FlightSimulatorApp.ViewModel {
                 double normalized = value;
                 /** Once airplane reaches left\right boundry move to the other side of the map. More about the equation at:
                  https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values*/
-                if (value > Location.MaxLatitude) {
-                    normalized = Location.MaxLatitude;
-                } else if (value < Location.MinLatitude) {
+                if (value < Location.MinLatitude) {
                     normalized = Location.MinLatitude;
+                    /*TODO Show status: "Warning: Airplane out of bounds\n Latitude is below minimal bound"*/
+                    
+                } else if (value > Location.MaxLatitude) {
+                    normalized = Location.MaxLatitude;
+                    /*TODO Show status: "Warning: Airplane out of bounds\n Latitude is above maximal bound"*/
                 }
-
                 location.Latitude = normalized;
-                NotifyPropertyChanged("Latitude");
+                if (value != normalized) {
+                    NotifyPropertyChanged("Latitude");
+                }
             }
         }
 
@@ -120,18 +117,21 @@ namespace FlightSimulatorApp.ViewModel {
             }
         }
 
-        /*private void InitVariables() {
-            Variables = new DictionaryIndexer();
-            Variables["Latitude"] = "NO_VALUE_YET";
-            Variables["Longitude"] = "NO_VALUE_YET";
-            Variables["Heading"] = "NO_VALUE_YET";
-        }*/
-        /*private Dictionary<string, string> NameToPath() {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict["Heading"] = "/orientation/heading-deg";
-            dict["Longitude"] = "/position/longitude-deg";
-            dict["Latitude"] = "/position/latitude-deg";
-            return dict;
-        }*/
+        /*** Currently not in use.
+         * Mainly: Makes the longitude property cyclic in the range [MinLongitude , MaxLongitude]
+         */
+        private double NormalizeLongitude(double longitude) {
+            /* Once airplane reaches top\bottom boundries, show as if airplane is at
+             * the min/max possible value. More about the equation at:
+             * https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values */
+            while (longitude > Location.MaxLongitude) {
+                longitude -= Location.MaxLongitude * 2;
+            }
+            while (longitude < Location.MinLongitude) {
+                longitude += Location.MaxLongitude * 2;
+            }
+
+            return longitude;
+        }
     }
 }
