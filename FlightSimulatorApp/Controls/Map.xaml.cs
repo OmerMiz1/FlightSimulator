@@ -12,23 +12,26 @@ namespace FlightSimulatorApp.Controls
     {
         private MapVM _myVM;
 
+        public MapVM ViewModel {
+            set {
+                _myVM = value;
+                _myVM.PropertyChanged += MyVM_PropertyChanged;
+            }
+        }
         public Map()
         {
             InitializeComponent();
         }
 
-        public void SetVM(MapVM viewModel)
-        {
-            _myVM = viewModel;
-            _myVM.PropertyChanged += MyVM_PropertyChanged;
-        }
-
+        /*** Function retrieves the location value from its model.
+         * In order to print the airplane at the correct location. The location property of the
+         * airplane (pushpin) must get a new instance other wise the map wont update it location
+         * in real time.
+         ***/
         private void MyVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            /** Explanation for below at, also creating a new Location instance is a MUST.
-             * If not using a new instance, the map wont update the location of the pushpin! More at:
-             * https://stackoverflow.com/questions/9732709/the-calling-thread-cannot-access-this-object-because-a-different-thread-owns-it
-             */
+            /* More at:
+             https://stackoverflow.com/questions/9732709/the-calling-thread-cannot-access-this-object-because-a-different-thread-owns-it */
             Dispatcher.Invoke(() =>
             {
                 AirplanePushpin.Heading = ((MapVM) sender).Heading;

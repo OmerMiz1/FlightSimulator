@@ -11,16 +11,18 @@ namespace FlightSimulatorApp.Controls
     {
         private ConnectionButtonsVM _myVM;
 
+        public ConnectionButtonsVM ViewModel {
+            set {
+                _myVM = value;
+                DataContext = _myVM;
+            }
+        }
+
         public ConnectionButtons()
         {
             InitializeComponent();
         }
 
-        public string IP
-        {
-            get
-            {
-                if (_myVM == null) return "127.0.0.1";
         public string IP {
             get {
                 if (_myVM == null) {
@@ -47,12 +49,6 @@ namespace FlightSimulatorApp.Controls
                 if (_myVM == null) return;
                 _myVM.Port = int.Parse(value);
             }
-        }
-
-        public void SetVM(ConnectionButtonsVM viewModel)
-        {
-            _myVM = viewModel;
-            DataContext = _myVM;
         }
 
         private void connectButton_Click(object sender, RoutedEventArgs e)

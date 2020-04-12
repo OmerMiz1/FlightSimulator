@@ -8,128 +8,98 @@ namespace FlightSimulatorApp.ViewModel
 {
     public class ConnectionButtonsVM : INotifyPropertyChanged
     {
-        private bool _connectButtonEnabled = true;
-        private bool _disconnectButtonEnabled;
+        /* Model Related Fields */
+        private readonly SimulatorModel _myModel;
         private string _ip;
-        private readonly SimulatorModel _model;
         private int _port;
-        private bool _settingsButtonEnabled = true;
-        private string _status = "Status: Disconnected";
-        private Brush _statusColor = Brushes.Red;
         private bool _connectButtonEnabled = true;
         private bool _disconnectButtonEnabled = false;
         private bool _settingsButtonEnabled = true;
+
+        /* Status Block Related Fields*/
+        private string _status = "Status: Disconnected";
+        private Brush _statusColor = Brushes.Red;
         private static bool StatusChanged = false;
 
-        public ConnectionButtonsVM(SimulatorModel model)
-        {
-            _model = model;
-            model.ConnectionChanged += Model_ConnectionChanged;
-            Ip = model.Ip;
-            Port = model.Port;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool ConnectButtonEnabled
-        {
+        public string Ip {
+            get => _ip;
+            set {
+                //If you remove this condition make sure it won't cause an infinite loop while initializing
+                if (_ip != value) {
+                    _ip = value;
+                    NotifyPropertyChanged("Ip");
+                    _myModel.Ip = value;
+                }
+            }
+        }
+        public int Port {
+            get => _port;
+            set {
+                //If you remove this condition make sure it won't cause an infinite loop while initializing
+                if (_port != value) {
+                    _port = value;
+                    NotifyPropertyChanged("Port");
+                    _myModel.Port = value;
+                }
+            }
+        }
+        public bool ConnectButtonEnabled {
             get => _connectButtonEnabled;
-            set
-            {
+            set {
                 _connectButtonEnabled = value;
                 NotifyPropertyChanged("ConnectButtonEnabled");
             }
         }
-
-        public bool DisconnectButtonEnabled
-        {
+        public bool DisconnectButtonEnabled {
             get => _disconnectButtonEnabled;
-            set
-            {
+            set {
                 _disconnectButtonEnabled = value;
                 NotifyPropertyChanged("DisconnectButtonEnabled");
             }
         }
-
-        public bool SettingsButtonEnabled
-        {
+        public bool SettingsButtonEnabled {
             get => _settingsButtonEnabled;
-            set
-            {
+            set {
                 _settingsButtonEnabled = value;
                 NotifyPropertyChanged("SettingsButtonEnabled");
             }
         }
-
-        // private bool _isConnected = false;
-        // private bool _connectionFailed = false;
-        public string Status
-        {
+        public string Status {
             get => _status;
-            set
-            {
+            set {
                 _status = value;
                 StatusChanged = true;
                 NotifyPropertyChanged("Status");
             }
         }
-
-        public Brush StatusColor
-        {
+        public Brush StatusColor {
             get => _statusColor;
-            set
-            {
+            set {
                 _statusColor = value;
                 NotifyPropertyChanged("StatusColor");
             }
         }
 
-        public string Ip
+        public ConnectionButtonsVM(SimulatorModel myModel)
         {
-            get => _ip;
-            set
-            {
-                //If you remove this condition make sure it won't cause an infinite loop while initializing
-                if (_ip != value)
-                {
-                    _ip = value;
-                    NotifyPropertyChanged("Ip");
-                    _model.Ip = value;
-                }
-            }
+            _myModel = myModel;
+            _myModel.StatusChanged += ModelStatusChanged;
+            Ip = myModel.Ip;
+            Port = myModel.Port;
         }
-
-        public int Port
-        {
-            get => _port;
-            set
-            {
-                //If you remove this condition make sure it won't cause an infinite loop while initializing
-                if (_port != value)
-                {
-                    _port = value;
-                    NotifyPropertyChanged("Port");
-                    _model.Port = value;
-                }
-            }
+        public void Connect() {
+            _myModel.Connect();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        public void Disconnect() {
+            _myModel.Disconnect();
+        }
         private void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public void Connect()
-        {
-            _model.Connect();
-        }
-
-        public void Disconnect()
-        {
-            _model.Disconnect();
-        }
-
-        private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e)
+        private void ModelStatusChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Connected")
             {
@@ -143,12 +113,15 @@ namespace FlightSimulatorApp.ViewModel
                 StatusChanged = false;
                 if (Status.Contains("Error") || Status.Contains("Warning")) {
                     Delay(5000).ContinueWith(_ => {
-                        if (!StatusChanged)
+                        if (StatusChanged)
                             return Status;
                         return Status = "Status: Disconnected";
                     });
-                } else {
+                }
+                else {
                     Status = "Status: Disconnected";
+                }
+
                 StatusColor = Brushes.Red;
                 ConnectButtonEnabled = true;
                 DisconnectButtonEnabled = false;

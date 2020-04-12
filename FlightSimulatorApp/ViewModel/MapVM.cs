@@ -6,48 +6,39 @@ namespace FlightSimulatorApp.ViewModel
 {
     public class MapVM : INotifyPropertyChanged
     {
+        private SimulatorModel _myModel;
         private double _heading;
-        private Location location = new Location();
-        private VariableNamesManager varNamesMgr = new VariableNamesManager();
-
-        public MapVM(SimulatorModel simulatorModel)
-        {
-            mySimulatorModel = simulatorModel;
-            mySimulatorModel.PropertyChanged += Model_PropertyChanged;
-        }
-
-        public SimulatorModel mySimulatorModel { get; }
+        private Location _location = new Location();
+        private VariableNamesManager _varNamesMgr = new VariableNamesManager();
 
         public Location Location
         {
-            get => location;
+            get => _location;
             set
             {
-                if (location != value)
+                if (_location != value)
                 {
-                    location = value;
+                    _location = value;
                     NotifyPropertyChanged("Location");
                 }
             }
         }
-
         public double Longitude
         {
-            get => location.Longitude;
+            get => _location.Longitude;
             set {
                 if (value < Location.MinLongitude) {
                     /*TODO Show status: "Warning: Airplane out of bounds\n Longitude is below minimal bound"*/
                 } else if (Location.MaxLongitude > value) {
                     /*TODO Show status: "Warning: Airplane out of bounds\n Longitude is above maximal bound"*/
                 }
-                location.Longitude = value;
+                _location.Longitude = value;
                 NotifyPropertyChanged("Longitude");
             }
         }
-
         public double Latitude
         {
-            get => location.Latitude;
+            get => _location.Latitude;
             set
             {
                 var normalized = value;
@@ -61,26 +52,24 @@ namespace FlightSimulatorApp.ViewModel
                     normalized = Location.MaxLatitude;
                     /*TODO Show status: "Warning: Airplane out of bounds\n Latitude is above maximal bound"*/
                 }
-                location.Latitude = normalized;
+                _location.Latitude = normalized;
                 if (value != normalized) {
                     NotifyPropertyChanged("Latitude");
                 }
             }
         }
-
         public double Altitude
         {
-            get => location.Altitude;
+            get => _location.Altitude;
             set
             {
-                if (location.Altitude != value)
+                if (_location.Altitude != value)
                 {
-                    location.Altitude = value;
+                    _location.Altitude = value;
                     NotifyPropertyChanged("Location");
                 }
             }
         }
-
         public double Heading
         {
             get => _heading;
@@ -89,6 +78,12 @@ namespace FlightSimulatorApp.ViewModel
                 _heading = value;
                 NotifyPropertyChanged("Heading");
             }
+        }
+
+        public MapVM(SimulatorModel model)
+        {
+            _myModel = model;
+            _myModel.PropertyChanged += Model_PropertyChanged;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -106,7 +101,7 @@ namespace FlightSimulatorApp.ViewModel
 
             switch (e.PropertyName)
             {
-                case "Altitude":
+                case "AltitudeGps":
                 {
                     Altitude = propValue;
                     break;

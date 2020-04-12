@@ -14,13 +14,9 @@
              DataContext="vm:MapVM">
         <map:Pushpin x:Name="AirplanePushpin"
                      Template="{StaticResource airplaneTemplate}"
-                     Location="32.5,20"
+                     Location="32.307197, 34.870627"
                      Background="Purple"
                      Content="Airplane"
                      FontSize="5" />
-        <map:Pushpin Location="0,0" Content="{Binding ElementName=AirplanePushpin, Path=Location.Longitude}"
-                     FontSize="10" />
-        <map:Pushpin Location="0,20" Content="{Binding ElementName=AirplanePushpin, Path=Location.Latitude}"
-                     FontSize="10" />
     </map:Map>
 </UserControl>

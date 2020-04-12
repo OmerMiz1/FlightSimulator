@@ -10,15 +10,16 @@ namespace FlightSimulatorApp.Controls
     {
         private CockpitDashboardVM _myVM;
 
+        public CockpitDashboardVM ViewModel {
+            set {
+                _myVM = value;
+                DataContext = _myVM;
+            }
+        }
+
         public CockpitDashboard()
         {
             InitializeComponent();
-        }
-
-        public void SetVM(CockpitDashboardVM viewModel)
-        {
-            _myVM = viewModel;
-            DataContext = _myVM;
         }
     }
 }

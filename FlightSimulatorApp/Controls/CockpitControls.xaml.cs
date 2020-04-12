@@ -11,16 +11,14 @@ namespace FlightSimulatorApp.Controls
     {
         private CockpitControlsVM? _myVM;
 
+        public CockpitControlsVM ViewModel {
+            set => _myVM = value;
+        }
         public CockpitControls()
         {
             InitializeComponent();
             Joystick.AddXValueChanged(Rudder_ValueChanged);
             Joystick.AddYValueChanged(Elevator_ValueChanged);
-        }
-
-        public void setVM(CockpitControlsVM viewModel)
-        {
-            _myVM = viewModel;
         }
 
         private void AileronSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
