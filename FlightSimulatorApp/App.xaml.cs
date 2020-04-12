@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -10,6 +11,7 @@ using System.Windows;
 using FlightSimulatorApp.Controls;
 using FlightSimulatorApp.Model;
 using FlightSimulatorApp.ViewModel;
+using Microsoft.Maps.MapControl.WPF;
 
 namespace FlightSimulatorApp {
     /// <summary>

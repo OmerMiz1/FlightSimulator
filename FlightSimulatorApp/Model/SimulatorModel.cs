@@ -11,6 +11,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Automation;
 using FlightSimulatorApp.ViewModel;
 
@@ -44,7 +45,7 @@ namespace FlightSimulatorApp.Model {
             try { /* Connect to server */
                 _tcpClient = new TcpClient(Ip, Port);
                 NotifyConnectionChanged("Connected");
-                //Debug.WriteLine("TCP Client: Connected successfully to server...");
+                Debug.WriteLine("TCP Client: Connected successfully to server...");
             }
             catch (SocketException se) { /* Usually this error points that server is not on yet */
                 NotifyConnectionChanged("Error: Connection Failed, try to turn on the server -> Click on 'Connect'");
@@ -69,7 +70,7 @@ namespace FlightSimulatorApp.Model {
             _tcpClient.Close();
             _setRequests.Clear();
             NotifyConnectionChanged("Disconnected");
-            //Debug.WriteLine("TCP Client: Disconnected successfully to server...");
+            Debug.WriteLine("TCP Client: Disconnected successfully to server...");
         }
 
         public string Read() {
@@ -95,7 +96,6 @@ namespace FlightSimulatorApp.Model {
                         /* TODO Unknown exception thrown, might be because server was shut down mid way*/
                     }
                 } while (_stream.DataAvailable);
-                Debug.WriteLine("@@@@Read from server:\n" + strBuilder.ToString());
                 return strBuilder.ToString();
             }
 
@@ -109,7 +109,6 @@ namespace FlightSimulatorApp.Model {
                 try {
                     byte[] writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                     _stream.Write(writeBuffer, 0, writeBuffer.Length);
-                    Debug.WriteLine("####Sent to server:\n" + msg);
                 }
                 catch (Exception e) { /* Error occured - might be server shut down unexpectedly */
                     NotifyConnectionChanged("Error: Connection to server lost\\broken");
@@ -122,7 +121,9 @@ namespace FlightSimulatorApp.Model {
         }
 
         public void Start() {
+            /* Clear any requests sent before starting this server*/
             _running = true;
+            _setRequests.Clear();
 
             /* Create stream & set timeout to 10 seconds */
             _stream = _tcpClient.GetStream();
@@ -147,7 +148,7 @@ namespace FlightSimulatorApp.Model {
                         longi = 0;
                     }
 
-                    //Debug.WriteLine("Inside SimulatorModel.Start, longi=" + longi + "now...");
+                    Debug.WriteLine("Inside SimulatorModel.Start, longi=" + longi + "now...");
                     _variables[longiPath] = longi.ToString();
                     NotifyPropertyChanged(longiPath);
                     Thread.Sleep(50);
@@ -171,7 +172,7 @@ namespace FlightSimulatorApp.Model {
             }
             else {
                 /*TODO WHAT SHOULD WE PRINT IF HAPPENS?*/
-                //Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
+                Debug.WriteLine("Some Weird BUG", Thread.CurrentThread.Name);
             }
         }
 
@@ -195,20 +196,21 @@ namespace FlightSimulatorApp.Model {
                 strBuilder.Append("get " + entry.Key + "\r\n");
                 paths.Add((string) entry.Key);
             }
-
             requestMsg = strBuilder.ToString();
+            Debug.WriteLine("Request message= " + requestMsg);/*TODO DEBUG*/
 
             /* Request values from simulator every 100ms */
             while (_running) {
                 /* TODO maybe need to show notification to user? */
                 if (!_tcpClient.Connected) {
-                    //Debug.WriteLine("Error #1 SimulatorModel.Start()...");
+                    Debug.WriteLine("Error #1 SimulatorModel.Start()...");
                 }
 
                 /* Send request for updates & read response */
                 mtx.WaitOne();
                 Write(requestMsg);
                 valuesFromSim = Read();
+                Debug.WriteLine("Reading from server:\n" + valuesFromSim);
                 mtx.ReleaseMutex();
 
                 /* Enumerate each variable manually (iterator)*/
@@ -216,6 +218,7 @@ namespace FlightSimulatorApp.Model {
                 pathEnum.MoveNext();
 
                 /* Split received values and update each one */
+                int iterations = 0; /*TODO DEBUG*/
                 List<string> newValsArray = valuesFromSim.Split("\n").ToList();
                 foreach (string newVal in newValsArray) {
                     if (newVal == "ERR") {
@@ -233,11 +236,18 @@ namespace FlightSimulatorApp.Model {
                         Console.WriteLine("ERR");
                     }
 
+                    iterations++;
                     if (!pathEnum.MoveNext()) {
                         break;
                     }
                 }
 
+                if (iterations > 10) {
+                    Debug.WriteLine("TOO MANY VALUES: Total updated values = " + iterations);
+                }
+                else {
+                    Debug.WriteLine("Total updated values = " + iterations);
+                }
                 pathEnum.Dispose();
                 Thread.Sleep(100);
             }
@@ -256,13 +266,6 @@ namespace FlightSimulatorApp.Model {
                     Write("set " + request);
                     string response = Read();
                     mtx.ReleaseMutex();
-
-                    /* Check if request was valid. */
-                    if (response != request) {
-                        /*TODO debug*/
-                        //Debug.WriteLine("response= " + response);
-                        //Debug.WriteLine("request= " + request);
-                    }
                 }
             }
         }

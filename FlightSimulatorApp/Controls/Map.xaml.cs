@@ -23,20 +23,12 @@ namespace FlightSimulatorApp.Controls
     public partial class Map : UserControl
     {
         private MapVM _myVM;
-        private Image _airplaneImage;
-        private MapLayer layer = new MapLayer();
         public Map() { InitializeComponent(); }
 
         public void SetVM(MapVM viewModel)
         {
             _myVM = viewModel;
             _myVM.PropertyChanged += MyVM_PropertyChanged;
-            _airplaneImage = new Image();
-            _airplaneImage.Width = 30;
-            _airplaneImage.Height = 30;
-            
-            layer.AddChild(_airplaneImage, new Location(0,0));
-            myMap.Children.Add(layer);
         }
 
         private void MyVM_PropertyChanged(object sender, PropertyChangedEventArgs e) {

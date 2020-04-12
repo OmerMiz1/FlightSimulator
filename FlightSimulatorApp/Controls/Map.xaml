@@ -8,8 +8,7 @@
              xmlns:local="clr-namespace:FlightSimulatorApp.Controls"
              xmlns:vm="clr-namespace:FlightSimulatorApp.ViewModel"
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="800">
-
+             d:DesignHeight="600" d:DesignWidth="800">
     <map:Map x:Name="myMap"
              CredentialsProvider="VsuXtswpxYfnv1OqwmKr~KDTQtrFuRO6tRkFb8XVwwQ~AmANrH8EWU6IrujFhiEBIMo84I5yeceB0jXXklG00byhaenDMsAztU_DX_Moz7tl"
              Margin="5"
@@ -17,24 +16,9 @@
              DataContext="vm:MapVM">
         <map:Pushpin x:Name="AirplanePushpin"
                      Template="{StaticResource airplaneTemplate}"
-                     Location="32.307097,34.871453"
+                     Location="32.5,20"
                      Background="Purple"
                      Content="Airplane"
-                     FontSize="5"
-                     />
-        
-        
-        <!-- <map:Pushpin Location="0,0" Heading="180"/> -->
-        <!-- <map:Pushpin Location="0,0" Heading="90"/> -->
-        <!-- <map:Pushpin Location="0,0" Heading="270"/> -->
-        <!-- <map:Pushpin Location="0,0"/> -->
-        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}" Heading="180"/> -->
-        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}" Heading="90"/> -->
-        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}" Heading="270"/> -->
-        <!-- <map:Pushpin Location="0,0" Template="{StaticResource airplaneTemplate}"/> -->
-        <!-- <map:Pushpin Location="0,20" Heading="180"/> -->
-        <!-- <map:Pushpin Location="0,20"/> -->
-        <!-- <map:Pushpin Location="0,40" Heading="180"/> -->
-        <!-- <map:Pushpin Location="0,40"/> -->
+                     FontSize="5"/>
     </map:Map>
 </UserControl>

@@ -16,6 +16,7 @@ namespace FlightSimulatorApp.ViewModel {
         public event PropertyChangedEventHandler PropertyChanged;
         private double _heading;
         private Location location = new Location();
+
         public Location Location {
             get => location;
             set {
@@ -25,29 +26,50 @@ namespace FlightSimulatorApp.ViewModel {
                 }
             }
         }
+
         public double Longitude {
             get => location.Longitude;
             set {
-                if (location.Longitude != value) {
-                    location.Longitude = value;
-                    NotifyPropertyChanged("Location");
+                double normalized = value;
+                /** Once airplane reaches top\bottom boundries, show as if airplane is at
+                 * the min/max possible value. More about the equation at:
+                 https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values*/
+                while (normalized > Location.MaxLongitude) {
+                    normalized -= Location.MaxLongitude * 2;
+
                 }
+                while (normalized < Location.MinLongitude) {
+                    normalized += Location.MaxLongitude * 2;
+
+                }
+                location.Longitude = normalized;
+                NotifyPropertyChanged("Longitude");
             }
         }
+
+        public double Latitude {
+            get => location.Latitude;
+            set {
+                double normalized = value;
+                /** Once airplane reaches left\right boundry move to the other side of the map. More about the equation at:
+                 https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values*/
+                if (value > Location.MaxLatitude) {
+                    normalized = Location.MaxLatitude;
+                }
+                else if (value < Location.MinLatitude) {
+                    normalized = Location.MinLatitude;
+                }
+
+                location.Latitude = normalized;
+                NotifyPropertyChanged("Latitude");
+            }
+        }
+
         public double Altitude {
             get => location.Altitude;
             set {
                 if (location.Altitude != value) {
                     location.Altitude = value;
-                    NotifyPropertyChanged("Location");
-                }
-            }
-        }
-        public double Latitude {
-            get => location.Latitude;
-            set {
-                if (location.Latitude != value) {
-                    location.Latitude = value;
                     NotifyPropertyChanged("Location");
                 }
             }
@@ -66,7 +88,7 @@ namespace FlightSimulatorApp.ViewModel {
             mySimulatorModel.PropertyChanged += Model_PropertyChanged;
         }
 
-        private void NotifyPropertyChanged( string propertyName) {
+        private void NotifyPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
