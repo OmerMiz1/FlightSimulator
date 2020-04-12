@@ -104,6 +104,10 @@ namespace FlightSimulatorApp.Model {
             return null;
         }
         public void Write(string msg) {
+            // clear server buffer
+            if (_stream.CanRead && _stream.DataAvailable) {
+                Read();
+            }
             /* Double check writing is possible */
             if (_stream.CanWrite) {
                 try {
@@ -201,17 +205,18 @@ namespace FlightSimulatorApp.Model {
 
             /* Request values from simulator every 100ms */
             while (_running) {
+                mtx.WaitOne();
                 /* TODO maybe need to show notification to user? */
                 if (!_tcpClient.Connected) {
                     Debug.WriteLine("Error #1 SimulatorModel.Start()...");
                 }
 
                 /* Send request for updates & read response */
-                mtx.WaitOne();
+                
                 Write(requestMsg);
                 valuesFromSim = Read();
                 Debug.WriteLine("Reading from server:\n" + valuesFromSim);
-                mtx.ReleaseMutex();
+                
 
                 /* Enumerate each variable manually (iterator)*/
                 pathEnum = paths.GetEnumerator();
@@ -249,6 +254,7 @@ namespace FlightSimulatorApp.Model {
                     Debug.WriteLine("Total updated values = " + iterations);
                 }
                 pathEnum.Dispose();
+                mtx.ReleaseMutex();
                 Thread.Sleep(100);
             }
         }
@@ -260,9 +266,10 @@ namespace FlightSimulatorApp.Model {
         private void WriteValuesToSim() {
             while (_running) {
                 if (_setRequests.Count != 0) {
+                    mtx.WaitOne();
                     /* Send requested value change and read respond afterwards */
                     string request = _setRequests.Dequeue();
-                    mtx.WaitOne();
+                    
                     Write("set " + request);
                     string response = Read();
                     mtx.ReleaseMutex();
