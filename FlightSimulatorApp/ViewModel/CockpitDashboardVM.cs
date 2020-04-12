@@ -54,14 +54,12 @@ namespace FlightSimulatorApp.ViewModel {
             set { _altitudeAltimeter = value; NotifyPropertyChanged("AltitudeAltimeter"); }
         }
 
-        public CockpitDashboardVM(SimulatorModel model)
-        {
+        public CockpitDashboardVM(SimulatorModel model) {
             mySimulatorModel = model;
             mySimulatorModel.PropertyChanged += Model_PropertyChanged;
         }
 
-        public void NotifyPropertyChanged(string propName)
-        {
+        public void NotifyPropertyChanged(string propName) {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 

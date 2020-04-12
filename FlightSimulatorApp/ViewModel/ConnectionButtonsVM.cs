@@ -84,20 +84,6 @@ namespace FlightSimulatorApp.ViewModel {
                 }
             }
         }
-        // public bool IsConnected {
-        //     get => _isConnected;
-        //     set {
-        //         if (_isConnected != value) {
-        //             _isConnected = value;
-        //             NotifyPropertyChanged("IsConnected");
-        //         }
-        //     }
-        // }
-        //
-        // public bool ConnectionFailed {
-        //     get => _connectionFailed;
-        //     set { _connectionFailed = value; }
-        // }
 
         public ConnectionButtonsVM(SimulatorModel model) {
             _model = model;
@@ -117,27 +103,6 @@ namespace FlightSimulatorApp.ViewModel {
         public void Disconnect() {
             _model.Disconnect();
         }
-
-        // private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e) {
-        //     switch (e.PropertyName) {
-        //         case "Connected": {
-        //             IsConnected = true;
-        //             _connectionFailed = false;
-        //             break;
-        //         }
-        //         case "Disconnected": {
-        //             IsConnected = false;
-        //             break;
-        //         }
-        //         case "Failed": {
-        //             IsConnected = false;
-        //             _connectionFailed = true;
-        //             break;
-        //         }
-        //         default:
-        //             break;
-        //     }
-        // }
 
         private void Model_ConnectionChanged(object sender, PropertyChangedEventArgs e) {
             if (e.PropertyName == "Connected") {
