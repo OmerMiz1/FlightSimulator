@@ -12,8 +12,8 @@ namespace FlightSimulatorApp.Controls
     public partial class SettingsWindow : Window
     {
         private readonly ConnectionButtons caller;
-        private readonly string initialIP;
-        private readonly string initialPort;
+        private string initialIP;
+        private string initialPort;
         private bool IPIsValid = true;
         private bool portIsValid = true;
 
@@ -78,20 +78,18 @@ namespace FlightSimulatorApp.Controls
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            caller.notifySettingsEnded(IPTextBox.Text, PortTextBox.Text);
+            initialIP = IPTextBox.Text;
+            initialPort = PortTextBox.Text;
             Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            caller.notifySettingsEnded(initialIP, initialPort);
             Close();
         }
 
-        private void CancelButton_Click(object sender, CancelEventArgs e)
-        {
+        private void Window_Closing(object sender, CancelEventArgs e) {
             caller.notifySettingsEnded(initialIP, initialPort);
-            Close();
         }
     }
 }
