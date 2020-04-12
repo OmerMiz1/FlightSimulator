@@ -17,7 +17,7 @@ namespace FlightSimulatorApp.Controls {
     /// </summary>
     public partial class SettingsWindow : Window {
 
-        // Regex taken from https://www.regextester.com/22
+        // Regex that validates that a certain string is a legit IP address (taken from https://www.regextester.com/22)
         Regex ValidIPRegex = new Regex("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
         private bool portIsValid = true;
         private bool IPIsValid = true;
@@ -36,79 +36,61 @@ namespace FlightSimulatorApp.Controls {
 
         private void IPTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             MatchCollection matches = ValidIPRegex.Matches(IPTextBox.Text);
-            if (matches.Count > 0)
-            {
+            if (matches.Count > 0) {
                 IPIsValid = true;
-            }
-            else
-            {
+            } else {
                 IPIsValid = false;
             }
             updateStatus();
         }
 
-        private void PortTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        private void PortTextBox_TextChanged(object sender, TextChangedEventArgs e) {
             int port = -1;
-            if (int.TryParse(PortTextBox.Text, out port) && port >= 0 && port <= 65535)
-            {
+            if (int.TryParse(PortTextBox.Text, out port) && port >= 0 && port <= 65535)  {
                 portIsValid = true;
-            }
-            else
-            {
+            } else {
                 portIsValid = false;
             }
             updateStatus();
         }
 
-        private void updateStatus()
-        {
+        private void updateStatus() {
             if (StatusLabel == null) {
                 return;
             }
             StatusLabel.Content = "Status: ";
-            if (IPIsValid)
-            {
+            if (IPIsValid) {
                 StatusLabel.Content += "IP is valid, ";
-            }
-            else
-            {
+            } else {
                 StatusLabel.Content += "IP isn't valid, ";
             }
-            if (portIsValid)
-            {
+            if (portIsValid) {
                 StatusLabel.Content += "Port is valid.";
-            }
-            else
-            {
+            } else {
                 StatusLabel.Content += "Port isn't valid.";
             }
-            if (IPIsValid && portIsValid)
-            {
+            if (IPIsValid && portIsValid) {
                 StatusLabel.Foreground = Brushes.Green;
                 OKButton.IsEnabled = true;
-            }
-            else
-            {
+            } else {
                 StatusLabel.Foreground = Brushes.Red;
                 OKButton.IsEnabled = false;
             }
         }
 
-        private void OKButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void OKButton_Click(object sender, RoutedEventArgs e) {
             this.caller.notifySettingsEnded(IPTextBox.Text, PortTextBox.Text);
             this.Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
-            
             this.caller.notifySettingsEnded(initialIP, initialPort);
             this.Close();
         }
 
         private void CancelButton_Click(object sender, System.ComponentModel.CancelEventArgs e) {
-
+            this.caller.notifySettingsEnded(initialIP, initialPort);
+            this.Close();
         }
     }
 }

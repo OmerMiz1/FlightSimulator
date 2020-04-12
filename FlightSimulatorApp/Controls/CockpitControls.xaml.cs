@@ -19,9 +19,6 @@ namespace FlightSimulatorApp.Controls {
     public partial class CockpitControls : UserControl {
         private CockpitControlsVM? _myVM;
 
-        public double Rudder { get; set; }
-        public double Elevator { get; set; }
-
         public CockpitControls() {
             InitializeComponent();
             Joystick.AddXValueChanged(Rudder_ValueChanged);
@@ -36,7 +33,6 @@ namespace FlightSimulatorApp.Controls {
             if (_myVM == null) {
                 return;
             }
-
             _myVM.Aileron = e.NewValue;
         }
 
@@ -44,7 +40,6 @@ namespace FlightSimulatorApp.Controls {
             if (_myVM == null) {
                 return;
             }
-
             _myVM.Throttle = e.NewValue;
         }
 
@@ -52,7 +47,6 @@ namespace FlightSimulatorApp.Controls {
             if (_myVM == null) {
                 return;
             }
-
             _myVM.Rudder = newValue;
         }
 
@@ -60,7 +54,6 @@ namespace FlightSimulatorApp.Controls {
             if (_myVM == null) {
                 return;
             }
-
             _myVM.Elevator = newValue;
         }
     }

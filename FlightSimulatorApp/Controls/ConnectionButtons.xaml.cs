@@ -21,28 +21,22 @@ namespace FlightSimulatorApp.Controls {
     public partial class ConnectionButtons : UserControl {
         private ConnectionButtonsVM _myVM;
 
-        public string IP
-        {
-            get
-            {
-                if (_myVM == null)
-                {
+        public string IP {
+            get {
+                if (_myVM == null) {
                     return "127.0.0.1";
                 }
                 return _myVM.Ip;
             }
-            set
-            {
-                if (_myVM == null)
-                {
+            set {
+                if (_myVM == null) {
                     return;
                 }
                 _myVM.Ip = value;
             }
         }
 
-        public string Port
-        {
+        public string Port {
             get {
                 if (_myVM == null) {
                     return "5402";
@@ -82,8 +76,7 @@ namespace FlightSimulatorApp.Controls {
             mySettings.Show();
         }
 
-        public void notifySettingsEnded(string newIP, string newPort)
-        {
+        public void notifySettingsEnded(string newIP, string newPort) {
             IP = newIP;
             Port = newPort;
             _myVM.ConnectButtonEnabled = true;
