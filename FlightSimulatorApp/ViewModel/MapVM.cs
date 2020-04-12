@@ -55,8 +55,7 @@ namespace FlightSimulatorApp.ViewModel {
                  https://stackoverflow.com/questions/7594508/modulo-operator-with-negative-values*/
                 if (value > Location.MaxLatitude) {
                     normalized = Location.MaxLatitude;
-                }
-                else if (value < Location.MinLatitude) {
+                } else if (value < Location.MinLatitude) {
                     normalized = Location.MinLatitude;
                 }
 

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FlightSimulatorApp.Model {
-    public class DictionaryIndexer : INotifyPropertyChanged{
+    public class DictionaryIndexer : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -17,6 +17,8 @@ namespace FlightSimulatorApp.Model {
                 }
             }
         }
+
+        
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -31,5 +33,10 @@ namespace FlightSimulatorApp.Model {
         {
             return dic.ContainsKey(key);
         }
+        public void Clear() {
+            dic.Clear();
+        }
+
+        public int Count => dic.Count;
     }
 }
