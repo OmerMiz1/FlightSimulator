@@ -23,10 +23,9 @@
             <!-- Dashboard Value Labels Style -->
             <Style x:Key="DashboardValueLabelStyle" TargetType="{x:Type Label}">
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding Path=Content}" Value="ERR">
+                    <Trigger Property="Content" Value="ERR">
                         <Setter Property="Foreground" Value="Red" />
-                        <Setter Property="FontWeight" Value="Bold"/>
-                    </DataTrigger>
+                    </Trigger>
                 </Style.Triggers>
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Left" />

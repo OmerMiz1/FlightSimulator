@@ -14,9 +14,9 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" MinWidth="50"/>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" MinWidth="50"/>
             </Grid.ColumnDefinitions>
             <!-- Heading Degree Indicator -->
             <Label Content="Heading Degree:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="0"
