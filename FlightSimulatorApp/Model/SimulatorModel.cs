@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using FlightSimulatorApp.ViewModel;
 
 namespace FlightSimulatorApp.Model {
     public class SimulatorModel : TcpClient, INotifyPropertyChanged {
@@ -21,9 +19,9 @@ namespace FlightSimulatorApp.Model {
         private static string ConnectionError { get; } = "CONNECTION_ERROR";
 
         /* Variables related fields */
-        private VariableNamesManager _varNamesMgr = new VariableNamesManager();
-        private DictionaryIndexer _variables = new DictionaryIndexer();
+        private Dictionary<string, string> _variables;
         private Queue<string> _setRequests = new Queue<string>();
+        private VariableNamesManager _varNamesMgr = new VariableNamesManager();
 
         public string Ip { get; set; }
         public int Port { get; set; }
@@ -75,22 +73,30 @@ namespace FlightSimulatorApp.Model {
             /* Signal threads to stop */
             Stop();
 
-            /* Wait for threads to finish before closing connection */
-            _getValuesThread.Join();
-            _setValuesThread.Join();
+            /* Wait for threads to finish before closing connection
+               Conditions are to avoid starvation */
+            if (Thread.CurrentThread.Name != _getValuesThread.Name) {
+                _getValuesThread.Join();
+            }
+            if (Thread.CurrentThread.Name != _setValuesThread.Name) {
+                _setValuesThread.Join();
+            }
+
             try {
                 _tcpClient.Close();
                 NotifyStatusChanged("Disconnected");
             }
             catch (Exception e) {
-                // DO NOTHING, Just in-case TCP Client is already disposed.
+                // DO NOTHING - just in-case TCP Client has already been disposed.
             }
-
             //Debug.WriteLine("TCP Client: Disconnected successfully from server...");
         }
 
-        /*** Reads data from server.
+        /*** Reads data from server. IMPORTANT NOTES BELOW!
          * Reads until there is no more data available to read.
+         * IMPORTANT NOTE: Method can call Disconnect method, therefor after every use it is
+         * important to check for ConnectionError output and if so, abort any actions with
+         * server
          */
         public string Read() {
             var readBuffer = new byte[4096];
@@ -118,7 +124,7 @@ namespace FlightSimulatorApp.Model {
                 catch (Exception) {
                     /* Connection error */
                     NotifyStatusChanged("Error Failed to read from server\nConnection to server lost\\broken");
-                    new Thread(Disconnect).Start();
+                    Disconnect();
                     return ConnectionError;
                 }
             } while (_stream.DataAvailable);
@@ -196,7 +202,7 @@ namespace FlightSimulatorApp.Model {
             /*** Build get requests message (once). More info at:
              *  https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.system-collections-idictionary-getenumerator?view=netframework-4.8
              */
-            var entry = _variables.GetEnumerator();
+            IDictionaryEnumerator entry = _variables.GetEnumerator();
             while (entry.MoveNext()) {
                 strBuilder.Append("get " + entry.Key + "\r\n");
                 paths.Add((string) entry.Key);
@@ -216,6 +222,11 @@ namespace FlightSimulatorApp.Model {
                 var valuesFromSimRaw = Read();
                 mtx.ReleaseMutex();
 
+                /* No connection, see 'Read' comment for more info */
+                if (valuesFromSimRaw == ConnectionError) {
+                    break;
+                }
+
                 /* Iterate paths list manually */
                 var pathEnum = paths.GetEnumerator();
                 pathEnum.MoveNext();
@@ -229,7 +240,8 @@ namespace FlightSimulatorApp.Model {
                  this sample. */
                 if (valuesFromSim.Count == paths.Count)
                     foreach (var newVal in valuesFromSim) {
-                        if (_variables[pathEnum.Current] != VariableNamesManager.VariableNotFound) {
+                        if (_variables.ContainsKey(pathEnum.Current) &&
+                            _variables[pathEnum.Current] != VariableNamesManager.VariableNotFound) {
                             _variables[pathEnum.Current] = newVal;
                             NotifyPropertyChanged(pathEnum.Current);
                         }
@@ -262,7 +274,7 @@ namespace FlightSimulatorApp.Model {
 
         private void InitVariables() {
             /* Initializes NAMES of variables that model is GETTING FROM simulator */
-            _variables = new DictionaryIndexer {
+            _variables = new Dictionary<string,string> {
                 ["/instrumentation/heading-indicator/indicated-heading-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-vertical-speed"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-ground-speed-kt"] = "NO_VALUE_YET",
@@ -277,7 +289,11 @@ namespace FlightSimulatorApp.Model {
         }
 
         public string GetVariable(string varName) {
-            return _variables[_varNamesMgr.toPath(varName)];
+            string path = _varNamesMgr.toPath(varName);
+            if (_variables.ContainsKey(path)) 
+                return _variables[path];
+            /*TODO Not 100% sure this is what we're asked for, but seems like it fits the request..*/
+            return "ERR";
         }
 
         public void SetVariable(string varName, string varValue) {

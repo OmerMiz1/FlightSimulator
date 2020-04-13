@@ -9,14 +9,13 @@ namespace FlightSimulatorApp.ViewModel
         private double _altitudeAltimeter;
         private double _altitudeGps;
         private double _groundSpeed;
-        private double _heading;
+        private string _heading;
         private double _pitch;
         private double _roll;
         private double _speed;
 
         /* Fields & Properties declarations */
         private double _verticalSpeed;
-        private VariableNamesManager varNamesMgr = new VariableNamesManager();
 
         public CockpitDashboardVM(SimulatorModel model)
         {
@@ -33,7 +32,7 @@ namespace FlightSimulatorApp.ViewModel
             }
         }
 
-        public double Heading
+        public string Heading
         {
             get => _heading;
             set
@@ -123,7 +122,7 @@ namespace FlightSimulatorApp.ViewModel
                 }
                 case "Heading":
                 {
-                    Heading = propValue;
+                    Heading = propValueStr;
                     break;
                 }
                 case "GroundSpeed":

@@ -9,7 +9,6 @@ namespace FlightSimulatorApp.ViewModel
         private SimulatorModel _myModel;
         private double _heading;
         private Location _location = new Location();
-        private VariableNamesManager _varNamesMgr = new VariableNamesManager();
 
         public Location Location
         {
