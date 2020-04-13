@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -247,15 +248,17 @@ namespace FlightSimulatorApp.Model {
                 /* Minor message validity test. If condition is not met:
                  data might be corrupted so just skip
                  this sample. */
-                if (valuesFromSim.Count == paths.Count)
+                if (valuesFromSim.Count == paths.Count) {
                     foreach (var newVal in valuesFromSim) {
                         if (_variables.ContainsKey(pathEnum.Current) &&
                             _variables[pathEnum.Current] != VariableNamesManager.VariableNotFound) {
                             _variables[pathEnum.Current] = newVal;
                             NotifyPropertyChanged((pathEnum.Current));
                         }
+
                         pathEnum.MoveNext();
                     }
+                }
 
                 pathEnum.Dispose();
                 Thread.Sleep(100);
@@ -263,7 +266,7 @@ namespace FlightSimulatorApp.Model {
         }
 
         private void WriteValuesToSim() {
-            while (_running)
+            while (_running) {
                 if (_setRequests.Count != 0) {
                     /*Send requested and read respond to clear server's output buffer.
                       there is no actual use in what is read, so for now just read*/
@@ -274,13 +277,8 @@ namespace FlightSimulatorApp.Model {
                     Read();
                     mtx.ReleaseMutex();
                 }
-
-            /**try {
-                    Thread.Sleep(100);
-                }
-                catch (ThreadInterruptedException tie) {
-                    //DO NOTHING JUST CONTINUE
-                }*/
+                Thread.Sleep(300);
+            }
         }
 
         private void InitVariables() {
@@ -310,9 +308,6 @@ namespace FlightSimulatorApp.Model {
             if (_setRequests.Count() > 8) _setRequests.Dequeue();
             var varPath = _varNamesMgr.toPath(varName);
             _setRequests.Enqueue(varPath + " " + varValue);
-            /*if (setValuesThread.ThreadState != ThreadState.Running) {
-                setValuesThread.Interrupt();
-            }*/
         }
 
         private void ClearServerOutputBuffer() {

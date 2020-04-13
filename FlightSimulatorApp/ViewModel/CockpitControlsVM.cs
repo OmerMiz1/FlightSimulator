@@ -24,7 +24,6 @@ namespace FlightSimulatorApp.ViewModel
             set
             {
                 _rudder = value;
-                NotifyPropertyChanged("Rudder");
                 mySimulatorModel.SetVariable("Rudder", value.ToString());
             }
         }
@@ -35,7 +34,6 @@ namespace FlightSimulatorApp.ViewModel
             set
             {
                 _elevator = value;
-                NotifyPropertyChanged("Elevator");
                 mySimulatorModel.SetVariable("Elevator", value.ToString());
             }
         }
@@ -46,7 +44,6 @@ namespace FlightSimulatorApp.ViewModel
             set
             {
                 _aileron = value;
-                NotifyPropertyChanged("Aileron");
                 mySimulatorModel.SetVariable("Aileron", value.ToString());
             }
         }
@@ -57,7 +54,6 @@ namespace FlightSimulatorApp.ViewModel
             set
             {
                 _throttle = value;
-                NotifyPropertyChanged("Throttle");
                 mySimulatorModel.SetVariable("Throttle", value.ToString());
                 //TODO: make sure the server is notified on a change!!!
             }

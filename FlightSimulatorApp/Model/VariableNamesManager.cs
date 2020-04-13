@@ -33,7 +33,7 @@
                 case "Aileron":
                     return "/controls/flight/aileron";
                 case "Throttle":
-                    return "/controls/engines/engine/throttle";
+                    return "/controls/engines/current-engine/throttle";
                 default:
                     return VariableNotFound;
             }
