@@ -24,8 +24,8 @@
                             VerticalAlignment="Center" />
             <!-- Throttle Slider -->
             <Slider Name="ThrottleSlider" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Grid.Row="1" Grid.Column="3" Orientation="Vertical" TickPlacement="TopLeft" Maximum="100"
-                    SmallChange="2.5" TickFrequency="5" LargeChange="5" ValueChanged="ThrottleSlider_ValueChanged" />
+                    Grid.Row="1" Grid.Column="3" Orientation="Vertical" TickPlacement="TopLeft" Maximum="1"
+                    SmallChange="0.025" TickFrequency="0.05" LargeChange="0.05" ValueChanged="ThrottleSlider_ValueChanged" />
             <!-- Aileron Slider -->
             <Slider Name="AileronSlider" Width="300" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                     Grid.Row="3" Grid.Column="1" TickPlacement="TopLeft" Minimum="-1" Maximum="1" TickFrequency="0.1"
@@ -42,7 +42,7 @@
                     </TransformGroup>
                 </Label.RenderTransform>
             </Label>
-            <Label Content="{Binding ElementName=ThrottleSlider, Path=Value}" ContentStringFormat="{}{0:F0}%"
+            <Label Content="{Binding ElementName=ThrottleSlider, Path=Value}" ContentStringFormat="{}{0:F2}"
                    HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"
                    Grid.Column="2" Grid.Row="1">
                 <Label.RenderTransform>
