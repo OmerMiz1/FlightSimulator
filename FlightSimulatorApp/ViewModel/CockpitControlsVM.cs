@@ -59,6 +59,7 @@ namespace FlightSimulatorApp.ViewModel
                 _throttle = value;
                 NotifyPropertyChanged("Throttle");
                 mySimulatorModel.SetVariable("Throttle", value.ToString());
+                //TODO: make sure the server is notified on a change!!!
             }
         }
 

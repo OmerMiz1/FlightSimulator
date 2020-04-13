@@ -10,6 +10,7 @@ namespace FlightSimulatorApp
         public MainWindow()
         {
             InitializeComponent();
+            //TODO if window is closed make sure to disconnect server
         }
     }
 }

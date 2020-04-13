@@ -232,7 +232,7 @@ namespace FlightSimulatorApp.Model {
                 pathEnum.MoveNext();
 
                 /* Split received values and update each one */
-                var valuesFromSim = valuesFromSimRaw.Split("\n").ToList();
+                List<string> valuesFromSim = valuesFromSimRaw.Split("\n").ToList();
                 valuesFromSim.RemoveAll(string.IsNullOrEmpty);
 
                 /* Minor message validity test. If condition is not met:
@@ -243,8 +243,9 @@ namespace FlightSimulatorApp.Model {
                         if (_variables.ContainsKey(pathEnum.Current) &&
                             _variables[pathEnum.Current] != VariableNamesManager.VariableNotFound) {
                             _variables[pathEnum.Current] = newVal;
-                            NotifyPropertyChanged(pathEnum.Current);
+                            NotifyPropertyChanged((pathEnum.Current));
                         }
+                        pathEnum.MoveNext();
                     }
 
                 pathEnum.Dispose();
@@ -260,7 +261,8 @@ namespace FlightSimulatorApp.Model {
                     var request = _setRequests.Dequeue();
                     mtx.WaitOne();
                     Write("set " + request);
-                    ClearServerOutputBuffer();
+                    //ClearServerOutputBuffer();
+                    Read();
                     mtx.ReleaseMutex();
                 }
 
