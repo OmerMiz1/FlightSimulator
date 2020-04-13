@@ -68,11 +68,13 @@ namespace FlightSimulatorApp.ViewModel
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
+            double propValue;
             /*TODO DEBUG*/
-            if (e.PropertyName == "Longitude" || e.PropertyName == "Latitude") {
+            if (!double.TryParse(propValueStr, out propValue))
+            {
                 return;
             }
-            var propValue = Convert.ToDouble(propValueStr);
+            // var propValue = Convert.ToDouble(propValueStr);
             switch (e.PropertyName)
             {
                 case "Rudder":

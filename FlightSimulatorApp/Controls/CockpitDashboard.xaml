@@ -22,7 +22,7 @@
             <Label Content="Heading Degree:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="0"
                    Grid.Column="0" />
             <Label Name="headingDegree" Style="{StaticResource DashboardValueLabelStyle}" Grid.Row="0" Grid.Column="1"
-                   Content="{Binding Path=Heading, FallbackValue=0, Mode=OneWay}" ContentStringFormat="{}{0:F1}°" />
+                   Content="{Binding Path=Heading, FallbackValue=0, Mode=OneWay}" ContentStringFormat="{}{0:F1}" />
             <!-- GPS Vertical Degree Indicator -->
             <Label Content="GPS Vertical Speed:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="1"
                    Grid.Column="0" />
@@ -46,12 +46,12 @@
             <!-- Roll Degree Indicator -->
             <Label Content="Roll Degree:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="1" Grid.Column="2" />
             <Label Name="rollDegree" Style="{StaticResource DashboardValueLabelStyle}" Grid.Row="1" Grid.Column="3"
-                   Content="{Binding Path=Roll, FallbackValue=0, Mode=OneWay}" ContentStringFormat="{}{0:F1}°" />
+                   Content="{Binding Path=Roll, FallbackValue=0, Mode=OneWay}" ContentStringFormat="{}{0:F1}" />
             <!-- Pitch Degree Indicator -->
             <Label Content="Pitch Degree:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="2"
                    Grid.Column="2" />
             <Label Name="pitchDegree" Style="{StaticResource DashboardValueLabelStyle}" Grid.Row="2" Grid.Column="3"
-                   Content="{Binding Path=Pitch, FallbackValue=0, Mode=OneWay}" ContentStringFormat="{}{0:F1}°" />
+                   Content="{Binding Path=Pitch, FallbackValue=0, Mode=OneWay}" ContentStringFormat="{}{0:F1}" />
             <!-- Altimeter Altitude ft Indicator -->
             <Label Content="Altimeter Altitude ft:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="3"
                    Grid.Column="2" />
