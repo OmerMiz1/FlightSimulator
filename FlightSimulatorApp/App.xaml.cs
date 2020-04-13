@@ -26,10 +26,10 @@ namespace FlightSimulatorApp
 
             /* Initialize Model:
              If ip and port are provided in App.config parse them else use default values.*/
-            SimulatorModel model = new SimulatorModel();
+            var model = new SimulatorModel();
             model.Ip = DefaultIp;
             model.Port = DefaultPort;
-            int port = -1;
+            var port = -1;
             try {
                 var appSettings = ConfigurationManager.AppSettings;
                 if (appSettings.Count > 0) {
@@ -46,12 +46,12 @@ namespace FlightSimulatorApp
                     }
                 }
             }
-            catch (ConfigurationErrorsException ce) {
+            catch (ConfigurationErrorsException) {
                 // DO NOTHING
             }
 
             /* Initialize Views & View Models */
-            MainWindow mainWindow = new MainWindow();
+            var mainWindow = new MainWindow();
             mainWindow.MyMap.ViewModel = new MapVM(model);
             mainWindow.MyConnectionButtons.ViewModel = new ConnectionButtonsVM(model);
             mainWindow.MyCockpitDashboard.ViewModel = new CockpitDashboardVM(model);

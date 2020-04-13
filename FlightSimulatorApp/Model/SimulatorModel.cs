@@ -96,7 +96,7 @@ namespace FlightSimulatorApp.Model {
                 _tcpClient.Close();
                 NotifyStatusChanged("Disconnected");
             }
-            catch (Exception e) {
+            catch (Exception) {
                 // DO NOTHING - just in-case TCP Client has already been disposed.
             }
             //Debug.WriteLine("TCP Client: Disconnected successfully from server...");
@@ -242,7 +242,7 @@ namespace FlightSimulatorApp.Model {
                 pathEnum.MoveNext();
 
                 /* Split received values and update each one */
-                List<string> valuesFromSim = valuesFromSimRaw.Split("\n").ToList();
+                var valuesFromSim = valuesFromSimRaw.Split("\n").ToList();
                 valuesFromSim.RemoveAll(string.IsNullOrEmpty);
 
                 /* Minor message validity test. If condition is not met:
@@ -253,7 +253,7 @@ namespace FlightSimulatorApp.Model {
                         if (_variables.ContainsKey(pathEnum.Current) &&
                             _variables[pathEnum.Current] != VariableNamesManager.VariableNotFound) {
                             _variables[pathEnum.Current] = newVal;
-                            NotifyPropertyChanged((pathEnum.Current));
+                            NotifyPropertyChanged(pathEnum.Current);
                         }
 
                         pathEnum.MoveNext();
@@ -298,7 +298,7 @@ namespace FlightSimulatorApp.Model {
         }
 
         public string GetVariable(string varName) {
-            string path = _varNamesMgr.toPath(varName);
+            var path = _varNamesMgr.toPath(varName);
             if (_variables.ContainsKey(path)) 
                 return _variables[path];
             return "ERR";

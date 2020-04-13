@@ -63,7 +63,7 @@ namespace FlightSimulatorApp.Controls
 
         private void settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            SettingsWindow mySettings = new SettingsWindow(IP, Port, this);
+            var mySettings = new SettingsWindow(IP, Port, this);
             _myVM.ConnectButtonEnabled = false;
             _myVM.DisconnectButtonEnabled = false;
             _myVM.SettingsButtonEnabled = false;

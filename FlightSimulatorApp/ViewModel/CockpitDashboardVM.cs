@@ -10,20 +10,20 @@ namespace FlightSimulatorApp.ViewModel
     {
 
         /* Fields & Properties declarations */
-        private String _altitudeAltimeter;
-        private String _altitudeGps;
-        private String _verticalSpeed;
-        private String _groundSpeed;
-        private String _heading;
-        private String _pitch;
-        private String _roll;
-        private String _speed;
+        private string _altitudeAltimeter;
+        private string _altitudeGps;
+        private string _verticalSpeed;
+        private string _groundSpeed;
+        private string _heading;
+        private string _pitch;
+        private string _roll;
+        private string _speed;
 
         public CockpitDashboardVM(SimulatorModel model)
         {
             model.PropertyChanged += Model_PropertyChanged;
         }
-        public String VerticalSpeed
+        public string VerticalSpeed
         {
             get => _verticalSpeed;
             set
@@ -32,7 +32,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("VerticalSpeed");
             }
         }
-        public String Heading
+        public string Heading
         {
             get => _heading;
             set
@@ -41,7 +41,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Heading");
             }
         }
-        public String GroundSpeed
+        public string GroundSpeed
         {
             get => _groundSpeed;
             set
@@ -50,7 +50,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("GroundSpeed");
             }
         }
-        public String Speed
+        public string Speed
         {
             get => _speed;
             set
@@ -59,7 +59,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Speed");
             }
         }
-        public String AltitudeGps
+        public string AltitudeGps
         {
             get => _altitudeGps;
             set
@@ -68,7 +68,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("AltitudeGps");
             }
         }
-        public String Roll
+        public string Roll
         {
             get => _roll;
             set
@@ -77,7 +77,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Roll");
             }
         }
-        public String Pitch
+        public string Pitch
         {
             get => _pitch;
             set
@@ -86,7 +86,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Pitch");
             }
         }
-        public String AltitudeAltimeter
+        public string AltitudeAltimeter
         {
             get => _altitudeAltimeter;
             set
@@ -152,19 +152,19 @@ namespace FlightSimulatorApp.ViewModel
             }
         }
 
-        private String ToDecimalFormat(String str) {
+        private string ToDecimalFormat(string str) {
             return ToDecimalFormat(str, 0);
         }
 
-        private String ToDecimalFormat(String str, int precision) {
-            Double myValue = Double.NaN;
+        private string ToDecimalFormat(string str, int precision) {
+            var myValue = double.NaN;
             /* Test if string's a number (either double or int are ok)*/
             if (!double.TryParse(str, out myValue)) {
                 return str; // Value of str here is supposed to be "ERR"
             }
 
             /* If string's a number, generate its format */
-            return String.Format("{0:N" + precision + "}", myValue);
+            return string.Format("{0:N" + precision + "}", myValue);
         }
     }
 }
