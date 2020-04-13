@@ -89,8 +89,19 @@ namespace FlightSimulatorApp.ViewModel
             Ip = myModel.Ip;
             Port = myModel.Port;
         }
-        public void Connect() {
-            _myModel.Connect();
+        public async void Connect() {
+            Status = "Connecting: Looking for host, timeout in a few seconds...";
+            StatusColor = Brushes.DarkSlateBlue;
+            ConnectButtonEnabled = false;
+            DisconnectButtonEnabled = false;
+            SettingsButtonEnabled = false;
+
+            Task t = Task.Run(() => {
+                _myModel.Connect();
+            });
+            try {
+                await t;
+            } catch { /* Do nothing */ }
         }
         public void Disconnect() {
             _myModel.Disconnect();
@@ -111,18 +122,19 @@ namespace FlightSimulatorApp.ViewModel
             }
             else if (e.PropertyName == "Disconnected") {
                 StatusChanged = false;
-                if (Status.Contains("Error") || Status.Contains("Warning")) {
+                if (!Status.Contains("Connected") && !Status.Contains("Warning")) {
                     Delay(5000).ContinueWith(_ => {
                         if (StatusChanged)
                             return Status;
+                        StatusColor = Brushes.Red;
                         return Status = "Status: Disconnected";
                     });
                 }
                 else {
                     Status = "Status: Disconnected";
+                    StatusColor = Brushes.Red;
                 }
 
-                StatusColor = Brushes.Red;
                 ConnectButtonEnabled = true;
                 DisconnectButtonEnabled = false;
                 SettingsButtonEnabled = true;
@@ -143,7 +155,7 @@ namespace FlightSimulatorApp.ViewModel
             else
             {
                 Status = e.PropertyName;
-                StatusColor = Brushes.Orange;
+                StatusColor = Brushes.IndianRed;
                 ConnectButtonEnabled = false;
                 DisconnectButtonEnabled = false;
                 SettingsButtonEnabled = false;

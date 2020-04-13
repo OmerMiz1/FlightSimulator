@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -47,33 +48,29 @@ namespace FlightSimulatorApp.Model {
          * Method connects the model to the server using the ip and port configured
          *from outside (different source, not self!) */
         public void Connect() {
+            /* Connect to server with 5 seconds timeout, normally server actively refuses after ~3 seconds..
+             MORE INFO AT: https://stackoverflow.com/questions/17118632/how-to-set-the-timeout-for-a-tcpclient */
+            _tcpClient = new TcpClient();
+            var result = _tcpClient.BeginConnect(Ip, Port, null, null);
+            result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+            if (!_tcpClient.Connected) {
+                result = _tcpClient.BeginConnect(Ip, Port, null, null); //Give user a few more seconds...
+                result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+            }
+            
+            /* Check if connected successfully, if not inform user */
             try {
-                /* Connect to server */
-                _tcpClient = new TcpClient(Ip, Port);
-                NotifyStatusChanged("Connected");
-                //Debug.WriteLine("TCP Client: Connected successfully to server...");
+                _tcpClient.EndConnect(result);
             }
             catch (SocketException) {
-                /* Usually this error points that server is not on yet */
-                NotifyStatusChanged(
-                    "Error Connection Failed:\n 1. Try to turn on the server\n 2. Click on 'Connect'");
-                return;
-            }
-            catch (Exception) {
-                /* Unexpected error */
-                NotifyStatusChanged("Error Connection Failed:\n Unexpected error occured");
+                NotifyStatusChanged("Connection failed: server timed-out..");
+                NotifyStatusChanged("Disconnected");
                 return;
             }
 
-            /* Check connection & Start communicating. NOTE:
-               Named the thread for easier debugging */
-            if (!_tcpClient.Connected) {
-                return;
-            }
-
-            var t = new Thread(Start);
-            t.Name = "SimulatorModel.Start Thread";
-            t.Start();
+            /* Case connected successfully */
+            NotifyStatusChanged("Connected");
+            Start();
         }
 
         /*** Disconnect from server.
@@ -88,6 +85,7 @@ namespace FlightSimulatorApp.Model {
             if (Thread.CurrentThread.Name != _getValuesThread.Name) {
                 _getValuesThread.Join();
             }
+
             if (Thread.CurrentThread.Name != _setValuesThread.Name) {
                 _setValuesThread.Join();
             }
@@ -99,6 +97,7 @@ namespace FlightSimulatorApp.Model {
             catch (Exception) {
                 // DO NOTHING - just in-case TCP Client has already been disposed.
             }
+            
             //Debug.WriteLine("TCP Client: Disconnected successfully from server...");
         }
 
@@ -112,30 +111,38 @@ namespace FlightSimulatorApp.Model {
             var readBuffer = new byte[4096];
             var strBuilder = new StringBuilder();
 
-            /** Read all data sent from simulator
+                /*** Read all data sent from simulator
                  * NOTE: Probably there's no need in the string builder
                  * because the messaged received from sim are short.
                  * Still i think its a good idea just in-case.
-                 **/
+                 */
             do {
-                try {
-                    var bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
-                    strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
-                    //} catch (ArgumentNullException) {
-                    //    Debug.WriteLine("Argument Null Exception thrown at Read()");
-                    //} catch (ObjectDisposedException) {
-                    //    Debug.WriteLine("Object Disposed Exception thrown at Read()");
-                    //} catch (InvalidOperationException) {
-                    //    Debug.WriteLine("Invalid Operation Exception thrown at Read()");
-                    //} catch (IOException e) {
-                    //    Debug.WriteLine("I/O Exception thrown at Read()");
-                    //    Debug.WriteLine("Inner Exception:\n" + e.InnerException);
-                }
-                catch (Exception) {
-                    /* Connection error */
-                    NotifyStatusChanged("Error Failed to read from server\nConnection to server lost\\broken");
-                    Disconnect();
-                    return ConnectionError;
+                if (_stream.CanRead) {
+                    try {
+                        _tcpClient.ReceiveTimeout = 10000;
+                        var bytesRead = _stream.Read(readBuffer, 0, readBuffer.Length);
+                        strBuilder.AppendFormat("{0}", Encoding.ASCII.GetString(readBuffer, 0, bytesRead));
+                    }
+                    // catch (ArgumentNullException) {
+                    //     Debug.WriteLine("Argument Null Exception thrown at Read()");
+                    // }
+                    // catch (ObjectDisposedException) {
+                    //     Debug.WriteLine("Object Disposed Exception thrown at Read()");
+                    // }
+                    // catch (InvalidOperationException) {
+                    //     Debug.WriteLine("Invalid Operation Exception thrown at Read()");
+                    // }
+                    catch (IOException e) {
+                        NotifyStatusChanged("Error: Server timed out (host failed to respond) or connection lost");
+                        NotifyStatusChanged("Disconnected");
+                        return ConnectionError;
+                    }
+                    catch (Exception) {
+                        /* Connection error */
+                        NotifyStatusChanged("Error: Connection to server lost\\broken");
+                        Disconnect();
+                        return ConnectionError;
+                    }
                 }
             } while (_stream.DataAvailable);
 
@@ -150,12 +157,16 @@ namespace FlightSimulatorApp.Model {
         public void Write(string msg) {
             if (_tcpClient.Connected)
                 try {
+                    _tcpClient.SendTimeout = 10000;
                     var writeBuffer = Encoding.ASCII.GetBytes(msg + "\r\n");
                     _stream.Write(writeBuffer, 0, writeBuffer.Length);
-                }
-                catch (Exception) {
+                } catch (IOException e) {
+                    NotifyStatusChanged("Error: Server timed out (host failed to receive) or connection lost");
+                    NotifyStatusChanged("Disconnected");
+                } catch (Exception) {
                     /* Error occured - might be server shut down unexpectedly */
-                    NotifyStatusChanged("Error Failed writing to server\nConnection to server lost\\broken");
+                    NotifyStatusChanged("Error: Connection to server lost\\broken");
+                    Disconnect();
                 }
         }
 
@@ -169,7 +180,8 @@ namespace FlightSimulatorApp.Model {
             _running = true;
             _setRequests.Clear();
 
-            /* Create stream & set timeout to 10 seconds */
+            /* Create stream & set timeout
+             to 10 seconds */
             _stream = _tcpClient.GetStream();
             _stream.ReadTimeout = 10;
 
@@ -277,13 +289,14 @@ namespace FlightSimulatorApp.Model {
                     Read();
                     mtx.ReleaseMutex();
                 }
-                Thread.Sleep(300);
+
+                Thread.Sleep(400);
             }
         }
 
         private void InitVariables() {
             /* Initializes NAMES of variables that model is GETTING FROM simulator */
-            _variables = new Dictionary<string,string> {
+            _variables = new Dictionary<string, string> {
                 ["/instrumentation/heading-indicator/indicated-heading-deg"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-vertical-speed"] = "NO_VALUE_YET",
                 ["/instrumentation/gps/indicated-ground-speed-kt"] = "NO_VALUE_YET",
@@ -299,7 +312,7 @@ namespace FlightSimulatorApp.Model {
 
         public string GetVariable(string varName) {
             var path = _varNamesMgr.toPath(varName);
-            if (_variables.ContainsKey(path)) 
+            if (_variables.ContainsKey(path))
                 return _variables[path];
             return "ERR";
         }
@@ -309,7 +322,17 @@ namespace FlightSimulatorApp.Model {
             var varPath = _varNamesMgr.toPath(varName);
             _setRequests.Enqueue(varPath + " " + varValue);
         }
-
+        
+        /* Currently not in use*/
+        private void ResetVariables() {
+            var list = _variables.Keys.ToList();
+            foreach (var path in list) {
+                _variables[path] = "0.0000";
+                Debug.WriteLine("path: " + path + "\nname: " + _varNamesMgr.toName(path));
+                NotifyPropertyChanged(_varNamesMgr.toName(path));
+            }
+        }
+        /* Currently not in use*/
         private void ClearServerOutputBuffer() {
             /* Clear server buffer and get rid of data not related to this query */
             var buffer = new byte[4096];
