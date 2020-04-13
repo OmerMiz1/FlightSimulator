@@ -69,7 +69,6 @@ namespace FlightSimulatorApp.ViewModel
         {
             var propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
             double propValue;
-            /*TODO DEBUG*/
             if (!double.TryParse(propValueStr, out propValue))
             {
                 return;

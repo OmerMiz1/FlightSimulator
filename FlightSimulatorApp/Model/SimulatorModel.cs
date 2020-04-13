@@ -294,7 +294,6 @@ namespace FlightSimulatorApp.Model {
             string path = _varNamesMgr.toPath(varName);
             if (_variables.ContainsKey(path)) 
                 return _variables[path];
-            /*TODO Not 100% sure this is what we're asked for, but seems like it fits the request..*/
             return "ERR";
         }
 
