@@ -164,18 +164,7 @@ namespace FlightSimulatorApp.ViewModel
             }
 
             /* If string's a number, generate its format */
-            String myFormat = "{0:#################0";
-            //if (precision > 0) {
-            //    myFormat += '.';
-            //    for (int i = 1; i <= precision; ++i) {
-            //        myFormat += '0';
-            //    }
-            //}
-            myFormat = "{0:N";
-            myFormat += precision;
-            myFormat += '}';
-
-            return String.Format(myFormat, myValue);
+            return String.Format("{0:N" + precision + "}", myValue);
         }
     }
 }
