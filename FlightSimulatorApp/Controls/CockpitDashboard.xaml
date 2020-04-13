@@ -27,7 +27,7 @@
             <Label Content="GPS Vertical Speed:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="1"
                    Grid.Column="0" />
             <Label Name="gpsVerticalSpeed" Style="{StaticResource DashboardValueLabelStyle}" Grid.Row="1"
-                   Grid.Column="1" Content="0.12345" />
+                   Grid.Column="1" Content="{Binding Path=VerticalSpeed, FallbackValue=0, Mode=OneWay}" />
             <!-- GPS Ground Speed Indicator -->
             <Label Content="GPS Ground Speed:" Style="{StaticResource DashboardNameLabelStyle}" Grid.Row="2"
                    Grid.Column="0" />

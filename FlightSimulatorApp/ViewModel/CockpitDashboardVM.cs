@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using FlightSimulatorApp.Model;
 
@@ -9,19 +10,20 @@ namespace FlightSimulatorApp.ViewModel
     {
 
         /* Fields & Properties declarations */
-        private double _altitudeAltimeter;
-        private double _altitudeGps;
-        private double _groundSpeed;
-        private string _heading;
-        private double _pitch;
-        private double _roll;
-        private double _speed;
+        private String _altitudeAltimeter;
+        private String _altitudeGps;
+        private String _verticalSpeed;
+        private String _groundSpeed;
+        private String _heading;
+        private String _pitch;
+        private String _roll;
+        private String _speed;
 
         public CockpitDashboardVM(SimulatorModel model)
         {
             model.PropertyChanged += Model_PropertyChanged;
         }
-        public double VerticalSpeed
+        public String VerticalSpeed
         {
             get => _verticalSpeed;
             set
@@ -30,7 +32,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("VerticalSpeed");
             }
         }
-        public double Heading
+        public String Heading
         {
             get => _heading;
             set
@@ -39,7 +41,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Heading");
             }
         }
-        public double GroundSpeed
+        public String GroundSpeed
         {
             get => _groundSpeed;
             set
@@ -48,7 +50,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("GroundSpeed");
             }
         }
-        public double Speed
+        public String Speed
         {
             get => _speed;
             set
@@ -57,7 +59,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Speed");
             }
         }
-        public double AltitudeGps
+        public String AltitudeGps
         {
             get => _altitudeGps;
             set
@@ -66,7 +68,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("AltitudeGps");
             }
         }
-        public double Roll
+        public String Roll
         {
             get => _roll;
             set
@@ -75,7 +77,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Roll");
             }
         }
-        public double Pitch
+        public String Pitch
         {
             get => _pitch;
             set
@@ -84,7 +86,7 @@ namespace FlightSimulatorApp.ViewModel
                 NotifyPropertyChanged("Pitch");
             }
         }
-        public double AltitudeAltimeter
+        public String AltitudeAltimeter
         {
             get => _altitudeAltimeter;
             set
@@ -104,50 +106,76 @@ namespace FlightSimulatorApp.ViewModel
         private void Model_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var propValueStr = (sender as SimulatorModel)?.GetVariable(e.PropertyName);
-            var propValue = Convert.ToDouble(propValueStr);
+            //var propValue = Convert.ToDouble(propValueStr);
             switch (e.PropertyName)
             {
                 case "VerticalSpeed":
                 {
-                    VerticalSpeed = propValue;
+                    VerticalSpeed = ToDecimalFormat(propValueStr, 0);
                     break;
                 }
                 case "Heading":
                 {
-                    Heading = propValue;
+                    Heading = ToDecimalFormat(propValueStr, 2);
                     break;
                 }
                 case "GroundSpeed":
                 {
-                    GroundSpeed = propValue;
+                    GroundSpeed = ToDecimalFormat(propValueStr, 0);
                     break;
                 }
                 case "Speed":
                 {
-                    Speed = propValue;
+                    Speed = ToDecimalFormat(propValueStr, 0);
                     break;
                 }
                 case "AltitudeGps":
                 {
-                    AltitudeGps = propValue;
+                    AltitudeGps = ToDecimalFormat(propValueStr, 2);
                     break;
                 }
                 case "Roll":
                 {
-                    Roll = propValue;
+                    Roll = ToDecimalFormat(propValueStr, 2);
                     break;
                 }
                 case "Pitch":
                 {
-                    Pitch = propValue;
+                    Pitch = ToDecimalFormat(propValueStr, 2);
                     break;
                 }
                 case "AltitudeAltimeter":
                 {
-                    AltitudeAltimeter = propValue;
+                    AltitudeAltimeter = ToDecimalFormat(propValueStr, 2);
                     break;
                 }
             }
+        }
+
+        private String ToDecimalFormat(String str) {
+            return ToDecimalFormat(str, 0);
+        }
+
+        private String ToDecimalFormat(String str, int precision) {
+            Double myValue = Double.NaN;
+            /* Test if string's a number (either double or int are ok)*/
+            if (!double.TryParse(str, out myValue)) {
+                return str; // Value of str here is supposed to be "ERR"
+            }
+
+            /* If string's a number, generate its format */
+            String myFormat = "{0:#################0";
+            //if (precision > 0) {
+            //    myFormat += '.';
+            //    for (int i = 1; i <= precision; ++i) {
+            //        myFormat += '0';
+            //    }
+            //}
+            myFormat = "{0:N";
+            myFormat += precision;
+            myFormat += '}';
+
+            return String.Format(myFormat, myValue);
         }
     }
 }

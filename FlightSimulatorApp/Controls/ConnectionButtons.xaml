@@ -23,11 +23,12 @@
                         Background="Yellow" Click="settingsButton_Click" />
             </Grid>
             <!-- Label is inside a view box so font size will fit the box size -->
-            <Viewbox Width="350" Height="35">
+            <Viewbox StretchDirection="Both" HorizontalAlignment="Stretch">
                 <TextBlock Name="StatusLabel" Text="{Binding Path=Status, FallbackValue=Status: Disconnected}"
-                           Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontWeight="Bold" FontSize="10"
-                           HorizontalAlignment="Center" TextWrapping="Wrap" Margin="4,0,0,0" />
+                           Foreground="{Binding Path=StatusColor, FallbackValue=Red}" FontWeight="Bold" LineHeight="{Binding ElementName=StatusLabel, Path=FontSize}"
+                           HorizontalAlignment="Stretch" TextWrapping="Wrap" Margin="4,0,0,0" TextAlignment="Justify" FontStretch="UltraExpanded"/>
             </Viewbox>
+            <!-- {Binding Path=Status, FallbackValue=Status: Disconnected} -->
         </StackPanel>
     </Grid>
 </UserControl>
