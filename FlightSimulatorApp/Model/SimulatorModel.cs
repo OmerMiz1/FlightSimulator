@@ -33,6 +33,15 @@ namespace FlightSimulatorApp.Model {
             InitVariables();
         }
 
+        ~SimulatorModel() {
+            try {
+                Disconnect();
+            }
+            catch (Exception) {
+                // DO NOTHING
+            }
+        }
+
         /*** Connect to server
          * Method connects the model to the server using the ip and port configured
          *from outside (different source, not self!) */

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Controls;
 using FlightSimulatorApp.ViewModel;
 using Microsoft.Maps.MapControl.WPF;
@@ -32,11 +34,16 @@ namespace FlightSimulatorApp.Controls
         {
             /* More at:
              https://stackoverflow.com/questions/9732709/the-calling-thread-cannot-access-this-object-because-a-different-thread-owns-it */
-            Dispatcher.Invoke(() =>
-            {
-                AirplanePushpin.Heading = ((MapVM) sender).Heading;
-                AirplanePushpin.Location = new Location((sender as MapVM)?.Location);
-            });
+            try {
+                Dispatcher.Invoke(() => {
+                    AirplanePushpin.Heading = ((MapVM) sender).Heading;
+                    AirplanePushpin.Location = new Location((sender as MapVM)?.Location);
+                });
+            }
+            catch (Exception) {
+                //Debug.WriteLine("Error at MyVM_PropertyChanged\n PropertyName= " + e.PropertyName);
+            }
+            
         }
     }
 }

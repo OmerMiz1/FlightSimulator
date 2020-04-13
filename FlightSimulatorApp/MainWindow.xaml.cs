@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace FlightSimulatorApp
 {
@@ -10,7 +11,6 @@ namespace FlightSimulatorApp
         public MainWindow()
         {
             InitializeComponent();
-            //TODO if window is closed make sure to disconnect server
         }
     }
 }

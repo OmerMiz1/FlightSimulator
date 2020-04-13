@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Windows;
 using FlightSimulatorApp.Model;
@@ -57,6 +58,10 @@ namespace FlightSimulatorApp
             mainWindow.MyCockpitControls.ViewModel = new CockpitControlsVM(model);
 
             mainWindow.Show();
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e) {
+            Environment.Exit(1);
         }
     }
 }
